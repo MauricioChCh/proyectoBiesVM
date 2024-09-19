@@ -1,12 +1,18 @@
 class VM {
     constructor() {
-        this.stack = []; //D
-        this.environment = {}; 
-        this.functions = {};
+        this.stack = []; // S: Pila principal de ejecución
+        this.bindings = [{ /* Capa 0 */ }]; // B: Entorno de bindings (capa 0 inicial)
+        this.contextStack = []; // D: Contexto de ejecución
         
     }
 
-
+ 
+    getCurrentLayer(layerIndex) { //Ayuda a obtener la capa/layer actual
+        if (!this.bindings[layerIndex]) {
+            this.bindings[layerIndex] = {};
+        }
+        return this.bindings[layerIndex];
+    }
 
     executeInstruction(instr) {
         switch(instr.type) {
@@ -25,12 +31,19 @@ class VM {
             case 'HLT':
                 process.exit(0);
                 break;
-            case 'BSD':
-                // Implementar lógica para BLD
-                break;
-            case 'BLD':
-                // Implementar lógica para BLD
-                break;
+                case 'BST':
+                    // BST capa varIndex: Guarda lo último de la pila en la capa y variable indicadas
+                    const [layerIndex, varIndex] = instr.args;
+                    const valueToStore = this.stack.pop();
+                    this.getCurrentLayer(layerIndex)[varIndex] = valueToStore;
+                    break;
+    
+                case 'BLD':
+                    // BLD capa varIndex: Carga de la capa y variable a la pila
+                    const [bindLayer, bindVarIndex] = instr.args;
+                    const valueToLoad = this.getCurrentLayer(bindLayer)[bindVarIndex];
+                    this.stack.push(valueToLoad);
+                    break;
             case 'LDF':
                 // Implementar lógica para LDF
                 break;

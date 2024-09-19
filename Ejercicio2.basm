@@ -1,5 +1,5 @@
-ldv 666
-bst 0 0
-bld 0 0
-prn
-hlt
+LDV 666
+BST 0 0
+BLD 0 0
+PRN
+HLT

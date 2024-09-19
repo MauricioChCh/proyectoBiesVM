@@ -31,11 +31,12 @@ loadInstr
     | APP
     | PRN
     | BLD NUMBER NUMBER
+    | BST NUMBER NUMBER
     | LDF LABEL_IDENTIFIER
     | INI LABEL_IDENTIFIER
     ;
 
-arithInstr
+arithInstr //hay que anniadir mul y div 
     : ADD
     ;
 
@@ -57,6 +58,7 @@ HLT : 'HLT';
 APP : 'APP';
 PRN : 'PRN';
 BLD : 'BLD';
+BST : 'BST';
 LDF : 'LDF';
 INI : 'INI';
 
