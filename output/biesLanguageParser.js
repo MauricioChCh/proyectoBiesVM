@@ -1,8 +1,8 @@
-// Generated from grammar/biesVMParser.g4 by ANTLR 4.13.1
+// Generated from grammar/biesLanguage.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
+import biesLanguageVisitor from './biesLanguageVisitor.js';
 
-import biesVMParserListener from './biesVMParserListener.js';
 const serializedATN = [4,1,14,54,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,
 2,5,7,5,2,6,7,6,2,7,7,7,1,0,4,0,18,8,0,11,0,12,0,19,1,0,1,0,1,1,1,1,1,1,
 1,1,4,1,28,8,1,11,1,12,1,29,1,1,1,1,1,1,1,1,1,2,1,2,1,2,1,3,1,3,1,3,1,3,
@@ -26,9 +26,9 @@ const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DF
 
 const sharedContextCache = new antlr4.atn.PredictionContextCache();
 
-export default class biesVMParser extends antlr4.Parser {
+export default class biesLanguageParser extends antlr4.Parser {
 
-    static grammarFileName = "biesVMParser.g4";
+    static grammarFileName = "biesLanguage.g4";
     static literalNames = [ null, "'LDV'", "'ADD'", "'RET'", "'HLT'", "'APP'", 
                             "'PRN'", "'$FUN'", "'$END'" ];
     static symbolicNames = [ null, "LDV", "ADD", "RET", "HLT", "APP", "PRN", 
@@ -40,16 +40,16 @@ export default class biesVMParser extends antlr4.Parser {
     constructor(input) {
         super(input);
         this._interp = new antlr4.atn.ParserATNSimulator(this, atn, decisionsToDFA, sharedContextCache);
-        this.ruleNames = biesVMParser.ruleNames;
-        this.literalNames = biesVMParser.literalNames;
-        this.symbolicNames = biesVMParser.symbolicNames;
+        this.ruleNames = biesLanguageParser.ruleNames;
+        this.literalNames = biesLanguageParser.literalNames;
+        this.symbolicNames = biesLanguageParser.symbolicNames;
     }
 
 
 
 	program() {
 	    let localctx = new ProgramContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 0, biesVMParser.RULE_program);
+	    this.enterRule(localctx, 0, biesLanguageParser.RULE_program);
 	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
@@ -64,7 +64,7 @@ export default class biesVMParser extends antlr4.Parser {
 	            _la = this._input.LA(1);
 	        } while((((_la) & ~0x1f) === 0 && ((1 << _la) & 126) !== 0));
 	        this.state = 21;
-	        this.match(biesVMParser.EOF);
+	        this.match(biesLanguageParser.EOF);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -83,16 +83,16 @@ export default class biesVMParser extends antlr4.Parser {
 
 	functionDef() {
 	    let localctx = new FunctionDefContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 2, biesVMParser.RULE_functionDef);
+	    this.enterRule(localctx, 2, biesLanguageParser.RULE_functionDef);
 	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 23;
-	        this.match(biesVMParser.FUN);
+	        this.match(biesLanguageParser.FUN);
 	        this.state = 24;
-	        this.match(biesVMParser.LABEL_IDENTIFIER);
+	        this.match(biesLanguageParser.LABEL_IDENTIFIER);
 	        this.state = 25;
-	        this.match(biesVMParser.NL);
+	        this.match(biesLanguageParser.NL);
 	        this.state = 27; 
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
@@ -104,11 +104,11 @@ export default class biesVMParser extends antlr4.Parser {
 	            _la = this._input.LA(1);
 	        } while((((_la) & ~0x1f) === 0 && ((1 << _la) & 126) !== 0));
 	        this.state = 31;
-	        this.match(biesVMParser.END);
+	        this.match(biesLanguageParser.END);
 	        this.state = 32;
-	        this.match(biesVMParser.LABEL_IDENTIFIER);
+	        this.match(biesLanguageParser.LABEL_IDENTIFIER);
 	        this.state = 33;
-	        this.match(biesVMParser.NL);
+	        this.match(biesLanguageParser.NL);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -127,13 +127,13 @@ export default class biesVMParser extends antlr4.Parser {
 
 	statement() {
 	    let localctx = new StatementContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 4, biesVMParser.RULE_statement);
+	    this.enterRule(localctx, 4, biesLanguageParser.RULE_statement);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 35;
 	        this.instruction();
 	        this.state = 36;
-	        this.match(biesVMParser.NL);
+	        this.match(biesLanguageParser.NL);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -152,7 +152,7 @@ export default class biesVMParser extends antlr4.Parser {
 
 	instruction() {
 	    let localctx = new InstructionContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 6, biesVMParser.RULE_instruction);
+	    this.enterRule(localctx, 6, biesLanguageParser.RULE_instruction);
 	    try {
 	        this.state = 42;
 	        this._errHandler.sync(this);
@@ -200,13 +200,13 @@ export default class biesVMParser extends antlr4.Parser {
 
 	loadInstr() {
 	    let localctx = new LoadInstrContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 8, biesVMParser.RULE_loadInstr);
+	    this.enterRule(localctx, 8, biesLanguageParser.RULE_loadInstr);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 44;
-	        this.match(biesVMParser.LDV);
+	        this.match(biesLanguageParser.LDV);
 	        this.state = 45;
-	        this.match(biesVMParser.NUMBER);
+	        this.match(biesLanguageParser.NUMBER);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -225,11 +225,11 @@ export default class biesVMParser extends antlr4.Parser {
 
 	arithInstr() {
 	    let localctx = new ArithInstrContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 10, biesVMParser.RULE_arithInstr);
+	    this.enterRule(localctx, 10, biesLanguageParser.RULE_arithInstr);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 47;
-	        this.match(biesVMParser.ADD);
+	        this.match(biesLanguageParser.ADD);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -248,7 +248,7 @@ export default class biesVMParser extends antlr4.Parser {
 
 	controlInstr() {
 	    let localctx = new ControlInstrContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 12, biesVMParser.RULE_controlInstr);
+	    this.enterRule(localctx, 12, biesLanguageParser.RULE_controlInstr);
 	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
@@ -279,7 +279,7 @@ export default class biesVMParser extends antlr4.Parser {
 
 	funcInstr() {
 	    let localctx = new FuncInstrContext(this, this._ctx, this.state);
-	    this.enterRule(localctx, 14, biesVMParser.RULE_funcInstr);
+	    this.enterRule(localctx, 14, biesLanguageParser.RULE_funcInstr);
 	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
@@ -309,30 +309,30 @@ export default class biesVMParser extends antlr4.Parser {
 
 }
 
-biesVMParser.EOF = antlr4.Token.EOF;
-biesVMParser.LDV = 1;
-biesVMParser.ADD = 2;
-biesVMParser.RET = 3;
-biesVMParser.HLT = 4;
-biesVMParser.APP = 5;
-biesVMParser.PRN = 6;
-biesVMParser.FUN = 7;
-biesVMParser.END = 8;
-biesVMParser.LABEL_IDENTIFIER = 9;
-biesVMParser.NUMBER = 10;
-biesVMParser.ID = 11;
-biesVMParser.COMMENT = 12;
-biesVMParser.WS = 13;
-biesVMParser.NL = 14;
+biesLanguageParser.EOF = antlr4.Token.EOF;
+biesLanguageParser.LDV = 1;
+biesLanguageParser.ADD = 2;
+biesLanguageParser.RET = 3;
+biesLanguageParser.HLT = 4;
+biesLanguageParser.APP = 5;
+biesLanguageParser.PRN = 6;
+biesLanguageParser.FUN = 7;
+biesLanguageParser.END = 8;
+biesLanguageParser.LABEL_IDENTIFIER = 9;
+biesLanguageParser.NUMBER = 10;
+biesLanguageParser.ID = 11;
+biesLanguageParser.COMMENT = 12;
+biesLanguageParser.WS = 13;
+biesLanguageParser.NL = 14;
 
-biesVMParser.RULE_program = 0;
-biesVMParser.RULE_functionDef = 1;
-biesVMParser.RULE_statement = 2;
-biesVMParser.RULE_instruction = 3;
-biesVMParser.RULE_loadInstr = 4;
-biesVMParser.RULE_arithInstr = 5;
-biesVMParser.RULE_controlInstr = 6;
-biesVMParser.RULE_funcInstr = 7;
+biesLanguageParser.RULE_program = 0;
+biesLanguageParser.RULE_functionDef = 1;
+biesLanguageParser.RULE_statement = 2;
+biesLanguageParser.RULE_instruction = 3;
+biesLanguageParser.RULE_loadInstr = 4;
+biesLanguageParser.RULE_arithInstr = 5;
+biesLanguageParser.RULE_controlInstr = 6;
+biesLanguageParser.RULE_funcInstr = 7;
 
 class ProgramContext extends antlr4.ParserRuleContext {
 
@@ -345,11 +345,11 @@ class ProgramContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_program;
+        this.ruleIndex = biesLanguageParser.RULE_program;
     }
 
 	EOF() {
-	    return this.getToken(biesVMParser.EOF, 0);
+	    return this.getToken(biesLanguageParser.EOF, 0);
 	};
 
 	statement = function(i) {
@@ -363,16 +363,12 @@ class ProgramContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterProgram(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitProgram(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitProgram(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -391,11 +387,11 @@ class FunctionDefContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_functionDef;
+        this.ruleIndex = biesLanguageParser.RULE_functionDef;
     }
 
 	FUN() {
-	    return this.getToken(biesVMParser.FUN, 0);
+	    return this.getToken(biesLanguageParser.FUN, 0);
 	};
 
 	LABEL_IDENTIFIER = function(i) {
@@ -403,9 +399,9 @@ class FunctionDefContext extends antlr4.ParserRuleContext {
 			i = null;
 		}
 	    if(i===null) {
-	        return this.getTokens(biesVMParser.LABEL_IDENTIFIER);
+	        return this.getTokens(biesLanguageParser.LABEL_IDENTIFIER);
 	    } else {
-	        return this.getToken(biesVMParser.LABEL_IDENTIFIER, i);
+	        return this.getToken(biesLanguageParser.LABEL_IDENTIFIER, i);
 	    }
 	};
 
@@ -415,15 +411,15 @@ class FunctionDefContext extends antlr4.ParserRuleContext {
 			i = null;
 		}
 	    if(i===null) {
-	        return this.getTokens(biesVMParser.NL);
+	        return this.getTokens(biesLanguageParser.NL);
 	    } else {
-	        return this.getToken(biesVMParser.NL, i);
+	        return this.getToken(biesLanguageParser.NL, i);
 	    }
 	};
 
 
 	END() {
-	    return this.getToken(biesVMParser.END, 0);
+	    return this.getToken(biesLanguageParser.END, 0);
 	};
 
 	statement = function(i) {
@@ -437,16 +433,12 @@ class FunctionDefContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterFunctionDef(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitFunctionDef(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitFunctionDef(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -465,7 +457,7 @@ class StatementContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_statement;
+        this.ruleIndex = biesLanguageParser.RULE_statement;
     }
 
 	instruction() {
@@ -473,19 +465,15 @@ class StatementContext extends antlr4.ParserRuleContext {
 	};
 
 	NL() {
-	    return this.getToken(biesVMParser.NL, 0);
+	    return this.getToken(biesLanguageParser.NL, 0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterStatement(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitStatement(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitStatement(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -504,7 +492,7 @@ class InstructionContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_instruction;
+        this.ruleIndex = biesLanguageParser.RULE_instruction;
     }
 
 	loadInstr() {
@@ -523,16 +511,12 @@ class InstructionContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(FuncInstrContext,0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterInstruction(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitInstruction(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitInstruction(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -551,27 +535,23 @@ class LoadInstrContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_loadInstr;
+        this.ruleIndex = biesLanguageParser.RULE_loadInstr;
     }
 
 	LDV() {
-	    return this.getToken(biesVMParser.LDV, 0);
+	    return this.getToken(biesLanguageParser.LDV, 0);
 	};
 
 	NUMBER() {
-	    return this.getToken(biesVMParser.NUMBER, 0);
+	    return this.getToken(biesLanguageParser.NUMBER, 0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterLoadInstr(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitLoadInstr(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitLoadInstr(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -590,23 +570,19 @@ class ArithInstrContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_arithInstr;
+        this.ruleIndex = biesLanguageParser.RULE_arithInstr;
     }
 
 	ADD() {
-	    return this.getToken(biesVMParser.ADD, 0);
+	    return this.getToken(biesLanguageParser.ADD, 0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterArithInstr(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitArithInstr(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitArithInstr(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -625,27 +601,23 @@ class ControlInstrContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_controlInstr;
+        this.ruleIndex = biesLanguageParser.RULE_controlInstr;
     }
 
 	RET() {
-	    return this.getToken(biesVMParser.RET, 0);
+	    return this.getToken(biesLanguageParser.RET, 0);
 	};
 
 	HLT() {
-	    return this.getToken(biesVMParser.HLT, 0);
+	    return this.getToken(biesLanguageParser.HLT, 0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterControlInstr(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitControlInstr(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitControlInstr(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -664,27 +636,23 @@ class FuncInstrContext extends antlr4.ParserRuleContext {
         }
         super(parent, invokingState);
         this.parser = parser;
-        this.ruleIndex = biesVMParser.RULE_funcInstr;
+        this.ruleIndex = biesLanguageParser.RULE_funcInstr;
     }
 
 	APP() {
-	    return this.getToken(biesVMParser.APP, 0);
+	    return this.getToken(biesLanguageParser.APP, 0);
 	};
 
 	PRN() {
-	    return this.getToken(biesVMParser.PRN, 0);
+	    return this.getToken(biesLanguageParser.PRN, 0);
 	};
 
-	enterRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.enterFuncInstr(this);
-		}
-	}
-
-	exitRule(listener) {
-	    if(listener instanceof biesVMParserListener ) {
-	        listener.exitFuncInstr(this);
-		}
+	accept(visitor) {
+	    if ( visitor instanceof biesLanguageVisitor ) {
+	        return visitor.visitFuncInstr(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
 	}
 
 
@@ -693,11 +661,11 @@ class FuncInstrContext extends antlr4.ParserRuleContext {
 
 
 
-biesVMParser.ProgramContext = ProgramContext; 
-biesVMParser.FunctionDefContext = FunctionDefContext; 
-biesVMParser.StatementContext = StatementContext; 
-biesVMParser.InstructionContext = InstructionContext; 
-biesVMParser.LoadInstrContext = LoadInstrContext; 
-biesVMParser.ArithInstrContext = ArithInstrContext; 
-biesVMParser.ControlInstrContext = ControlInstrContext; 
-biesVMParser.FuncInstrContext = FuncInstrContext; 
+biesLanguageParser.ProgramContext = ProgramContext; 
+biesLanguageParser.FunctionDefContext = FunctionDefContext; 
+biesLanguageParser.StatementContext = StatementContext; 
+biesLanguageParser.InstructionContext = InstructionContext; 
+biesLanguageParser.LoadInstrContext = LoadInstrContext; 
+biesLanguageParser.ArithInstrContext = ArithInstrContext; 
+biesLanguageParser.ControlInstrContext = ControlInstrContext; 
+biesLanguageParser.FuncInstrContext = FuncInstrContext; 

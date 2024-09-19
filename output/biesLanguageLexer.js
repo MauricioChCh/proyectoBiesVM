@@ -1,4 +1,4 @@
-// Generated from grammar/biesVMLexer.g4 by ANTLR 4.13.1
+// Generated from grammar/biesLanguage.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -42,9 +42,9 @@ const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
 const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DFA(ds, index) );
 
-export default class biesVMLexer extends antlr4.Lexer {
+export default class biesLanguageLexer extends antlr4.Lexer {
 
-    static grammarFileName = "biesVMLexer.g4";
+    static grammarFileName = "biesLanguage.g4";
     static channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
 	static modeNames = [ "DEFAULT_MODE" ];
 	static literalNames = [ null, "'LDV'", "'ADD'", "'RET'", "'HLT'", "'APP'", 
@@ -62,21 +62,21 @@ export default class biesVMLexer extends antlr4.Lexer {
     }
 }
 
-biesVMLexer.EOF = antlr4.Token.EOF;
-biesVMLexer.LDV = 1;
-biesVMLexer.ADD = 2;
-biesVMLexer.RET = 3;
-biesVMLexer.HLT = 4;
-biesVMLexer.APP = 5;
-biesVMLexer.PRN = 6;
-biesVMLexer.FUN = 7;
-biesVMLexer.END = 8;
-biesVMLexer.LABEL_IDENTIFIER = 9;
-biesVMLexer.NUMBER = 10;
-biesVMLexer.ID = 11;
-biesVMLexer.COMMENT = 12;
-biesVMLexer.WS = 13;
-biesVMLexer.NL = 14;
+biesLanguageLexer.EOF = antlr4.Token.EOF;
+biesLanguageLexer.LDV = 1;
+biesLanguageLexer.ADD = 2;
+biesLanguageLexer.RET = 3;
+biesLanguageLexer.HLT = 4;
+biesLanguageLexer.APP = 5;
+biesLanguageLexer.PRN = 6;
+biesLanguageLexer.FUN = 7;
+biesLanguageLexer.END = 8;
+biesLanguageLexer.LABEL_IDENTIFIER = 9;
+biesLanguageLexer.NUMBER = 10;
+biesLanguageLexer.ID = 11;
+biesLanguageLexer.COMMENT = 12;
+biesLanguageLexer.WS = 13;
+biesLanguageLexer.NL = 14;
 
 
 
