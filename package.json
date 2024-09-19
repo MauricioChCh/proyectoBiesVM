@@ -7,7 +7,7 @@
     "biesVM": "./src/biesVM.js"
   },
   "scripts": {
-    "prestart": "java -jar /usr/local/lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesVMLexer.g4 &&  java -jar /usr/local/lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesVMParser.g4 && mv grammar/biesVMLexer.js output/ && mv grammar/biesVMParser.js output/ && mv grammar/biesVMParserListener.js output/",
+    "prestart": "java -jar lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesLanguage.g4 -no-listener -visitor -o output",
     "start": "node src/biesVM.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "antlr4": "^4.13.2",
+    "chalk": "^5.3.0",
     "commander": "^12.1.0"
   },
   "type": "module"
