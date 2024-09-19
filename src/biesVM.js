@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // src/biesVM.js
 
 import fs from 'fs';
@@ -32,9 +33,9 @@ program
         }
 
         // Opción de modo detallado
-        //if (options.verbose) {
-        //    console.log(chalk.blueBright('Modo detallado activado...'));
-        //} //buscar patrón strategy en js, para hacer que en modo detallado se imprima el árbol sintáctico entre otras cosas
+        if (options.verbose) {
+           console.log(chalk.blueBright('Modo detallado activado...'));
+        } //buscar patrón strategy en js, para hacer que en modo detallado se imprima el árbol sintáctico entre otras cosas
 
         //Es válido
 

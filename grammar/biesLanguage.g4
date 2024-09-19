@@ -2,21 +2,21 @@ grammar biesLanguage;
 
 // Reglas principales del parser
 program
-    : statement+ EOF
+    : (statement NL?)* EOF
     ;
 
-functionDef //para poder usar FUN y END
+functionDef //define la estructura de una funcion para poder usar FUN y END
     : FUN LABEL_IDENTIFIER NL
       statement*
       END LABEL_IDENTIFIER NL
     ;
 
 statement
-    : instruction NL
+    : instruction NL?
     | functionDef
     ;
 
-instruction
+instruction //posibles instrucciones
     : loadInstr
     | arithInstr
     | controlInstr
@@ -25,6 +25,14 @@ instruction
 
 loadInstr
     : LDV NUMBER
+    | ADD
+    | RET
+    | HLT
+    | APP
+    | PRN
+    | BLD NUMBER NUMBER
+    | LDF LABEL_IDENTIFIER
+    | INI LABEL_IDENTIFIER
     ;
 
 arithInstr
@@ -48,10 +56,14 @@ RET : 'RET';
 HLT : 'HLT';
 APP : 'APP';
 PRN : 'PRN';
+BLD : 'BLD';
+LDF : 'LDF';
+INI : 'INI';
 
 // Palabras clave para funciones
 FUN : '$FUN';
 END : '$END';
+
 
 LABEL_IDENTIFIER : '$' [a-zA-Z][a-zA-Z0-9]*;
 
