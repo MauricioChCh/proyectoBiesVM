@@ -14,6 +14,17 @@ export class Visitor extends biesLanguageVisitor {
         return this.vm;
     }
 
+    visitFunctionDef(ctx) {
+        const functionName = ctx.LABEL_IDENTIFIER(0).getText();
+        const functionBody = ctx.statement().map(stmt => stmt.getText());
+        if (!this.vm.functions) {
+            this.vm.functions = {};
+        }
+        this.vm.functions[functionName] = functionBody;
+        console.log(`Definida función ${functionName} con cuerpo:`, functionBody);
+        return super.visitFunctionDef(ctx);
+    }
+
     visitInstruction(ctx) {
         const text = ctx.getText().trim();
         console.log('Visitando instrucción', text);
@@ -24,11 +35,8 @@ export class Visitor extends biesLanguageVisitor {
             throw new Error(`Formato de instrucción desconocido: ${text}`);
         }
 
-    
         const type = match[1];
-        const args = match[2] ? match[2].split(' ').map(arg => parseInt(arg)) : [];
-    
-        
+        const args = match[2] ? match[2].split(' ').map(arg => isNaN(arg) ? arg : parseInt(arg)) : [];
 
         this.vm.executeInstruction({ type, args });
         return super.visitInstruction(ctx);

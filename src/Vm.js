@@ -4,6 +4,7 @@ class VM {
         this.bindings = [{ /* Capa 0 */ }]; // B: Entorno de bindings (capa 0 inicial)
         this.contextStack = []; // D: Contexto de ejecución
         this.environment = []; 
+        this.functions = {}; // Almacena las funciones definidas
 
     }
 
@@ -30,7 +31,7 @@ class VM {
                 break;
             case 'PRN':
                 const print = this.stack.pop();
-                    print!=undefined? console.log(): "";
+                print===undefined? "": console.log(print);
                 break;
             case 'HLT':
                 this.code = []; // Limpia el código
@@ -52,29 +53,33 @@ class VM {
                 this.stack.push(valueToLoad);
                 break;
             case 'LDF':
-                // Implementar lógica para LDF
                 // LDF functionName: Carga una función en la pila
                 const functionName = instr.args[0];
+                const functionBody = this.functions[functionName];
+                if (!functionBody) {
+                    throw new Error(`Function ${functionName} not defined`);
+                }
                 const closure = {
                     functionName: functionName,
+                    body: functionBody,
                     environment: this.environment.slice() // Captura el entorno actual
                 };
                 this.stack.push(closure);
                 break;
             case 'APP':
                 // Verificamos si en el tope de la pila hay un valor y un closure
-                let closures = this.stack.pop(); // El closure de la función
+                let closure1 = this.stack.pop(); // El closure de la función
                 let value = this.stack.pop();   // El valor a pasar a la función
             
-                if (closures && closures.body) {
+                if (closure1 && closure1.body) {
                     // Guarda el estado actual en la pila de contexto
-                    this.contextStack.push({ code: this.code, stack: this.stack, bindings: this.bindings });
+                    this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
             
                     // Cargar el cuerpo de la función como nuevo código
-                    this.code = closures.body;
+                    this.code = closure1.body;
             
                     // Empujar el valor como parte del nuevo entorno de bindings
-                    this.bindings.push(value);
+                    this.bindings.push({ 0: value });
                 }
                 break;
                 
@@ -98,13 +103,15 @@ class VM {
                 
             case 'INI':
                 // Inicializa el entorno y apunta al código de la función principal
-                let functionIndex = this.stack.pop(); // Índice o referencia de la función principal
-                if (functionIndex !== undefined && this.code[functionIndex]) {
-                    this.code = this.code.slice(functionIndex); // Cambia el código a partir de la función principal
-                    this.stack = [];  // Reinicia la pila
-                    this.bindings = []; // Reinicia el entorno de bindings
-                    this.contextStack = []; // Reinicia el contexto de ejecución
+                const mainFunctionName = instr.args[0];
+                const mainFunctionBody = this.functions[mainFunctionName];
+                if (!mainFunctionBody) {
+                    throw new Error(`Main function ${mainFunctionName} not defined`);
                 }
+                this.code = mainFunctionBody; // Cambia el código a partir de la función principal
+                this.stack = [];  // Reinicia la pila
+                this.bindings = []; // Reinicia el entorno de bindings
+                this.contextStack = []; // Reinicia el contexto de ejecución
                 break;
             
             default:
