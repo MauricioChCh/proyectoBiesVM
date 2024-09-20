@@ -83,8 +83,24 @@ class VM {
                     
                     // Convertir el cuerpo de la función a una cadena, separando instrucciones como BLD00 en BLD 0 0
                     const functionBodyString = closure1.body
-                        .map(instruction => instruction.replace(/([A-Z]+)(\d)(\d)/g, '$1 $2 $3'))  // Reemplazar BLD00 por BLD 0 0
-                        .join('\n');
+                    .map(instruction => {
+                        // Utilizar la expresión regular para separar correctamente las instrucciones
+                        const match = instruction.match(/^([A-Z]+)(\d+|\$[a-zA-Z][a-zA-Z0-9]*|(\d+ \d+))*$/);
+                        if (!match) {
+                            throw new Error(`Formato de instrucción desconocido: ${instruction}`);
+                        }
+                
+                        const type = match[1];
+                        const args = match[2] ? match[2].split('').map(arg => isNaN(arg) ? arg : parseInt(arg)) : [];
+                
+                        // Si hay dos argumentos, asegúrate de que estén separados por un espacio
+                        if (args.length === 2) {
+                            return `${type} ${args[0]} ${args[1]}`;
+                        } else {
+                            return `${type} ${args.join(' ')}`;
+                        }
+                    })
+                    .join('\n');
                     
                     console.log('Cuerpo de la función como cadena (ajustado):', functionBodyString);
                     

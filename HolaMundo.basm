@@ -1,0 +1,12 @@
+
+$FUN $hola
+BLD 0 0         ; Cargar el valor 'saludo' del entorno
+PRN             ; Imprimir el valor
+RET             ; Retornar de la función
+$END $hola
+
+LDV "Hola Mundo" 
+BST 0 0
+
+LDF $hola     ; Cargar la función 'hola'
+APP             ; Llamar a la función 'hola'
