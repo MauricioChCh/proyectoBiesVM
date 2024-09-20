@@ -8,7 +8,7 @@ import fs from 'fs';
 
 
 // Función que integra el lexer y parser y analiza el archivo
-export function analizarArchivoBasm(filePath) {
+export function analizarArchivoBasm(filePath, logger) {
     try {
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });
         //console.log('Contenido del archivo: \n', input);
@@ -19,9 +19,9 @@ export function analizarArchivoBasm(filePath) {
         const parser = new biesVMParser(tokens);  //crea el parser en base a los tokens
 
 
-        // console.log('Tokens del lexer:');
+        // logger.debug('Tokens generados por el lexer:');
         // lexer.getAllTokens().forEach(token => {
-        //     console.log(token.type, token.text);
+        //     logger.debug(`Tipo: ${token.type}, Texto: ${token.text}`);
         // });
 
 
@@ -30,15 +30,17 @@ export function analizarArchivoBasm(filePath) {
         const tree = parser.program();
     
 
-       //  console.log('Árbol de análisis sintáctico:', tree.toStringTree(null, parser));
+        logger.debug('Árbol de análisis sintáctico:');
+        logger.debug(tree.toStringTree(null, parser)); // Muestra el árbol de análisis
 
-        const visitor = new Visitor();
+        
+        const visitor = new Visitor(logger);
 
          visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones
     
 
 
-        // console.log('Ejecución completada para el archivo', filePath);
+      
 
 
         return true;

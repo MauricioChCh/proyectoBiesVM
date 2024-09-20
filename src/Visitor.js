@@ -1,15 +1,17 @@
+import chalk from 'chalk';
 import biesLanguageVisitor from '../output/biesLanguageVisitor.js';
 import VM from './Vm.js';
 
 
 export class Visitor extends biesLanguageVisitor {
-    constructor() {
+    constructor(logger = { log: () => {} }) {
         super();
         this.vm = new VM(); 
+        this.logger = logger;
     }
 
     visitProgram(ctx) {
-        console.log('Visitando el programa');
+        this.logger.log(chalk.cyanBright('Visitando el programa'));
         super.visitProgram(ctx);
         return this.vm;
     }
@@ -21,13 +23,14 @@ export class Visitor extends biesLanguageVisitor {
             this.vm.functions = {};
         }
         this.vm.functions[functionName] = functionBody;
-        console.log(`Definida función ${functionName} con cuerpo:`, functionBody);
+        this.logger.log(`Definida función ${functionName} con cuerpo: ${functionBody}`);
         return super.visitFunctionDef(ctx);
     }
 
     visitInstruction(ctx) {
         const text = ctx.getText().trim();
-        console.log('Visitando instrucción', text);
+        this.logger.log(`Visitando instrucción: ${text}`);
+        //console.log('Visitando instrucción: ${text}');
         
         // Usar expresión regular para separar tipo y argumentos
         const match = text.match(/^([A-Z]+)(\d+|\$[a-zA-Z][a-zA-Z0-9]*|(\d+ \d+))*$/);
