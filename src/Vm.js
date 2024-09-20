@@ -71,45 +71,44 @@ class VM {
                 break;
 
                 case 'APP':
-                    // Verificamos si en el tope de la pila hay un valor y un closure
-                    let closure1 = this.stack.pop(); // El closure de la función
-               //     let value = this.stack.pop();   // El valor a pasar a la función
+                // Extraemos el closure del tope de la pila
+                let closure1 = this.stack.pop();
                 
-                    console.log('Estado de la pila:', this.stack);
-                    console.log('Closure extraído:', closure1);
-                  //  console.log('Valor extraído:', value);
+                console.log('Estado de la pila:', this.stack);
+                console.log('Closure extraído:', closure1);
                 
-                    if (closure1 && closure1.body) {
-                        // Guarda el estado actual en la pila de contexto
-                        this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
-                
-                        // Convertir el cuerpo de la función a una cadena de entrada
-                        const functionBodyString = closure1.body.join('\n');
-                        console.log('Cuerpo de la función como cadena:', functionBodyString);
-                
-                        // Crear un nuevo lexer y parser con la cadena de entrada
-                        const chars = new antlr4.InputStream(functionBodyString);
-                        const lexer = new biesVMLexer(chars);
-                        const tokens = new antlr4.CommonTokenStream(lexer);
-                        const parser = new biesVMParser(tokens);
-                
-                        // Generar el árbol de análisis sintáctico
-                        parser.buildParseTrees = true;
-                        const tree = parser.program();
-                
-                        // Visitar el árbol y ejecutar las instrucciones
-                        const visitor = new Visitor();
-                        visitor.vm = this; // Pasar la instancia actual de VM al visitor
-                        visitor.visit(tree);
-                
-                        // Empujar el valor como parte del nuevo entorno de bindings
-                       // this.bindings.push({ 0: value });
-                    } else {
-                        console.error('Closure o cuerpo del closure es undefined');
-                        throw new Error('Closure or closure body is undefined');
-                    }
+                if (closure1 && closure1.body) {
+                    // Guardar el estado actual de la VM
+                    this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
                     
-                    break;
+                    // Convertir el cuerpo de la función a una cadena, separando instrucciones como BLD00 en BLD 0 0
+                    const functionBodyString = closure1.body
+                        .map(instruction => instruction.replace(/([A-Z]+)(\d)(\d)/g, '$1 $2 $3'))  // Reemplazar BLD00 por BLD 0 0
+                        .join('\n');
+                    
+                    console.log('Cuerpo de la función como cadena (ajustado):', functionBodyString);
+                    
+                    // Crear un nuevo lexer y parser con la cadena ajustada
+                    const chars = new antlr4.InputStream(functionBodyString);
+                    const lexer = new biesVMLexer(chars);
+                    const tokens = new antlr4.CommonTokenStream(lexer);
+                    const parser = new biesVMParser(tokens);
+                    
+                    // Generar el árbol de análisis sintáctico
+                    parser.buildParseTrees = true;
+                    const tree = parser.program();
+                    
+                    // Visitar el árbol y ejecutar las instrucciones
+                    const visitor = new Visitor();
+                    visitor.vm = this;  // Pasar la instancia actual de VM al visitor
+                    visitor.visit(tree);
+                    
+                } else {
+                    console.error('Closure o cuerpo del closure es undefined');
+                    throw new Error('Closure or closure body is undefined');
+                }
+                break;
+
             
             case 'RET':
                 let returnValue = this.stack.pop(); // Valor de retorno de la función

@@ -21,7 +21,7 @@ BLD 0 2
 ADD             ; Sumar a * 10 + b
  
 
-
+BST 0 0
 
 LDF $salude     ; Cargar la función 'salude'
 
