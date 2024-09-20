@@ -1,8 +1,10 @@
+
 $FUN $salude
-BLD 0 0         ; Cargar el valor 'saludo' del entorno
+BLD 1 0         ; Cargar el valor 'saludo' del entorno
 PRN             ; Imprimir el valor
 RET             ; Retornar de la función
 $END $salude
+
 
 $FUN $main
 LDV 1           ; Cargar el valor de 'a' (1)
@@ -23,5 +25,7 @@ LDF $salude     ; Cargar la función 'salude'
 APP             ; Llamar a la función 'salude'
 HLT             ; Detener la ejecución
 $END $main
+
+
 
 INI $main       ; Iniciar la ejecución en la función 'main'
