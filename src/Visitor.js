@@ -1,6 +1,6 @@
 import biesLanguageVisitor from '../output/biesLanguageVisitor.js';
-import biesLanguageParser from '../output/biesLanguageParser.js';
 import VM from './Vm.js';
+
 
 export class Visitor extends biesLanguageVisitor {
     constructor() {

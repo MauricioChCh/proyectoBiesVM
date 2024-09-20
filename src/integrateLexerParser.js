@@ -11,7 +11,7 @@ import fs from 'fs';
 export function analizarArchivoBasm(filePath) {
     try {
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });
-        console.log('Contenido del archivo: \n', input);
+        //console.log('Contenido del archivo: \n', input);
         const chars = new antlr4.InputStream(input); //crea los chars 
         const lexer = new biesVMLexer(chars); //crea el lexer en base a los caracteres
 
@@ -30,7 +30,7 @@ export function analizarArchivoBasm(filePath) {
         const tree = parser.program();
     
 
-         console.log('Árbol de análisis sintáctico:', tree.toStringTree(null, parser));
+       //  console.log('Árbol de análisis sintáctico:', tree.toStringTree(null, parser));
 
         const visitor = new Visitor();
 

@@ -1,3 +1,7 @@
+import Visitor from './Visitor.js'; 
+import antlr4 from 'antlr4';
+import biesVMLexer from '../output/biesLanguageLexer.js';
+import biesVMParser from '../output/biesLanguageParser.js';
 class VM {
     constructor() {
         this.stack = []; // S: Pila principal de ejecución
@@ -5,7 +9,8 @@ class VM {
         this.contextStack = []; // D: Contexto de ejecución
         this.environment = []; 
         this.functions = {}; // Almacena las funciones definidas
-
+        this.code = []; // Código a ejecutar
+        this.instructionPointer = 0; // Puntero de instrucción
     }
 
  
@@ -22,14 +27,13 @@ class VM {
                 this.stack.push(parseInt(instr.args[0]));
                 break;
             case 'ADD':
-                const b = this.stack.pop();
-                const a = this.stack.pop();
-                this.stack.push(a + b);
+                this.stack.push(this.stack.pop() + this.stack.pop());
                 break;
             case 'MUL':
                 this.stack.push(this.stack.pop() * this.stack.pop());
                 break;
             case 'PRN':
+
                 const print = this.stack.pop();
                 print===undefined? "": console.log(print);
                 break;
@@ -40,7 +44,6 @@ class VM {
                 this.contextStack = []; // Limpia el contexto de ejecución
                 break;
             case 'BST': 
-                // BST capa varIndex: Guarda lo último de la pila en la capa y variable indicadas
                 const [layerIndex, varIndex] = instr.args;
                 const valueToStore = this.stack.pop();
                 this.getCurrentLayer(layerIndex)[varIndex] = valueToStore;
@@ -53,7 +56,6 @@ class VM {
                 this.stack.push(valueToLoad);
                 break;
             case 'LDF':
-                // LDF functionName: Carga una función en la pila
                 const functionName = instr.args[0];
                 const functionBody = this.functions[functionName];
                 if (!functionBody) {
@@ -64,25 +66,50 @@ class VM {
                     body: functionBody,
                     environment: this.environment.slice() // Captura el entorno actual
                 };
+
                 this.stack.push(closure);
                 break;
-            case 'APP':
-                // Verificamos si en el tope de la pila hay un valor y un closure
-                let closure1 = this.stack.pop(); // El closure de la función
-                let value = this.stack.pop();   // El valor a pasar a la función
-            
-                if (closure1 && closure1.body) {
-                    // Guarda el estado actual en la pila de contexto
-                    this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
-            
-                    // Cargar el cuerpo de la función como nuevo código
-                    this.code = closure1.body;
-            
-                    // Empujar el valor como parte del nuevo entorno de bindings
-                    this.bindings.push({ 0: value });
-                }
-                break;
+
+                case 'APP':
+                    // Verificamos si en el tope de la pila hay un valor y un closure
+                    let closure1 = this.stack.pop(); // El closure de la función
+                    let value = this.stack.pop();   // El valor a pasar a la función
                 
+                    console.log('Estado de la pila:', this.stack);
+                    console.log('Closure extraído:', closure1);
+                    console.log('Valor extraído:', value);
+                
+                    if (closure1 && closure1.body) {
+                        // Guarda el estado actual en la pila de contexto
+                        this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
+                
+                        // Convertir el cuerpo de la función a una cadena de entrada
+                        const functionBodyString = closure1.body.join('\n');
+                        console.log('Cuerpo de la función como cadena:', functionBodyString);
+                
+                        // Crear un nuevo lexer y parser con la cadena de entrada
+                        const chars = new antlr4.InputStream(functionBodyString);
+                        const lexer = new biesVMLexer(chars);
+                        const tokens = new antlr4.CommonTokenStream(lexer);
+                        const parser = new biesVMParser(tokens);
+                
+                        // Generar el árbol de análisis sintáctico
+                        parser.buildParseTrees = true;
+                        const tree = parser.program();
+                
+                        // Visitar el árbol y ejecutar las instrucciones
+                        const visitor = new Visitor();
+                        visitor.vm = this; // Pasar la instancia actual de VM al visitor
+                        visitor.visit(tree);
+                
+                        // Empujar el valor como parte del nuevo entorno de bindings
+                        this.bindings.push({ 0: value });
+                    } else {
+                        console.error('Closure o cuerpo del closure es undefined');
+                        throw new Error('Closure or closure body is undefined');
+                    }
+                    
+                    break;
             
             case 'RET':
                 let returnValue = this.stack.pop(); // Valor de retorno de la función
@@ -93,6 +120,7 @@ class VM {
                     this.code = previousContext.code;  // Restaurar código anterior
                     this.stack = previousContext.stack; // Restaurar pila anterior
                     this.bindings = previousContext.bindings; // Restaurar bindings anteriores
+                    this.instructionPointer = previousContext.instructionPointer; // Restaurar puntero de instrucción
             
                     // Empujar el valor de retorno en la pila si no es undefined
                     if (returnValue !== undefined) {
@@ -110,8 +138,9 @@ class VM {
                 }
                 this.code = mainFunctionBody; // Cambia el código a partir de la función principal
                 this.stack = [];  // Reinicia la pila
-                this.bindings = []; // Reinicia el entorno de bindings
+                this.bindings = [{}]; // Reinicia el entorno de bindings
                 this.contextStack = []; // Reinicia el contexto de ejecución
+                this.instructionPointer = 0; // Reinicia el puntero de instrucción
                 break;
             
             default:
