@@ -27,6 +27,6 @@ LDF $salude     ; Cargar la función 'salude'
 
 
 APP             ; Llamar a la función 'salude'
-BSD 0 0 
+
 
 HLT             ; Detener la ejecución

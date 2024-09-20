@@ -73,11 +73,11 @@ class VM {
                 case 'APP':
                     // Verificamos si en el tope de la pila hay un valor y un closure
                     let closure1 = this.stack.pop(); // El closure de la función
-                    let value = this.stack.pop();   // El valor a pasar a la función
+               //     let value = this.stack.pop();   // El valor a pasar a la función
                 
                     console.log('Estado de la pila:', this.stack);
                     console.log('Closure extraído:', closure1);
-                    console.log('Valor extraído:', value);
+                  //  console.log('Valor extraído:', value);
                 
                     if (closure1 && closure1.body) {
                         // Guarda el estado actual en la pila de contexto
@@ -103,7 +103,7 @@ class VM {
                         visitor.visit(tree);
                 
                         // Empujar el valor como parte del nuevo entorno de bindings
-                        this.bindings.push({ 0: value });
+                       // this.bindings.push({ 0: value });
                     } else {
                         console.error('Closure o cuerpo del closure es undefined');
                         throw new Error('Closure or closure body is undefined');
