@@ -7,7 +7,7 @@ program
 
 functionDef //define la estructura de una funcion para poder usar FUN y END
     : FUN LABEL_IDENTIFIER NL
-      statement*
+      (statement NL?)*
       END LABEL_IDENTIFIER NL
     ;
 

@@ -16,7 +16,6 @@ LDV 656         ; Cargar el valor de 'b' (656)
 BST 0 2
 BLD 0 2 
 
-
 ADD             ; Sumar a * 10 + b
 
 BST 0 0
