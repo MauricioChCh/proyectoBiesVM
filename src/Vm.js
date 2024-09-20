@@ -25,13 +25,12 @@ class VM {
                 this.stack.push(a + b);
                 break;
             case 'PRN':
-                
                 console.log(this.stack.pop());
                 break;
             case 'HLT':
                 process.exit(0);
                 break;
-                case 'BST':
+                case 'BST': 
                     // BST capa varIndex: Guarda lo último de la pila en la capa y variable indicadas
                     const [layerIndex, varIndex] = instr.args;
                     const valueToStore = this.stack.pop();

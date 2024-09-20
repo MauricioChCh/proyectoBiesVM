@@ -26,6 +26,7 @@ instruction //posibles instrucciones
 loadInstr
     : LDV NUMBER
     | ADD
+    | MUL
     | RET
     | HLT
     | APP
@@ -38,6 +39,7 @@ loadInstr
 
 arithInstr //hay que anniadir mul y div 
     : ADD
+    | MUL
     ;
 
 controlInstr
@@ -53,6 +55,7 @@ funcInstr
 // Instrucciones principales
 LDV : 'LDV';
 ADD : 'ADD';
+MUL : 'MUL'; 
 RET : 'RET';
 HLT : 'HLT';
 APP : 'APP';

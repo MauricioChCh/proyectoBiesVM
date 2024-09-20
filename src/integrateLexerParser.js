@@ -30,7 +30,7 @@ export function analizarArchivoBasm(filePath) {
         const tree = parser.program();
     
 
-         //console.log('Árbol de análisis sintáctico:', tree.toStringTree(null, parser));
+         console.log('Árbol de análisis sintáctico:', tree.toStringTree(null, parser));
 
         const visitor = new Visitor();
 

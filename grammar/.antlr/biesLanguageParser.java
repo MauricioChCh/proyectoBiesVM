@@ -16,9 +16,9 @@ public class biesLanguageParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		LDV=1, ADD=2, RET=3, HLT=4, APP=5, PRN=6, BLD=7, BST=8, LDF=9, INI=10, 
-		FUN=11, END=12, LABEL_IDENTIFIER=13, NUMBER=14, ID=15, COMMENT=16, WS=17, 
-		NL=18;
+		LDV=1, ADD=2, MUL=3, RET=4, HLT=5, APP=6, PRN=7, BLD=8, BST=9, LDF=10, 
+		INI=11, FUN=12, END=13, LABEL_IDENTIFIER=14, NUMBER=15, ID=16, COMMENT=17, 
+		WS=18, NL=19;
 	public static final int
 		RULE_program = 0, RULE_functionDef = 1, RULE_statement = 2, RULE_instruction = 3, 
 		RULE_loadInstr = 4, RULE_arithInstr = 5, RULE_controlInstr = 6, RULE_funcInstr = 7;
@@ -32,16 +32,16 @@ public class biesLanguageParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'LDV'", "'ADD'", "'RET'", "'HLT'", "'APP'", "'PRN'", "'BLD'", 
-			"'BST'", "'LDF'", "'INI'", "'$FUN'", "'$END'"
+			null, "'LDV'", "'ADD'", "'MUL'", "'RET'", "'HLT'", "'APP'", "'PRN'", 
+			"'BLD'", "'BST'", "'LDF'", "'INI'", "'$FUN'", "'$END'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "LDV", "ADD", "RET", "HLT", "APP", "PRN", "BLD", "BST", "LDF", 
-			"INI", "FUN", "END", "LABEL_IDENTIFIER", "NUMBER", "ID", "COMMENT", "WS", 
-			"NL"
+			null, "LDV", "ADD", "MUL", "RET", "HLT", "APP", "PRN", "BLD", "BST", 
+			"LDF", "INI", "FUN", "END", "LABEL_IDENTIFIER", "NUMBER", "ID", "COMMENT", 
+			"WS", "NL"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -124,7 +124,7 @@ public class biesLanguageParser extends Parser {
 			setState(22);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 4094L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 8190L) != 0)) {
 				{
 				{
 				setState(16);
@@ -200,7 +200,7 @@ public class biesLanguageParser extends Parser {
 			setState(33);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 4094L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 8190L) != 0)) {
 				{
 				{
 				setState(30);
@@ -254,6 +254,7 @@ public class biesLanguageParser extends Parser {
 			switch (_input.LA(1)) {
 			case LDV:
 			case ADD:
+			case MUL:
 			case RET:
 			case HLT:
 			case APP:
@@ -376,6 +377,7 @@ public class biesLanguageParser extends Parser {
 			return getToken(biesLanguageParser.NUMBER, i);
 		}
 		public TerminalNode ADD() { return getToken(biesLanguageParser.ADD, 0); }
+		public TerminalNode MUL() { return getToken(biesLanguageParser.MUL, 0); }
 		public TerminalNode RET() { return getToken(biesLanguageParser.RET, 0); }
 		public TerminalNode HLT() { return getToken(biesLanguageParser.HLT, 0); }
 		public TerminalNode APP() { return getToken(biesLanguageParser.APP, 0); }
@@ -395,7 +397,7 @@ public class biesLanguageParser extends Parser {
 		LoadInstrContext _localctx = new LoadInstrContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_loadInstr);
 		try {
-			setState(70);
+			setState(71);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case LDV:
@@ -414,71 +416,78 @@ public class biesLanguageParser extends Parser {
 				match(ADD);
 				}
 				break;
-			case RET:
+			case MUL:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(56);
+				match(MUL);
+				}
+				break;
+			case RET:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(57);
 				match(RET);
 				}
 				break;
 			case HLT:
-				enterOuterAlt(_localctx, 4);
+				enterOuterAlt(_localctx, 5);
 				{
-				setState(57);
+				setState(58);
 				match(HLT);
 				}
 				break;
 			case APP:
-				enterOuterAlt(_localctx, 5);
+				enterOuterAlt(_localctx, 6);
 				{
-				setState(58);
+				setState(59);
 				match(APP);
 				}
 				break;
 			case PRN:
-				enterOuterAlt(_localctx, 6);
+				enterOuterAlt(_localctx, 7);
 				{
-				setState(59);
+				setState(60);
 				match(PRN);
 				}
 				break;
 			case BLD:
-				enterOuterAlt(_localctx, 7);
+				enterOuterAlt(_localctx, 8);
 				{
-				setState(60);
-				match(BLD);
 				setState(61);
-				match(NUMBER);
+				match(BLD);
 				setState(62);
+				match(NUMBER);
+				setState(63);
 				match(NUMBER);
 				}
 				break;
 			case BST:
-				enterOuterAlt(_localctx, 8);
+				enterOuterAlt(_localctx, 9);
 				{
-				setState(63);
-				match(BST);
 				setState(64);
-				match(NUMBER);
+				match(BST);
 				setState(65);
+				match(NUMBER);
+				setState(66);
 				match(NUMBER);
 				}
 				break;
 			case LDF:
-				enterOuterAlt(_localctx, 9);
+				enterOuterAlt(_localctx, 10);
 				{
-				setState(66);
-				match(LDF);
 				setState(67);
+				match(LDF);
+				setState(68);
 				match(LABEL_IDENTIFIER);
 				}
 				break;
 			case INI:
-				enterOuterAlt(_localctx, 10);
+				enterOuterAlt(_localctx, 11);
 				{
-				setState(68);
-				match(INI);
 				setState(69);
+				match(INI);
+				setState(70);
 				match(LABEL_IDENTIFIER);
 				}
 				break;
@@ -500,6 +509,7 @@ public class biesLanguageParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class ArithInstrContext extends ParserRuleContext {
 		public TerminalNode ADD() { return getToken(biesLanguageParser.ADD, 0); }
+		public TerminalNode MUL() { return getToken(biesLanguageParser.MUL, 0); }
 		public ArithInstrContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -509,11 +519,20 @@ public class biesLanguageParser extends Parser {
 	public final ArithInstrContext arithInstr() throws RecognitionException {
 		ArithInstrContext _localctx = new ArithInstrContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_arithInstr);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(72);
-			match(ADD);
+			setState(73);
+			_la = _input.LA(1);
+			if ( !(_la==ADD || _la==MUL) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -544,7 +563,7 @@ public class biesLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(74);
+			setState(75);
 			_la = _input.LA(1);
 			if ( !(_la==RET || _la==HLT) ) {
 			_errHandler.recoverInline(this);
@@ -584,7 +603,7 @@ public class biesLanguageParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76);
+			setState(77);
 			_la = _input.LA(1);
 			if ( !(_la==APP || _la==PRN) ) {
 			_errHandler.recoverInline(this);
@@ -608,7 +627,7 @@ public class biesLanguageParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0012O\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0013P\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0001"+
 		"\u0000\u0001\u0000\u0003\u0000\u0013\b\u0000\u0005\u0000\u0015\b\u0000"+
@@ -619,45 +638,46 @@ public class biesLanguageParser extends Parser {
 		"\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u00034\b\u0003\u0001\u0004"+
 		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
 		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
-		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004G\b\u0004"+
-		"\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007"+
-		"\u0001\u0007\u0000\u0000\b\u0000\u0002\u0004\u0006\b\n\f\u000e\u0000\u0002"+
-		"\u0001\u0000\u0003\u0004\u0001\u0000\u0005\u0006W\u0000\u0016\u0001\u0000"+
-		"\u0000\u0000\u0002\u001b\u0001\u0000\u0000\u0000\u0004-\u0001\u0000\u0000"+
-		"\u0000\u00063\u0001\u0000\u0000\u0000\bF\u0001\u0000\u0000\u0000\nH\u0001"+
-		"\u0000\u0000\u0000\fJ\u0001\u0000\u0000\u0000\u000eL\u0001\u0000\u0000"+
-		"\u0000\u0010\u0012\u0003\u0004\u0002\u0000\u0011\u0013\u0005\u0012\u0000"+
-		"\u0000\u0012\u0011\u0001\u0000\u0000\u0000\u0012\u0013\u0001\u0000\u0000"+
-		"\u0000\u0013\u0015\u0001\u0000\u0000\u0000\u0014\u0010\u0001\u0000\u0000"+
-		"\u0000\u0015\u0018\u0001\u0000\u0000\u0000\u0016\u0014\u0001\u0000\u0000"+
-		"\u0000\u0016\u0017\u0001\u0000\u0000\u0000\u0017\u0019\u0001\u0000\u0000"+
-		"\u0000\u0018\u0016\u0001\u0000\u0000\u0000\u0019\u001a\u0005\u0000\u0000"+
-		"\u0001\u001a\u0001\u0001\u0000\u0000\u0000\u001b\u001c\u0005\u000b\u0000"+
-		"\u0000\u001c\u001d\u0005\r\u0000\u0000\u001d!\u0005\u0012\u0000\u0000"+
-		"\u001e \u0003\u0004\u0002\u0000\u001f\u001e\u0001\u0000\u0000\u0000 #"+
-		"\u0001\u0000\u0000\u0000!\u001f\u0001\u0000\u0000\u0000!\"\u0001\u0000"+
-		"\u0000\u0000\"$\u0001\u0000\u0000\u0000#!\u0001\u0000\u0000\u0000$%\u0005"+
-		"\f\u0000\u0000%&\u0005\r\u0000\u0000&\'\u0005\u0012\u0000\u0000\'\u0003"+
-		"\u0001\u0000\u0000\u0000(*\u0003\u0006\u0003\u0000)+\u0005\u0012\u0000"+
-		"\u0000*)\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+.\u0001\u0000"+
-		"\u0000\u0000,.\u0003\u0002\u0001\u0000-(\u0001\u0000\u0000\u0000-,\u0001"+
-		"\u0000\u0000\u0000.\u0005\u0001\u0000\u0000\u0000/4\u0003\b\u0004\u0000"+
-		"04\u0003\n\u0005\u000014\u0003\f\u0006\u000024\u0003\u000e\u0007\u0000"+
-		"3/\u0001\u0000\u0000\u000030\u0001\u0000\u0000\u000031\u0001\u0000\u0000"+
-		"\u000032\u0001\u0000\u0000\u00004\u0007\u0001\u0000\u0000\u000056\u0005"+
-		"\u0001\u0000\u00006G\u0005\u000e\u0000\u00007G\u0005\u0002\u0000\u0000"+
-		"8G\u0005\u0003\u0000\u00009G\u0005\u0004\u0000\u0000:G\u0005\u0005\u0000"+
-		"\u0000;G\u0005\u0006\u0000\u0000<=\u0005\u0007\u0000\u0000=>\u0005\u000e"+
-		"\u0000\u0000>G\u0005\u000e\u0000\u0000?@\u0005\b\u0000\u0000@A\u0005\u000e"+
-		"\u0000\u0000AG\u0005\u000e\u0000\u0000BC\u0005\t\u0000\u0000CG\u0005\r"+
-		"\u0000\u0000DE\u0005\n\u0000\u0000EG\u0005\r\u0000\u0000F5\u0001\u0000"+
-		"\u0000\u0000F7\u0001\u0000\u0000\u0000F8\u0001\u0000\u0000\u0000F9\u0001"+
-		"\u0000\u0000\u0000F:\u0001\u0000\u0000\u0000F;\u0001\u0000\u0000\u0000"+
-		"F<\u0001\u0000\u0000\u0000F?\u0001\u0000\u0000\u0000FB\u0001\u0000\u0000"+
-		"\u0000FD\u0001\u0000\u0000\u0000G\t\u0001\u0000\u0000\u0000HI\u0005\u0002"+
-		"\u0000\u0000I\u000b\u0001\u0000\u0000\u0000JK\u0007\u0000\u0000\u0000"+
-		"K\r\u0001\u0000\u0000\u0000LM\u0007\u0001\u0000\u0000M\u000f\u0001\u0000"+
-		"\u0000\u0000\u0007\u0012\u0016!*-3F";
+		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004"+
+		"H\b\u0004\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0007"+
+		"\u0001\u0007\u0001\u0007\u0000\u0000\b\u0000\u0002\u0004\u0006\b\n\f\u000e"+
+		"\u0000\u0003\u0001\u0000\u0002\u0003\u0001\u0000\u0004\u0005\u0001\u0000"+
+		"\u0006\u0007Y\u0000\u0016\u0001\u0000\u0000\u0000\u0002\u001b\u0001\u0000"+
+		"\u0000\u0000\u0004-\u0001\u0000\u0000\u0000\u00063\u0001\u0000\u0000\u0000"+
+		"\bG\u0001\u0000\u0000\u0000\nI\u0001\u0000\u0000\u0000\fK\u0001\u0000"+
+		"\u0000\u0000\u000eM\u0001\u0000\u0000\u0000\u0010\u0012\u0003\u0004\u0002"+
+		"\u0000\u0011\u0013\u0005\u0013\u0000\u0000\u0012\u0011\u0001\u0000\u0000"+
+		"\u0000\u0012\u0013\u0001\u0000\u0000\u0000\u0013\u0015\u0001\u0000\u0000"+
+		"\u0000\u0014\u0010\u0001\u0000\u0000\u0000\u0015\u0018\u0001\u0000\u0000"+
+		"\u0000\u0016\u0014\u0001\u0000\u0000\u0000\u0016\u0017\u0001\u0000\u0000"+
+		"\u0000\u0017\u0019\u0001\u0000\u0000\u0000\u0018\u0016\u0001\u0000\u0000"+
+		"\u0000\u0019\u001a\u0005\u0000\u0000\u0001\u001a\u0001\u0001\u0000\u0000"+
+		"\u0000\u001b\u001c\u0005\f\u0000\u0000\u001c\u001d\u0005\u000e\u0000\u0000"+
+		"\u001d!\u0005\u0013\u0000\u0000\u001e \u0003\u0004\u0002\u0000\u001f\u001e"+
+		"\u0001\u0000\u0000\u0000 #\u0001\u0000\u0000\u0000!\u001f\u0001\u0000"+
+		"\u0000\u0000!\"\u0001\u0000\u0000\u0000\"$\u0001\u0000\u0000\u0000#!\u0001"+
+		"\u0000\u0000\u0000$%\u0005\r\u0000\u0000%&\u0005\u000e\u0000\u0000&\'"+
+		"\u0005\u0013\u0000\u0000\'\u0003\u0001\u0000\u0000\u0000(*\u0003\u0006"+
+		"\u0003\u0000)+\u0005\u0013\u0000\u0000*)\u0001\u0000\u0000\u0000*+\u0001"+
+		"\u0000\u0000\u0000+.\u0001\u0000\u0000\u0000,.\u0003\u0002\u0001\u0000"+
+		"-(\u0001\u0000\u0000\u0000-,\u0001\u0000\u0000\u0000.\u0005\u0001\u0000"+
+		"\u0000\u0000/4\u0003\b\u0004\u000004\u0003\n\u0005\u000014\u0003\f\u0006"+
+		"\u000024\u0003\u000e\u0007\u00003/\u0001\u0000\u0000\u000030\u0001\u0000"+
+		"\u0000\u000031\u0001\u0000\u0000\u000032\u0001\u0000\u0000\u00004\u0007"+
+		"\u0001\u0000\u0000\u000056\u0005\u0001\u0000\u00006H\u0005\u000f\u0000"+
+		"\u00007H\u0005\u0002\u0000\u00008H\u0005\u0003\u0000\u00009H\u0005\u0004"+
+		"\u0000\u0000:H\u0005\u0005\u0000\u0000;H\u0005\u0006\u0000\u0000<H\u0005"+
+		"\u0007\u0000\u0000=>\u0005\b\u0000\u0000>?\u0005\u000f\u0000\u0000?H\u0005"+
+		"\u000f\u0000\u0000@A\u0005\t\u0000\u0000AB\u0005\u000f\u0000\u0000BH\u0005"+
+		"\u000f\u0000\u0000CD\u0005\n\u0000\u0000DH\u0005\u000e\u0000\u0000EF\u0005"+
+		"\u000b\u0000\u0000FH\u0005\u000e\u0000\u0000G5\u0001\u0000\u0000\u0000"+
+		"G7\u0001\u0000\u0000\u0000G8\u0001\u0000\u0000\u0000G9\u0001\u0000\u0000"+
+		"\u0000G:\u0001\u0000\u0000\u0000G;\u0001\u0000\u0000\u0000G<\u0001\u0000"+
+		"\u0000\u0000G=\u0001\u0000\u0000\u0000G@\u0001\u0000\u0000\u0000GC\u0001"+
+		"\u0000\u0000\u0000GE\u0001\u0000\u0000\u0000H\t\u0001\u0000\u0000\u0000"+
+		"IJ\u0007\u0000\u0000\u0000J\u000b\u0001\u0000\u0000\u0000KL\u0007\u0001"+
+		"\u0000\u0000L\r\u0001\u0000\u0000\u0000MN\u0007\u0002\u0000\u0000N\u000f"+
+		"\u0001\u0000\u0000\u0000\u0007\u0012\u0016!*-3G";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
