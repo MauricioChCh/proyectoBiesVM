@@ -6,7 +6,7 @@ import VM from './Vm.js';
 export class Visitor extends biesLanguageVisitor {
     constructor(logger = { log: () => {} }) {
         super();
-        this.vm = new VM(); 
+        this.vm = new VM(logger); 
         this.logger = logger;
     }
 

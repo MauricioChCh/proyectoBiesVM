@@ -3,7 +3,7 @@ import antlr4 from 'antlr4';
 import biesVMLexer from '../output/biesLanguageLexer.js';
 import biesVMParser from '../output/biesLanguageParser.js';
 class VM {
-    constructor() {
+    constructor(logger = { log: () => {} }) {
         this.stack = []; // S: Pila principal de ejecución
         this.bindings = [{ /* Capa 0 */ }]; // B: Entorno de bindings (capa 0 inicial)
         this.contextStack = []; // D: Contexto de ejecución
@@ -11,6 +11,7 @@ class VM {
         this.functions = {}; // Almacena las funciones definidas
         this.code = []; // Código a ejecutar
         this.instructionPointer = 0; // Puntero de instrucción
+        this.logger = logger;
     }
 
  
@@ -74,8 +75,10 @@ class VM {
                 // Extraemos el closure del tope de la pila
                 let closure1 = this.stack.pop();
                 
-                console.log('Estado de la pila:', this.stack);
-                console.log('Closure extraído:', closure1);
+                this.logger.log(`Estado de la pila: ${JSON.stringify(this.stack, null, 2)}`);
+                this.logger.log(`Closure extraído: \n ${JSON.stringify(closure1, null, 2)}`);
+                //console.log('Estado de la pila:', this.stack);
+                //console.log('Closure extraído:', closure1);
                 
                 if (closure1 && closure1.body) {
                     // Guardar el estado actual de la VM
@@ -102,7 +105,8 @@ class VM {
                     })
                     .join('\n');
                     
-                    console.log('Cuerpo de la función como cadena (ajustado):', functionBodyString);
+                    this.logger.log(`Cuerpo de la función como cadena (ajustado): \n ${functionBodyString }`);
+                    //console.log('Cuerpo de la función como cadena (ajustado): \n', functionBodyString);
                     
                     // Crear un nuevo lexer y parser con la cadena ajustada
                     const chars = new antlr4.InputStream(functionBodyString);
