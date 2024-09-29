@@ -4,6 +4,7 @@ import biesVMParser from '../output/biesLanguageParser.js';
 import Visitor from './Visitor.js';  
 
 import fs from 'fs';
+import chalk from 'chalk';
 
 
 
@@ -11,6 +12,10 @@ import fs from 'fs';
 export function analizarArchivoBasm(filePath, logger) {
     try {
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });
+        // logger.debug(chalk.cyanBright(`Analizando archivo: ${filePath}`));
+        // logger.debug(chalk.cyanBright('Contenido del archivo:'));
+        // logger.debug(input);
+
         //console.log('Contenido del archivo: \n', input);
         const chars = new antlr4.InputStream(input); //crea los chars 
         const lexer = new biesVMLexer(chars); //crea el lexer en base a los caracteres
@@ -30,7 +35,7 @@ export function analizarArchivoBasm(filePath, logger) {
         const tree = parser.program();
     
 
-        logger.debug('Árbol de análisis sintáctico:');
+        logger.debug(chalk.cyanBright('Árbol de análisis sintáctico:'));
         logger.debug(tree.toStringTree(null, parser)); // Muestra el árbol de análisis
 
         

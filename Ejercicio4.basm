@@ -1,32 +1,32 @@
 
-$FUN $salude
+$FUN $1
 BLD 0 0         ; Cargar el valor 'saludo' del entorno
 PRN             ; Imprimir el valor
 RET             ; Retornar de la función
-$END $salude
+$END $1
 
-
+$FUN $main
 
 LDV 1           ; Cargar el valor de 'a' (1)
-BST 0 1
-BLD 0 1
-LDV 10          ; Cargar el valor 10
+BST 0 1         ; Lo guardamos en el nivel 1 argumento 1
+BLD 0 1         ; Lo sacamos 
+LDV 10          ; Cargar el valor 10 (es constante no hace falta guardarlo)
 
-MUL             ; Multiplicar a * 10
+MUL             ; Multiplicar a * 10 (y guardara el resultado en pila)
 
 LDV 656         ; Cargar el valor de 'b' (656)
-BST 0 2
+BST 0 2         ; Lo guardamos y sacamos    
 BLD 0 2 
 
-ADD             ; Sumar a * 10 + b
- 
+ADD             ; Sumar a * 10 + b 
 
-BST 0 0
+BST 0 0         ; Cargamos la variable (parametros de la funcion)
 
-LDF $salude     ; Cargar la función 'salude'
-
-
+LDF $1     ; Cargar la función 'salude'
 APP             ; Llamar a la función 'salude'
 
 
 HLT             ; Detener la ejecución
+
+$END $main
+INI $main

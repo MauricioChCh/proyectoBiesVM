@@ -2,87 +2,80 @@ grammar biesLanguage;
 
 // Reglas principales del parser
 program
-    : (statement NL?)* EOF
+    : (statement NL?)* EOF // Un programa consiste en múltiples declaraciones opcionales seguidas de un fin de archivo
     ;
 
-functionDef //define la estructura de una funcion para poder usar FUN y END
-    : FUN LABEL_IDENTIFIER NL?
-      (statement NL?)*
-      END LABEL_IDENTIFIER NL?
+functionDef // Define la estructura de una función para poder usar FUN y END
+    : FUN ES LABEL_IDENTIFIER NL? // Inicio de la definición de la función con un identificador de etiqueta
+      (statement NL?)* // Cuerpo de la función compuesto por múltiples declaraciones opcionales
+      END ES LABEL_IDENTIFIER NL? // Fin de la definición de la función con un identificador de etiqueta
     ;
 
 statement
-    : instruction NL?
-    | functionDef
+    : instruction // Una declaración puede ser una instrucción
+    | functionDef // O una definición de función
     ;
 
-instruction //posibles instrucciones
-    : loadInstr
-    | arithInstr
-    | controlInstr
-    | funcInstr
+instruction
+    : loadInstr // Una instrucción puede ser una instrucción de carga
+    | arithInstr // O una instrucción aritmética
+    | controlInstr // O una instrucción de control
+    | funcInstr // O una instrucción de función
     ;
 
 loadInstr
-    : LDV NUMBER
-    | ADD
-    | MUL
-    | RET
-    | HLT
-    | APP
-    | PRN
-    | BLD NUMBER NUMBER
-    | BST NUMBER NUMBER
-    | LDF LABEL_IDENTIFIER
-    | INI LABEL_IDENTIFIER
+    : 'LDV' ES? NUMBER ES? // Instrucción de carga de valor con un número
+    | 'BLD' ES? NUMBER ES? NUMBER ES? // Instrucción de carga de bloque con dos números
+    | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
+    | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
+    | 'INI' ES? LABEL_IDENTIFIER ES? // Instrucción de inicialización con un identificador de etiqueta
     ;
 
-arithInstr //hay que anniadir mul y div 
-    : ADD
-    | MUL
+arithInstr
+    : 'ADD' // Instrucción de suma
+    | 'MUL' // Instrucción de multiplicación
     ;
 
 controlInstr
-    : RET
-    | HLT
+    : 'RET' // Instrucción de retorno
+    | 'HLT' // Instrucción de parada
     ;
 
 funcInstr
-    : APP
-    | PRN
+    : 'APP' // Instrucción de aplicación
+    | 'PRN'// Instrucción de impresión
     ;
 
 // Instrucciones principales
-LDV : 'LDV';
-ADD : 'ADD';
-MUL : 'MUL'; 
-RET : 'RET';
-HLT : 'HLT';
-APP : 'APP';
-PRN : 'PRN';
-BLD : 'BLD';
-BST : 'BST';
-LDF : 'LDF';
-INI : 'INI';
+LDV : 'LDV'; // Token para la instrucción LDV
+ADD : 'ADD'; // Token para la instrucción ADD
+MUL : 'MUL'; // Token para la instrucción MUL
+RET : 'RET'; // Token para la instrucción RET
+HLT : 'HLT'; // Token para la instrucción HLT
+APP : 'APP'; // Token para la instrucción APP
+PRN : 'PRN'; // Token para la instrucción PRN
+BLD : 'BLD'; // Token para la instrucción BLD
+BST : 'BST'; // Token para la instrucción BST
+LDF : 'LDF'; // Token para la instrucción LDF
+INI : 'INI'; // Token para la instrucción INI
 
 // Palabras clave para funciones
-FUN : '$FUN';
-END : '$END';
+FUN : '$FUN'; // Token para el inicio de una función
+END : '$END'; // Token para el fin de una función
 
+LABEL_IDENTIFIER : '$' [a-zA-Z0-9]*; // Identificador de etiqueta que comienza con '$' seguido de letras o números
 
-LABEL_IDENTIFIER : '$' [a-zA-Z][a-zA-Z0-9]*;
-
-// Números
-NUMBER : [0-9]+;
+NUMBER : [0-9]+; // Token para números
 
 // Identificadores
-ID : [a-zA-Z_][a-zA-Z_0-9]*;
+ID : [a-zA-Z_][a-zA-Z_0-9]*; // Identificadores que comienzan con una letra o guion bajo, seguidos de letras, números o guiones bajos
 
 // Comentarios
-COMMENT : ';' ~[\r\n]* -> skip;
+COMMENT : ';' ~[\r\n]* -> skip; // Comentarios que comienzan con ';' y se omiten
 
 // Ignorar espacios en blanco
-WS : [ \t\r\n]+ -> skip;
+ES : [ \t]; // Espacios en blanco y tabulaciones que se omiten
 
+WS : [ \t\r\n]+ -> skip;
 // Para manejar los saltos de línea
-NL : [\r\n]+;
+NL : [\r\n]+; // Saltos de línea que se omiten

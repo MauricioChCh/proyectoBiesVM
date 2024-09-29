@@ -16,10 +16,10 @@ export class Visitor extends biesLanguageVisitor {
         return this.vm;
     }
 
-    visitFunctionDef(ctx) {
-        const functionName = ctx.LABEL_IDENTIFIER(0).getText();
-        const functionBody = ctx.statement().map(stmt => stmt.getText());
-        if (!this.vm.functions) {
+    visitFunctionDef(ctx) { //Maneja las deficiones de funciones
+        const functionName = ctx.LABEL_IDENTIFIER(0).getText();//Consigo el nombre o numeracion del label
+        const functionBody = ctx.statement().map(stmt => stmt.getText());//Se obtiene el cuerpo de la funcion (Codigo)
+        if (!this.vm.functions) {//Por si no existe el objeto functions dentro de la vm lo crea vacio
             this.vm.functions = {};
         }
         this.vm.functions[functionName] = functionBody;
@@ -30,16 +30,11 @@ export class Visitor extends biesLanguageVisitor {
     visitInstruction(ctx) {
         const text = ctx.getText().trim();
         this.logger.log(`Visitando instrucción: ${text}`);
-        //console.log('Visitando instrucción: ${text}');
-        
-        // Usar expresión regular para separar tipo y argumentos
-        const match = text.match(/^([A-Z]+)(\d+|\$[a-zA-Z][a-zA-Z0-9]*|(\d+ \d+))*$/);
-        if (!match) {
-            throw new Error(`Formato de instrucción desconocido: ${text}`);
-        }
 
-        const type = match[1];
-        const args = match[2] ? match[2].split(' ').map(arg => isNaN(arg) ? arg : parseInt(arg)) : [];
+        // Extraer el tipo de instrucción y los argumentos
+        const parts = text.split(/\s+/);
+        const type = parts[0];
+        const args = parts.slice(1);
 
         this.vm.executeInstruction({ type, args });
         return super.visitInstruction(ctx);

@@ -72,62 +72,33 @@ class VM {
                 break;
 
                 case 'APP':
-                // Extraemos el closure del tope de la pila
-                let closure1 = this.stack.pop();
-                
-                this.logger.log(`Estado de la pila: ${JSON.stringify(this.stack, null, 2)}`);
-                this.logger.log(`Closure extraído: \n ${JSON.stringify(closure1, null, 2)}`);
-                //console.log('Estado de la pila:', this.stack);
-                //console.log('Closure extraído:', closure1);
-                
-                if (closure1 && closure1.body) {
-                    // Guardar el estado actual de la VM
-                    this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
+                    let closureAPP = this.stack.pop();
                     
-                    // Convertir el cuerpo de la función a una cadena, separando instrucciones como BLD00 en BLD 0 0
-                    const functionBodyString = closure1.body
-                    .map(instruction => {
-                        // Utilizar la expresión regular para separar correctamente las instrucciones
-                        const match = instruction.match(/^([A-Z]+)(\d+|\$[a-zA-Z][a-zA-Z0-9]*|(\d+ \d+))*$/);
-                        if (!match) {
-                            throw new Error(`Formato de instrucción desconocido: ${instruction}`);
-                        }
-                
-                        const type = match[1];
-                        const args = match[2] ? match[2].split('').map(arg => isNaN(arg) ? arg : parseInt(arg)) : [];
-                
-                        // Si hay dos argumentos, asegúrate de que estén separados por un espacio
-                        if (args.length === 2) {
-                            return `${type} ${args[0]} ${args[1]}`;
-                        } else {
-                            return `${type} ${args.join(' ')}`;
-                        }
-                    })
-                    .join('\n');
-                    
-                    this.logger.log(`Cuerpo de la función como cadena (ajustado): \n ${functionBodyString }`);
-                    //console.log('Cuerpo de la función como cadena (ajustado): \n', functionBodyString);
-                    
-                    // Crear un nuevo lexer y parser con la cadena ajustada
-                    const chars = new antlr4.InputStream(functionBodyString);
-                    const lexer = new biesVMLexer(chars);
-                    const tokens = new antlr4.CommonTokenStream(lexer);
-                    const parser = new biesVMParser(tokens);
-                    
-                    // Generar el árbol de análisis sintáctico
-                    parser.buildParseTrees = true;
-                    const tree = parser.program();
-                    
-                    // Visitar el árbol y ejecutar las instrucciones
-                    const visitor = new Visitor();
-                    visitor.vm = this;  // Pasar la instancia actual de VM al visitor
-                    visitor.visit(tree);
-                    
-                } else {
-                    console.error('Closure o cuerpo del closure es undefined');
-                    throw new Error('Closure or closure body is undefined');
-                }
-                break;
+                    if (closureAPP && closureAPP.body) {
+                        // Guardar el estado actual de la VM
+                        this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
+                        
+                        // Crear un nuevo lexer y parser directamente con el cuerpo de la función
+                        const functionBody = closureAPP.body.join('\n');
+                        this.logger.log(`Ejecutando función con cuerpo:\n${functionBody}`);
+                        
+                        const chars = new antlr4.InputStream(functionBody);
+                        const lexer = new biesVMLexer(chars);
+                        const tokens = new antlr4.CommonTokenStream(lexer);
+                        const parser = new biesVMParser(tokens);
+                        
+                        // Generar y visitar el árbol de análisis
+                        parser.buildParseTrees = true;
+                        const tree = parser.program();
+                        
+                        const visitor = new Visitor();
+                        visitor.vm = this;  // Pasar la instancia actual de la VM al visitor
+                        visitor.visit(tree);
+                    } else {
+                        console.error('Closure o cuerpo del closure es undefined');
+                        throw new Error('Closure or closure body is undefined');
+                    }
+                    break;
 
             
             case 'RET':
