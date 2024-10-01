@@ -78,7 +78,8 @@ class VM {
                         // Guardar el estado actual de la VM
                         this.contextStack.push({ code: this.code, stack: this.stack.slice(), bindings: this.bindings.slice() });
                         
-                        // Crear un nuevo lexer y parser directamente con el cuerpo de la función
+                        // Crear un nuevo lexer y parser directamente con el cuerpo de la función 
+                        //---------------------------------------------------------------------HACER DRY------------------------------------------
                         const functionBody = closureAPP.body.join('\n');
                         this.logger.log(`Ejecutando función con cuerpo:\n${functionBody}`);
                         
