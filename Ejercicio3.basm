@@ -1,6 +1,6 @@
-LDV 1 ;cargo el 1 (a)
-BST 0 0 ;lo guardo en a
-LDV 665 ;  lo guardo en b
+LDV 1       ; cargo el 1 (a)
+BST 0 0     ; lo guardo en a
+LDV 665     ; lo guardo en b
 BST 0 1 
 
 BLD 0 0

@@ -4,11 +4,8 @@
 import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
-import chalk from 'chalk'; // Importamos commander
+import chalk from 'chalk';
 import { Logger } from './Logger.js';
-
-
-// Importamos la función desde el archivo MJS
 import { analizarArchivoBasm } from './integrateLexerParser.js';
 
 const program = new Command();
@@ -19,14 +16,10 @@ program
     .description('Máquina virtual para ejecutar archivos .basm')
     .version('1.0.0') // Versión de la herramienta
     .argument('<archivo>', 'Archivo BASM a ejecutar') // Argumento obligatorio (el archivo)
-    .option('-v, --verbose', 'verbose mode') // Opción opcional para ver el proceso mas detallado
-    .option('-d, --detail', 'verbose mode') // Opción opcional ver mas detalladamente el proceso de parseo
+    .option('-v, --verbose', 'Modo verbose') // Opción opcional para ver el proceso más detallado
+    .option('-d, --detail', 'Modo detallado') // Opción opcional ver más detalladamente el proceso de parseo
     .action((fileName, options) => {
-
-        //Loger para manejar impresiones dependiendo del comando dado
         const logger = new Logger(options.verbose, options.detail);
-
-
 
         // Verificamos que el archivo tenga la extensión .basm
         const fileExt = path.extname(fileName);
@@ -43,8 +36,6 @@ program
 
         // Opción de modo detallado
         logger.log(chalk.blueBright('Modo detallado activado...'));
-        //Es válido
-
         console.log(`Verificando el archivo: ${fileName}`);
 
         // Llamar a la integración del lexer y parser
@@ -56,7 +47,6 @@ program
         } else {
             console.error(chalk.red(`El archivo ${fileName} tiene errores.`));
         }
-
     });
 
 // Procesa los argumentos de la línea de comandos

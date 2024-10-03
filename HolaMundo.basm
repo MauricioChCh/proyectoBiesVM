@@ -1,12 +1,13 @@
-
-$FUN $hola
-BLD 0 0         ; Cargar el valor 'saludo' del entorno
-PRN             ; Imprimir el valor
-RET             ; Retornar de la función
-$END $hola
-
-LDV "Hola Mundo" 
-BST 0 0
-
-LDF $hola     ; Cargar la función 'hola'
-APP             ; Llamar a la función 'hola'
+$FUN $add 1 $main; instruye a la VM que resuelva (linketear) la función
+BLD 0 0 ; load x (push de ambiente 0 entrada 0)
+LDV 1 ; push el valor 1
+ADD ; suma los dos elementos de pila (pop dos veces) y pone el resultado en pila
+RET ; retorna de la función
+$END $add
+$FUN $main
+LDV 666 ; push 666
+LDF $add ; carga la closure de add
+APP ; call add
+PRN ; print
+HLT ; halt
+$END $main

@@ -21,10 +21,11 @@ instruction
     | arithInstr // O una instrucción aritmética
     | controlInstr // O una instrucción de control
     | funcInstr // O una instrucción de función
+    | stringInstr // O instrucciones de manipulación de hileras
     ;
 
 loadInstr
-    : 'LDV' ES? NUMBER ES? // Instrucción de carga de valor con un número
+    : 'LDV' ES? (NUMBER | STRING)? ES? // Instrucción de carga de valor (número o hilera)
     | 'BLD' ES? NUMBER ES? NUMBER ES? // Instrucción de carga de bloque con dos números
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
@@ -32,24 +33,38 @@ loadInstr
     ;
 
 arithInstr
-    : 'ADD' // Instrucción de suma
-    | 'MUL' // Instrucción de multiplicación
+    : 'ADD' ES? // Instrucción de suma
+    | 'MUL' ES? // Instrucción de multiplicación
+    | 'SUB' ES? // Instrucción de resta
+    | 'DIV' ES? // Instrucción de división
     ;
 
 controlInstr
     : 'RET' // Instrucción de retorno
     | 'HLT' // Instrucción de parada
+    | 'BR' ES? NUMBER // Instrucción de salto incondicional
+    | 'BT' ES? NUMBER // Instrucción de salto si verdadero
+    | 'BF' ES? NUMBER // Instrucción de salto si falso
+    | 'NOP' // Instrucción de no operación
     ;
 
 funcInstr
-    : 'APP' // Instrucción de aplicación
-    | 'PRN'// Instrucción de impresión
+    : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos
+    | 'PRN' // Instrucción de impresión
+    | 'INP' // Instrucción de entrada
+    ;
+
+stringInstr
+    : 'STK' ES? NUMBER // Instrucción para seleccionar el k-ésimo elemento de la pila
+    | 'SRK' ES? NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
     ;
 
 // Instrucciones principales
 LDV : 'LDV'; // Token para la instrucción LDV
 ADD : 'ADD'; // Token para la instrucción ADD
 MUL : 'MUL'; // Token para la instrucción MUL
+SUB : 'SUB'; // Token para la instrucción SUB
+DIV : 'DIV'; // Token para la instrucción DIV
 RET : 'RET'; // Token para la instrucción RET
 HLT : 'HLT'; // Token para la instrucción HLT
 APP : 'APP'; // Token para la instrucción APP
@@ -58,6 +73,8 @@ BLD : 'BLD'; // Token para la instrucción BLD
 BST : 'BST'; // Token para la instrucción BST
 LDF : 'LDF'; // Token para la instrucción LDF
 INI : 'INI'; // Token para la instrucción INI
+STK : 'STK'; // Token para la instrucción STK
+SRK : 'SRK'; // Token para la instrucción SRK
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
@@ -65,10 +82,15 @@ END : '$END'; // Token para el fin de una función
 
 LABEL_IDENTIFIER : '$' [a-zA-Z0-9]*; // Identificador de etiqueta que comienza con '$' seguido de letras o números
 
-NUMBER : [0-9]+; // Token para números
+NUMBER
+    : [0-9]+ ('.' [0-9]+)? // Token para números enteros y flotantes
+    ;
 
 // Identificadores
 ID : [a-zA-Z_][a-zA-Z_0-9]*; // Identificadores que comienzan con una letra o guion bajo, seguidos de letras, números o guiones bajos
+
+// Literales de hileras
+STRING : '"' .*? '"'; // Token para hileras entre comillas dobles
 
 // Comentarios
 COMMENT : ';' ~[\r\n]* -> skip; // Comentarios que comienzan con ';' y se omiten
@@ -76,6 +98,5 @@ COMMENT : ';' ~[\r\n]* -> skip; // Comentarios que comienzan con ';' y se omiten
 // Ignorar espacios en blanco
 ES : [ \t]; // Espacios en blanco y tabulaciones que se omiten
 
-WS : [ \t\r\n]+ -> skip;
-// Para manejar los saltos de línea
+WS : [ \t\r\n]+ -> skip; // Para manejar los espacios en blanco
 NL : [\r\n]+; // Saltos de línea que se omiten

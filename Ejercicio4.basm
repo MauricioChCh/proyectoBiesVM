@@ -1,32 +1,33 @@
+;let salude = saludo => print(saludo)
+;let a = 1
+;let b = 656
+;salude( a*10 + b )
 
-$FUN $1
-BLD 0 0         ; Cargar el valor 'saludo' del entorno
+$FUN $1         ; Definir la función '$1'
+BLD 0 0         ; Cargar el argumento 'saludo' del entorno
 PRN             ; Imprimir el valor
 RET             ; Retornar de la función
-$END $1
+$END $1         ; Fin de la definición de la función '$1'
 
-$FUN $main
+$FUN $main      ; Definir la función 'main'
 
 LDV 1           ; Cargar el valor de 'a' (1)
-BST 0 1         ; Lo guardamos en el nivel 1 argumento 1
-BLD 0 1         ; Lo sacamos 
-LDV 10          ; Cargar el valor 10 (es constante no hace falta guardarlo)
-
-MUL             ; Multiplicar a * 10 (y guardara el resultado en pila)
+BST 0 0         ; Guardar 'a' en el nivel 0 argumento 0
 
 LDV 656         ; Cargar el valor de 'b' (656)
-BST 0 2         ; Lo guardamos y sacamos    
-BLD 0 2 
+BST 0 1         ; Guardar 'b' en el nivel 0 argumento 1
 
-ADD             ; Sumar a * 10 + b 
+BLD 0 0         ; Cargar el argumento 'a' del entorno
+LDV 10          ; Cargar el valor de 10
 
-BST 0 0         ; Cargamos la variable (parametros de la funcion)
+MUL             ; Multiplicar 'a' por 10
 
-LDF $1     ; Cargar la función 'salude'
+BLD 0 1         ; Cargar el argumento 'b' del entorno
+ADD             ; Sumar 'a' * 10 + 'b'
+
+LDF $1          ; Cargar la función 'salude'
 APP             ; Llamar a la función 'salude'
 
-
 HLT             ; Detener la ejecución
-
-$END $main
-INI $main
+$END $main      ; Fin de la definición de la función 'main'
+INI $main       ; Inicializar la función 'main'
