@@ -24,7 +24,7 @@ export class Visitor extends biesLanguageVisitor {
         }
 
         this.vm.functions[functionName] = functionBody;
-        this.logger.log(`Definida función ${functionName} con cuerpo: ${functionBody}`);
+        this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
         return super.visitFunctionDef(ctx);
     }
 

@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import Visitor from './Visitor.js';
 import antlr4 from 'antlr4';
 import biesVMLexer from '../output/biesLanguageLexer.js';
@@ -58,8 +59,11 @@ class VM {
      * @param {string} instr.type - Tipo de instrucción.
      * @param {Array<*>} [instr.args=[]] - Argumentos de la instrucción.
      */
+
+
     executeInstruction(instr) {
         switch (instr.type) {
+            // Carga y almacenamiento de valores
             case 'LDV':
                 // ([LDV V| C], S, B, D) => (C, [V | S], B, D)
                 // La instrucción `LDV` carga un valor `V` en la pila `S`.
@@ -67,55 +71,12 @@ class VM {
                 this.stack.push(parseInt(instr.args[0]));
                 break;
 
-            case 'ADD':
-                // ([ADD| C], [N, M| S], B, D) => (C, [N + M | S], B, D)
-                // La instrucción `ADD` suma los dos elementos superiores de la pila `S`
-                // y coloca el resultado de la suma en la cima de la pila.
-                this.stack.push(this.stack.pop() + this.stack.pop());
-                break;
-
-            case 'MUL':
-                // ([MUL| C], [N, M| S], B, D) => (C, [N * M | S], B, D)
-                // Multiplica los dos elementos superiores de `S` y almacena el resultado.
-                this.stack.push(this.stack.pop() * this.stack.pop());
-                break;
-
-            case 'SUB':
-                // ([SUB| C], [N, M| S], B, D) => (C, [M - N | S], B, D)
-                // Resta el segundo elemento superior `M` de `S` menos el elemento superior `N` de `S`
-                // y coloca el resultado en la cima de la pila.
-                const topValue = this.stack.pop(); // Valor superior (N)
-                const secondValue = this.stack.pop(); // Segundo valor (M)
-                this.stack.push(secondValue - topValue);
-                break;
-
-            case 'DIV':
-                // ([DIV| C], [N, M| S], B, D) => (C, [M / N | S], B, D)
-                // Divide el segundo elemento superior `M` por el superior `N`.
-                const divisor = this.stack.pop(); // A (divisor)
-                const dividend = this.stack.pop(); // B (dividendo)
-                if (divisor === 0) {
-                    throw new Error('Error: Division by zero');
-                }
-                this.stack.push(parseFloat(dividend) / parseFloat(divisor));
-                break;
-
-            case 'PRN':
-                // ([PRN| C], [V | S], B, D) => (C, S, B, D)
-                // Imprime el valor superior de `S` y lo elimina.
-                const print = this.stack.pop();
-                if (print !== undefined) {
-                    console.log(print);
-                }
-                break;
-
-            case 'HLT':
-                // ([HLT| C], S, B, D) => ([], [], [], [])
-                // Detiene la máquina virtual y limpia todos los estados de `C`, `S`, `B` y `D`.
-                this.code = [];
-                this.stack = [];
-                this.bindings = [];
-                this.contextStack = [];
+            case 'BLD':
+                // ([BLD L, V], S, B, D) => (C, [B[L][V] | S], B, D)
+                // Carga el valor de la variable `V` en la capa `L` del entorno `B` y lo coloca en `S`.
+                const [bindLayer, bindVarIndex] = instr.args;
+                const valueToLoad = this.getCurrentLayer(bindLayer)[bindVarIndex];
+                this.stack.push(valueToLoad);
                 break;
 
             case 'STK':
@@ -134,44 +95,73 @@ class VM {
                 this.getCurrentLayer(layerIndex)[varIndex] = valueToStore;
                 break;
 
-            case 'BLD':
-                // ([BLD L, V], S, B, D) => (C, [B[L][V] | S], B, D)
-                // Carga el valor de la variable `V` en la capa `L` del entorno `B` y lo coloca en `S`.
-                const [bindLayer, bindVarIndex] = instr.args;
-                const valueToLoad = this.getCurrentLayer(bindLayer)[bindVarIndex];
-                this.stack.push(valueToLoad);
+            // Operaciones aritméticas
+            case 'ADD':
+                // ([ADD| C], [N, M| S], B, D) => (C, [N + M | S], B, D)
+                // La instrucción `ADD` suma los dos elementos superiores de la pila `S`
+                // y coloca el resultado de la suma en la cima de la pila.
+                this.stack.push(this.stack.pop() + this.stack.pop());
                 break;
 
+            case 'SUB':
+                // ([SUB| C], [N, M| S], B, D) => (C, [M - N | S], B, D)
+                // Resta el segundo elemento superior `M` de `S` menos el elemento superior `N` de `S`
+                // y coloca el resultado en la cima de la pila.
+                const topValue = this.stack.pop(); // Valor superior (N)
+                const secondValue = this.stack.pop(); // Segundo valor (M)
+                this.stack.push(secondValue - topValue);
+                break;
+
+            case 'MUL':
+                // ([MUL| C], [N, M| S], B, D) => (C, [N * M | S], B, D)
+                // Multiplica los dos elementos superiores de `S` y almacena el resultado.
+                this.stack.push(this.stack.pop() * this.stack.pop());
+                break;
+
+            case 'DIV':
+                // ([DIV| C], [N, M| S], B, D) => (C, [M / N | S], B, D)
+                // Divide el segundo elemento superior `M` por el superior `N`.
+                const divisor = this.stack.pop(); // A (divisor)
+                const dividend = this.stack.pop(); // B (dividendo)
+                if (divisor === 0) {
+                    throw new Error('Error: Division by zero');
+                }
+                this.stack.push(parseFloat(dividend) / parseFloat(divisor));
+                break;
+
+            // Comparaciones
+            case 'GTE':
+                // ([GTE| C], [N, M| S], B, D) => (C, [M >= N | S], B, D)
+                // Compara si el segundo elemento superior `M` es mayor o igual al superior `N`.
+                const n = this.stack.pop(); // Valor N
+                const m = this.stack.pop(); // Valor M
+                this.stack.push(m >= n);
+                break;
+
+            // Control de flujo
             case 'LDF':
                 // ([LDF F, k | C], S, E, D) => (C, [FCL | S], E, D)
                 // Carga la closure de la función `F` en `S` con `k` parámetros.
-                const [functionNameLDF, k] = instr.args; // `instr.args` ahora puede contener el nombre de la función y el número de parámetros.
+                const [functionNameLDF, k] = instr.args;
                 const functionBodyLDF = this.functions[functionNameLDF];
-
                 if (!functionBodyLDF) {
                     throw new Error(`Function ${functionNameLDF} not defined`);
                 }
-
-                // Definir `k` como el número de parámetros, si no se especifica, usa el valor por defecto.
                 const paramCountLDF = k !== undefined ? k : this.functions[functionNameLDF].paramCount || 1;
-
-                // Crear la closure con `paramCountLDF`.
                 const closureLDF = {
                     functionName: functionNameLDF,
                     body: functionBodyLDF,
-                    paramCount: paramCountLDF,  // Número de parámetros ahora flexible
+                    paramCount: paramCountLDF,
                     environment: this.environment.slice()
                 };
-
                 this.stack.push(closureLDF);
                 break;
 
             case 'APP':
                 // ([APP k], S, B, D) => (C, [FCL | S], B, [FCL, S, B, C, I | D])
-                // Aplica la función `FCL` al entorno actual.
-                // Guarda el contexto actual y carga el entorno y código de `FCL`.
+                // Aplica la función closure `FCL` en la cima de la pila `S`.
                 let closureAPP = this.stack.pop();
-                const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1; // Obtener `k` o usar 1 si no está presente.
+                const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1;
                 if (closureAPP && closureAPP.body) {
                     this.contextStack.push({
                         code: this.code,
@@ -179,10 +169,8 @@ class VM {
                         stack: this.stack.slice(),
                         bindings: this.bindings.slice()
                     });
-
-                    // Extraer `k` elementos de la pila y crear un nuevo entorno.
                     let newBinding = {};
-                    for (let i = argCount - 1; i >= 0; i--) { // Tomar del más profundo (índice `k-1`) al local 0.
+                    for (let i = argCount - 1; i >= 0; i--) {
                         if (this.stack.length > 0) {
                             newBinding[i] = this.stack.pop();
                         } else {
@@ -193,9 +181,8 @@ class VM {
                     this.bindings.unshift(newBinding);
                     this.code = closureAPP.body;
                     this.instructionPointer = 0;
-
                     const functionBody = this.code.join('\n');
-                    this.logger.log(`Ejecutando función ${closureAPP.functionName} con cuerpo:\n${functionBody}`);
+                    this.logger.log(chalk.magenta(`Ejecutando función ${closureAPP.functionName} con cuerpo:`) + `\n${functionBody}`);
                     const chars = new antlr4.InputStream(functionBody);
                     const lexer = new biesVMLexer(chars);
                     const tokens = new antlr4.CommonTokenStream(lexer);
@@ -220,7 +207,8 @@ class VM {
                     this.stack = previousContext.stack;
                     this.bindings = previousContext.bindings;
                     this.instructionPointer = previousContext.instructionPointer;
-                    if (returnValue !== undefined) {
+                    if (typeof returnValue !== 'undefined') {
+                        console.log(`Pushing return value ${returnValue} to stack`);
                         this.stack.push(returnValue);
                     }
                 }
@@ -232,6 +220,7 @@ class VM {
                 const mainFunctionName = instr.args[0];
                 const mainFunctionBody = this.functions[mainFunctionName];
                 if (!mainFunctionBody) {
+                    this.logger.log(`Error: Main function ${mainFunctionName} not defined`);
                     throw new Error(`Main function ${mainFunctionName} not defined`);
                 }
                 this.code = mainFunctionBody;
@@ -241,10 +230,31 @@ class VM {
                 this.instructionPointer = 0;
                 break;
 
+            // Salida y finalización
+            case 'PRN':
+                // ([PRN| C], [V | S], B, D) => (C, S, B, D)
+                // Imprime el valor superior de `S` y lo elimina.
+                const print = this.stack.pop();
+                if (print !== undefined) {
+                    console.log(print);
+                }
+                break;
+
+            case 'HLT':
+                // ([HLT| C], S, B, D) => ([], [], [], [])
+                // Detiene la máquina virtual y limpia todos los estados de `C`, `S`, `B` y `D`.
+                this.code = [];
+                this.stack = [];
+                this.bindings = [];
+                this.contextStack = [];
+                break;
+
             default:
-                throw new Error(`Unknown instruction: ${instr.type}`);
+                this.logger.log(`Unknown instruction: ${instr.type} ejecutada con argumentos ${JSON.stringify(instr.args)}`);
+                throw new Error(`Instrucción desconocida: ${instr.type}`);
         }
     }
+
 }
 
 export default VM;

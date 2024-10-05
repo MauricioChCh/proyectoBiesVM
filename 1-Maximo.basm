@@ -1,13 +1,30 @@
-$FUN $add 1 $main; instruye a la VM que resuelva (linketear) la función
-BLD 0 0 ; load x (push de ambiente 0 entrada 0)
-LDV 1 ; push el valor 1
-ADD ; suma los dos elementos de pila (pop dos veces) y pone el resultado en pila
-RET ; retorna de la función
-$END $add
-$FUN $main
-LDV 666 ; push 666
-LDF $add ; carga la closure de add
-APP ; call add
-PRN ; print
-HLT ; halt
-$END $main
+;   let esMayor = (x, y) => x > y
+;   let a = 8
+;   let b = 5
+;   print( esMayor(a, b) )
+
+$FUN $1          ; Definir la función '$1' (esMayor)
+BLD 0 0          ; Cargar el argumento 'x' del entorno
+BLD 0 1          ; Cargar el argumento 'y' del entorno
+GTE              ; Comparar x > y
+RET              ; Retornar de la función
+$END $1          ; Fin de la definición de la función '$1'
+
+$FUN $main       ; Definir la función 'main'
+
+LDV 8            ; Cargar el valor de 'a' (8)
+BST 0 0          ; Guardar 'a' en el nivel 0 argumento 0
+
+LDV 5            ; Cargar el valor de 'b' (5)
+BST 0 1          ; Guardar 'b' en el nivel 0 argumento 1
+
+BLD 0 0          ; Cargar el argumento 'a' del entorno
+BLD 0 1          ; Cargar el argumento 'b' del entorno
+
+LDF $1           ; Cargar la función 'esMayor'
+APP 2            ; Llamar a la función 'esMayor' con 2 argumentos
+
+PRN              ; Imprimir el valor retornado
+HLT              ; Detener la ejecución
+$END $main       ; Fin de la definición de la función 'main'
+INI $main        ; Inicializar la función 'main'

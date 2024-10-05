@@ -22,6 +22,7 @@ instruction
     | controlInstr // O una instrucción de control
     | funcInstr // O una instrucción de función
     | stringInstr // O instrucciones de manipulación de hileras
+    | comparisonInstr // O instrucciones de comparación
     ;
 
 loadInstr
@@ -54,6 +55,10 @@ funcInstr
     | 'INP' // Instrucción de entrada
     ;
 
+comparisonInstr
+    : 'GTE' // Instrucción de comparación mayor o igual
+    ;
+
 stringInstr
     : 'STK' ES? NUMBER // Instrucción para seleccionar el k-ésimo elemento de la pila
     | 'SRK' ES? NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
@@ -65,6 +70,7 @@ ADD : 'ADD'; // Token para la instrucción ADD
 MUL : 'MUL'; // Token para la instrucción MUL
 SUB : 'SUB'; // Token para la instrucción SUB
 DIV : 'DIV'; // Token para la instrucción DIV
+GTE : 'GTE'; // Token para la instrucción GTE
 RET : 'RET'; // Token para la instrucción RET
 HLT : 'HLT'; // Token para la instrucción HLT
 APP : 'APP'; // Token para la instrucción APP
