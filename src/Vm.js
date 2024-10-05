@@ -6,7 +6,7 @@ import biesVMParser from '../output/biesLanguageParser.js';
 /**
  * Clase VM que representa la máquina virtual biesVM.
  * Implementa una máquina de pila con soporte para funciones, entornos de bindings,
- * y un stack de contextos, basada en la SECD de Landin. La máquina ejecuta instrucciones
+ * y un stack de contextos, basada en la 'SECD' de Landin. La máquina ejecuta instrucciones
  * ensambladas a partir de código `biesASM`.
  */
 class VM {
@@ -84,9 +84,9 @@ class VM {
                 // ([SUB| C], [N, M| S], B, D) => (C, [M - N | S], B, D)
                 // Resta el segundo elemento superior `M` de `S` menos el elemento superior `N` de `S`
                 // y coloca el resultado en la cima de la pila.
-                const A = this.stack.pop(); // A (valor superior)
-                const B = this.stack.pop(); // B (segundo valor)
-                this.stack.push(A - B);
+                const topValue = this.stack.pop(); // Valor superior (N)
+                const secondValue = this.stack.pop(); // Segundo valor (M)
+                this.stack.push(secondValue - topValue);
                 break;
 
             case 'DIV':
@@ -97,7 +97,7 @@ class VM {
                 if (divisor === 0) {
                     throw new Error('Error: Division by zero');
                 }
-                this.stack.push(dividend / divisor);
+                this.stack.push(parseFloat(dividend) / parseFloat(divisor));
                 break;
 
             case 'PRN':
@@ -143,27 +143,35 @@ class VM {
                 break;
 
             case 'LDF':
-                // ([LDF F | C], S, E, D) => (C, [FCL | S], E, D)
-                // Carga la closure de la función `F` en `S`.
-                const functionName = instr.args[0];
-                const functionBody = this.functions[functionName];
-                if (!functionBody) {
-                    throw new Error(`Function ${functionName} not defined`);
+                // ([LDF F, k | C], S, E, D) => (C, [FCL | S], E, D)
+                // Carga la closure de la función `F` en `S` con `k` parámetros.
+                const [functionNameLDF, k] = instr.args; // `instr.args` ahora puede contener el nombre de la función y el número de parámetros.
+                const functionBodyLDF = this.functions[functionNameLDF];
+
+                if (!functionBodyLDF) {
+                    throw new Error(`Function ${functionNameLDF} not defined`);
                 }
-                const closure = {
-                    functionName: functionName,
-                    body: functionBody,
-                    paramCount: this.functions[functionName].paramCount,
+
+                // Definir `k` como el número de parámetros, si no se especifica, usa el valor por defecto.
+                const paramCountLDF = k !== undefined ? k : this.functions[functionNameLDF].paramCount || 1;
+
+                // Crear la closure con `paramCountLDF`.
+                const closureLDF = {
+                    functionName: functionNameLDF,
+                    body: functionBodyLDF,
+                    paramCount: paramCountLDF,  // Número de parámetros ahora flexible
                     environment: this.environment.slice()
                 };
-                this.stack.push(closure);
+
+                this.stack.push(closureLDF);
                 break;
 
             case 'APP':
-                // ([APP], S, B, D) => (C, [FCL | S], B, [FCL, S, B, C, I | D])
+                // ([APP k], S, B, D) => (C, [FCL | S], B, [FCL, S, B, C, I | D])
                 // Aplica la función `FCL` al entorno actual.
                 // Guarda el contexto actual y carga el entorno y código de `FCL`.
                 let closureAPP = this.stack.pop();
+                const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1; // Obtener `k` o usar 1 si no está presente.
                 if (closureAPP && closureAPP.body) {
                     this.contextStack.push({
                         code: this.code,
@@ -172,9 +180,9 @@ class VM {
                         bindings: this.bindings.slice()
                     });
 
+                    // Extraer `k` elementos de la pila y crear un nuevo entorno.
                     let newBinding = {};
-                    let argCount = closureAPP.paramCount || 1;
-                    for (let i = 0; i < argCount; i++) {
+                    for (let i = argCount - 1; i >= 0; i--) { // Tomar del más profundo (índice `k-1`) al local 0.
                         if (this.stack.length > 0) {
                             newBinding[i] = this.stack.pop();
                         } else {

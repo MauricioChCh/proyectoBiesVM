@@ -49,7 +49,7 @@ controlInstr
     ;
 
 funcInstr
-    : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos
+    : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos (k) //: 'APP' (ES NUMBER)? // Instrucción de aplicación con un número opcional de argumentos (k)
     | 'PRN' // Instrucción de impresión
     | 'INP' // Instrucción de entrada
     ;
@@ -83,7 +83,7 @@ END : '$END'; // Token para el fin de una función
 LABEL_IDENTIFIER : '$' [a-zA-Z0-9]*; // Identificador de etiqueta que comienza con '$' seguido de letras o números
 
 NUMBER
-    : [0-9]+ ('.' [0-9]+)? // Token para números enteros y flotantes
+    : [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)? // Token para números enteros, flotantes y en notación científica
     ;
 
 // Identificadores
