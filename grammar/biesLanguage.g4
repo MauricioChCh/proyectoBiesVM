@@ -23,6 +23,7 @@ instruction
     | funcInstr // O una instrucción de función
     | stringInstr // O instrucciones de manipulación de hileras
     | comparisonInstr // O instrucciones de comparación
+    | listInstr // **Nueva regla** para manejar la instrucción LIN
     ;
 
 loadInstr
@@ -31,7 +32,6 @@ loadInstr
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
     | 'INI' ES? LABEL_IDENTIFIER ES? // Instrucción de inicialización con un identificador de etiqueta
-    | 'HIL' // Nueva instrucción para construir una hilera a partir de la pila
     ;
 
 arithInstr
@@ -68,8 +68,12 @@ stringInstr
     | 'SRK' ES? NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
     ;
 
+listInstr
+    : 'LIN' (ES? (NUMBER | STRING))*? // Los parámetros son opcionales
+    ;
+
 array
-    : '[' (STRING (',' STRING)*)? ']' // Un array que puede contener múltiples hileras
+    : '[' ( (NUMBER | STRING) (',' (NUMBER | STRING))* )? ']' // Acepta números o cadenas dentro de corchetes
     ;
 
 // Instrucciones principales
@@ -92,7 +96,7 @@ LDF : 'LDF'; // Token para la instrucción LDF
 INI : 'INI'; // Token para la instrucción INI
 STK : 'STK'; // Token para la instrucción STK
 SRK : 'SRK'; // Token para la instrucción SRK
-HIL : 'HIL'; // **Nuevo Token** para la instrucción HIL
+LIN : 'LIN'; // **Nuevo Token** para la instrucción LIN
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función

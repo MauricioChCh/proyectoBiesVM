@@ -64,8 +64,8 @@ const serializedATN = [4,0,38,264,6,-1,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,
 162,163,5,68,0,0,163,164,5,70,0,0,164,48,1,0,0,0,165,166,5,73,0,0,166,167,
 5,78,0,0,167,168,5,73,0,0,168,50,1,0,0,0,169,170,5,83,0,0,170,171,5,84,0,
 0,171,172,5,75,0,0,172,52,1,0,0,0,173,174,5,83,0,0,174,175,5,82,0,0,175,
-176,5,75,0,0,176,54,1,0,0,0,177,178,5,72,0,0,178,179,5,73,0,0,179,180,5,
-76,0,0,180,56,1,0,0,0,181,182,5,36,0,0,182,183,5,70,0,0,183,184,5,85,0,0,
+176,5,75,0,0,176,54,1,0,0,0,177,178,5,76,0,0,178,179,5,73,0,0,179,180,5,
+78,0,0,180,56,1,0,0,0,181,182,5,36,0,0,182,183,5,70,0,0,183,184,5,85,0,0,
 184,185,5,78,0,0,185,58,1,0,0,0,186,187,5,36,0,0,187,188,5,69,0,0,188,189,
 5,78,0,0,189,190,5,68,0,0,190,60,1,0,0,0,191,195,5,36,0,0,192,194,7,0,0,
 0,193,192,1,0,0,0,194,197,1,0,0,0,195,193,1,0,0,0,195,196,1,0,0,0,196,62,
@@ -103,18 +103,18 @@ export default class biesLanguageLexer extends antlr4.Lexer {
                          "'['", "','", "']'", "'LDV'", "'ADD'", "'MUL'", 
                          "'SUB'", "'DIV'", "'NEG'", "'SQRT'", "'POW'", "'GTE'", 
                          "'RET'", "'HLT'", "'APP'", "'PRN'", "'BLD'", "'BST'", 
-                         "'LDF'", "'INI'", "'STK'", "'SRK'", "'HIL'", "'$FUN'", 
+                         "'LDF'", "'INI'", "'STK'", "'SRK'", "'LIN'", "'$FUN'", 
                          "'$END'" ];
 	static symbolicNames = [ null, null, null, null, null, null, null, null, 
                           null, "LDV", "ADD", "MUL", "SUB", "DIV", "NEG", 
                           "SQRT", "POW", "GTE", "RET", "HLT", "APP", "PRN", 
-                          "BLD", "BST", "LDF", "INI", "STK", "SRK", "HIL", 
+                          "BLD", "BST", "LDF", "INI", "STK", "SRK", "LIN", 
                           "FUN", "END", "LABEL_IDENTIFIER", "NUMBER", "ID", 
                           "STRING", "COMMENT", "ES", "WS", "NL" ];
 	static ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", 
                       "T__7", "LDV", "ADD", "MUL", "SUB", "DIV", "NEG", 
                       "SQRT", "POW", "GTE", "RET", "HLT", "APP", "PRN", 
-                      "BLD", "BST", "LDF", "INI", "STK", "SRK", "HIL", "FUN", 
+                      "BLD", "BST", "LDF", "INI", "STK", "SRK", "LIN", "FUN", 
                       "END", "LABEL_IDENTIFIER", "NUMBER", "ID", "STRING", 
                       "COMMENT", "ES", "WS", "NL" ];
 
@@ -152,7 +152,7 @@ biesLanguageLexer.LDF = 24;
 biesLanguageLexer.INI = 25;
 biesLanguageLexer.STK = 26;
 biesLanguageLexer.SRK = 27;
-biesLanguageLexer.HIL = 28;
+biesLanguageLexer.LIN = 28;
 biesLanguageLexer.FUN = 29;
 biesLanguageLexer.END = 30;
 biesLanguageLexer.LABEL_IDENTIFIER = 31;

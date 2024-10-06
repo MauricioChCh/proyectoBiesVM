@@ -51,7 +51,7 @@ $FUN $1                ; Definir la función '$1'
 
     BLD 0 4            ; Cargar el resultado de (-b + d) / (2 * a)
     BLD 0 5            ; Cargar el resultado de (-b - d) / (2 * a)
-    HIL                ; Crear una hilera con los dos resultados
+    LIN                ; Crear una lista con los resultados
 
     RET                ; Retornar el resultado
 

@@ -87,13 +87,12 @@ class VM {
                 this.getCurrentLayer(stkLayerIndex)[stkVarIndex] = stkValueToStore;
                 break;
 
-            case 'HIL':
-                // ([HIL| C], S, B, D) => (C, [hilera | S], B, D)
-                // Construye una hilera con todos los elementos en la pila.
-                let hilera = "[" + this.stack.join(", ") + "]";
-
-                // Reemplaza la pila con la hilera construida
-                this.stack = [hilera];
+            case 'LIN':
+                // ([LIN, ...values], S, B, D) => (C, S', B, D)
+                // Construye una lista con los elementos especificados en instr.args y la coloca en la pila.
+                const listValues = "[" + this.stack.join(", ") + "]"; // Toma los valores directamente de los argumentos de la instrucción
+                this.stack = []; // Limpia la pila
+                this.stack.push(listValues); // Coloca la lista en la pila
                 break;
 
             case 'BST':
