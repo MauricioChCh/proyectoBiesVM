@@ -65,10 +65,10 @@ class VM {
         switch (instr.type) {
             // Carga y almacenamiento de valores
             case 'LDV':
-                // ([LDV V| C], S, B, D) => (C, [V | S], B, D)
+                // ([LDV V | C], S, B, D) => (C, [V | S], B, D)
                 // La instrucción `LDV` carga un valor `V` en la pila `S`.
-                // El estado de la máquina cambia al agregar `V` en la pila `S`.
-                this.stack.push(parseInt(instr.args[0]));
+                const valueArg = instr.args.join(' ');
+                this.stack.push(valueArg.replace(/^"(.*)"$/, '$1')); // Expresión regular para quitar las comillas si existen
                 break;
 
             case 'BLD':
@@ -88,7 +88,7 @@ class VM {
                 break;
 
             case 'LIN':
-                // ([LIN, ...values], S, B, D) => (C, S', B, D)
+                // ([LIN | C], [V, L | S]), B, D) => (C, [L.insert(0, V) | S]), B, D)
                 // Construye una lista con los elementos especificados en instr.args y la coloca en la pila.
                 const listValues = "[" + this.stack.join(", ") + "]"; // Toma los valores directamente de los argumentos de la instrucción
                 this.stack = []; // Limpia la pila
@@ -159,12 +159,41 @@ class VM {
                 break;
 
             // Comparaciones
+            case 'EQ':
+                // ([EQ|C], [N, M|S], B, D) => (C, [(M == N ? 1 : 0)|S], B, D)
+                const nEq = this.stack.pop(); // Valor N
+                const mEq = this.stack.pop(); // Valor M
+                this.stack.push(Number(mEq) === Number(nEq));
+                break;
+
+            case 'GT':
+                // ([GT|C], [N, M|S], B, D) => (C, [(M > N ? 1 : 0)|S], B, D)
+                const nGt = this.stack.pop(); // Valor N
+                const mGt = this.stack.pop(); // Valor M
+                this.stack.push(Number(mGt) > Number(nGt));
+                break;
+
             case 'GTE':
                 // ([GTE| C], [N, M| S], B, D) => (C, [M >= N | S], B, D)
                 // Compara si el segundo elemento superior `M` es mayor o igual al superior `N`.
                 const n = this.stack.pop(); // Valor N
                 const m = this.stack.pop(); // Valor M
-                this.stack.push(m >= n);
+                this.stack.push(Number(m) >= Number(n));
+                break;
+
+
+            case 'LT':
+                // ([LT|C], [N, M|S], B, D) => (C, [(M < N ? 1 : 0)|S], B, D)
+                const nLt = this.stack.pop(); // Valor N
+                const mLt = this.stack.pop(); // Valor M
+                this.stack.push(Number(mLt) < Number(nLt));
+                break;
+
+            case 'LTE':
+                // ([LTE|C], [N, M|S], B, D) => (C, [(M <= N ? 1 : 0)|S], B, D)
+                const nLte = this.stack.pop(); // Valor N
+                const mLte = this.stack.pop(); // Valor M
+                this.stack.push(Number(mLte) <= Number(nLte));
                 break;
 
             // Control de flujo
@@ -282,7 +311,6 @@ class VM {
                 throw new Error(`Instrucción desconocida: ${instr.type}`);
         }
     }
-
 }
 
 export default VM;

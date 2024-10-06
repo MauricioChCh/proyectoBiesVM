@@ -27,7 +27,7 @@ instruction
     ;
 
 loadInstr
-    : 'LDV' ES? (NUMBER | STRING)? ES? // Instrucción de carga de valor (número o hilera)
+    : 'LDV' ES* (NUMBER | STRING)? ES* // Permite espacios en blanco opcionales antes y después del argumento
     | 'BLD' ES? NUMBER ES? NUMBER ES? // Instrucción de carga de bloque con dos números
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
@@ -60,7 +60,11 @@ funcInstr
     ;
 
 comparisonInstr
-    : 'GTE' // Instrucción de comparación mayor o igual
+    : 'EQ'  // Instrucción de comparación igualdad
+    | 'GT'  // Instrucción de comparación mayor que
+    | 'GTE' // Instrucción de comparación mayor o igual
+    | 'LT'  // Instrucción de comparación menor que
+    | 'LTE' // Instrucción de comparación menor o igual
     ;
 
 stringInstr
@@ -83,9 +87,13 @@ MUL : 'MUL'; // Token para la instrucción MUL
 SUB : 'SUB'; // Token para la instrucción SUB
 DIV : 'DIV'; // Token para la instrucción DIV
 NEG : 'NEG'; // Token para la instrucción NEG
-SQRT : 'SQRT'; // Token para la instrucción de raíz cuadrada
-POW : 'POW'; // Token para la instrucción de potencia
+SQRT : 'SQRT'; // Token para la instrucción SQRT
+POW : 'POW'; // Token para la instrucción POW
+EQ : 'ET'; // Token para la instrucción GQ
+GT : 'GT'; // Token para la instrucción GT
 GTE : 'GTE'; // Token para la instrucción GTE
+LT : 'LT'; // Token para la instrucción LT
+LTE : 'LTE'; // Token para la instrucción LTE
 RET : 'RET'; // Token para la instrucción RET
 HLT : 'HLT'; // Token para la instrucción HLT
 APP : 'APP'; // Token para la instrucción APP
@@ -96,7 +104,7 @@ LDF : 'LDF'; // Token para la instrucción LDF
 INI : 'INI'; // Token para la instrucción INI
 STK : 'STK'; // Token para la instrucción STK
 SRK : 'SRK'; // Token para la instrucción SRK
-LIN : 'LIN'; // **Nuevo Token** para la instrucción LIN
+LIN : 'LIN'; // Token para la instrucción LIN
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
@@ -112,7 +120,7 @@ NUMBER
 ID : [a-zA-Z_][a-zA-Z_0-9]*; // Identificadores que comienzan con una letra o guion bajo, seguidos de letras, números o guiones bajos
 
 // Literales de hileras
-STRING : '"' .*? '"'; // Token para hileras entre comillas dobles
+STRING : '"' (~["\r\n])* '"' ; // Captura correctamente las cadenas entre comillas manteniendo los espacios
 
 // Comentarios
 COMMENT : ';' ~[\r\n]* -> skip; // Comentarios que comienzan con ';' y se omiten
