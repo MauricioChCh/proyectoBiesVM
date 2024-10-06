@@ -1,0 +1,81 @@
+;let cuadrática = (a, b, c) => {
+;    let d = Math.sqrt(b * b -4 * a * c);
+;    return [(-b + d) / (2 * a),(-b - d) / (2 * a)]
+;};
+
+; print(cuadrática(1, -5, 6))
+
+$FUN $1                ; Definir la función '$1'
+    BLD 0 1            ; Cargar el primer b (-5)
+    BLD 0 1            ; Cargar el segundo b (-5)
+    MUL                ; Multiplicar b * b
+
+    LDV 4              ; Cargar el 4
+    BLD 0 0            ; Cargar el argumento 'a' del entorno
+    MUL                ; Multiplicar 4 * 1
+
+    BLD 0 2            ; Cargar el c (6)
+    MUL                ; Multiplicar 4 * 1 * c
+
+    SUB                ; Restar b * b - 4 * a * c
+
+    SQRT               ; Calcular la raíz cuadrada de b * b - 4 * a * c
+    BST 0 3            ; Guardar el resultado en el nivel 0 argumento 3
+
+    BLD 0 1            ; Cargar el segundo b (-5)
+    NEG                ; Negar el valor de b
+    BLD 0 3            ; Cargar el resultado de la raíz cuadrada (d)
+    ADD                ; Sumar -b + d
+
+    LDV 2              ; Cargar el 2
+    BLD 0 0            ; Cargar el argumento 'a' del entorno
+    MUL                ; Sumar 2 * a
+
+    DIV                ; Dividir -b + d / 2 + a
+    BST 0 4            ; Guardar el resultado en el nivel 0 argumento 4
+
+    BLD 0 1            ; Cargar el segundo b (-5)
+    NEG                ; Negar el valor de b
+    BLD 0 3            ; Cargar el resultado de la raíz cuadrada (d)
+    NEG                ; Negar el valor de d
+    ADD                ; Sumar -b + d
+
+    LDV 2              ; Cargar el 2
+    BLD 0 0            ; Cargar el argumento 'a' del entorno
+    MUL                ; Sumar 2 * a
+
+    DIV                ; Dividir -b + d / 2 + a
+    BST 0 5            ; Guardar el resultado en el nivel 0 argumento 5
+
+    ; Hilera con los resultados:
+
+    BLD 0 4            ; Cargar el resultado de (-b + d) / (2 * a)
+    BLD 0 5            ; Cargar el resultado de (-b - d) / (2 * a)
+    HIL                ; Crear una hilera con los dos resultados
+
+    RET                ; Retornar el resultado
+
+$END $1                ; Fin de la definición de la función '$1'
+
+$FUN $main             ; Definir la función 'main'
+    LDV 1              ; Cargar el valor de 'a' (5)
+    BST 0 0            ; Guardar 'a' en el nivel 0 argumento 0
+
+    LDV -5             ; Cargar el valor de 'b' (5)
+    BST 0 1            ; Guardar 'b' en el nivel 0 argumento 1
+
+    LDV 6              ; Cargar el valor de 'c' (6)
+    BST 0 2            ; Guardar 'c' en el nivel 0 argumento 2
+
+    BLD 0 0            ; Cargar el argumento 'a' del entorno
+    BLD 0 1            ; Cargar el argumento 'b' del entorno
+    BLD 0 2            ; Cargar el argumento 'c' del entorno
+
+    LDF $1             ; Cargar la función 'cuadrática'
+    APP 3              ; Llamar a la función 'cuadrática' con 1 argumento
+    PRN                ; Imprimir el valor retornado
+
+    HLT                ; Detener la ejecución
+$END $main             ; Fin de la definición de la función 'main'
+
+INI $main              ; Inicializar la función 'main'

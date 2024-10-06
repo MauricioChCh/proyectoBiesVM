@@ -87,6 +87,15 @@ class VM {
                 this.getCurrentLayer(stkLayerIndex)[stkVarIndex] = stkValueToStore;
                 break;
 
+            case 'HIL':
+                // ([HIL| C], S, B, D) => (C, [hilera | S], B, D)
+                // Construye una hilera con todos los elementos en la pila.
+                let hilera = "[" + this.stack.join(", ") + "]";
+
+                // Reemplaza la pila con la hilera construida
+                this.stack = [hilera];
+                break;
+
             case 'BST':
                 // ([BST V, L], S, B, D) => (C, S, [V | B[L]], D)
                 // Almacena `V` en el entorno de la capa `L` en `B`.
@@ -127,6 +136,27 @@ class VM {
                     throw new Error('Error: Division by zero');
                 }
                 this.stack.push(parseFloat(dividend) / parseFloat(divisor));
+                break;
+            case 'NEG':
+                // ([NEG| C], [N| S], B, D) => (C, [-N | S], B, D)
+                // Cambia el signo del valor superior de `S`.
+                this.stack.push(-this.stack.pop());
+                break;
+
+            case 'POW':
+                // ([POW| C], [N, M| S], B, D) => (C, [M ^ N | S], B, D)
+                const exponent = this.stack.pop(); // Obtiene el exponente de la pila
+                const base = this.stack.pop(); // Obtiene la base de la pila
+                this.stack.push(Math.pow(base, exponent)); // Calcula la potencia y la empuja a la pila
+                break;
+
+            case 'SQRT':
+                // ([SQRT| C], [N| S], B, D) => (C, [sqrt(N) | S], B, D)
+                const value = this.stack.pop(); // Obtiene el valor de la pila
+                if (value < 0) {
+                    throw new Error('Error: La raíz cuadrada de un número negativo no es un número real');
+                }
+                this.stack.push(Math.sqrt(value)); // Calcula la raíz cuadrada y la empuja a la pila
                 break;
 
             // Comparaciones
@@ -208,7 +238,6 @@ class VM {
                     this.bindings = previousContext.bindings;
                     this.instructionPointer = previousContext.instructionPointer;
                     if (typeof returnValue !== 'undefined') {
-                        console.log(`Pushing return value ${returnValue} to stack`);
                         this.stack.push(returnValue);
                     }
                 }
@@ -236,7 +265,7 @@ class VM {
                 // Imprime el valor superior de `S` y lo elimina.
                 const print = this.stack.pop();
                 if (print !== undefined) {
-                    console.log(print);
+                    console.log(chalk.yellow(`${print}`));
                 }
                 break;
 

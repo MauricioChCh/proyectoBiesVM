@@ -31,6 +31,7 @@ loadInstr
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
     | 'INI' ES? LABEL_IDENTIFIER ES? // Instrucción de inicialización con un identificador de etiqueta
+    | 'HIL' // Nueva instrucción para construir una hilera a partir de la pila
     ;
 
 arithInstr
@@ -38,6 +39,9 @@ arithInstr
     | 'MUL' ES? // Instrucción de multiplicación
     | 'SUB' ES? // Instrucción de resta
     | 'DIV' ES? // Instrucción de división
+    | 'NEG' ES? // Instrucción de negación
+    | 'SQRT' ES? // Instrucción de raíz cuadrada
+    | 'POW' ES? // Instrucción de potencia
     ;
 
 controlInstr
@@ -50,7 +54,7 @@ controlInstr
     ;
 
 funcInstr
-    : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos (k) //: 'APP' (ES NUMBER)? // Instrucción de aplicación con un número opcional de argumentos (k)
+    : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos (k)
     | 'PRN' // Instrucción de impresión
     | 'INP' // Instrucción de entrada
     ;
@@ -64,12 +68,19 @@ stringInstr
     | 'SRK' ES? NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
     ;
 
+array
+    : '[' (STRING (',' STRING)*)? ']' // Un array que puede contener múltiples hileras
+    ;
+
 // Instrucciones principales
 LDV : 'LDV'; // Token para la instrucción LDV
 ADD : 'ADD'; // Token para la instrucción ADD
 MUL : 'MUL'; // Token para la instrucción MUL
 SUB : 'SUB'; // Token para la instrucción SUB
 DIV : 'DIV'; // Token para la instrucción DIV
+NEG : 'NEG'; // Token para la instrucción NEG
+SQRT : 'SQRT'; // Token para la instrucción de raíz cuadrada
+POW : 'POW'; // Token para la instrucción de potencia
 GTE : 'GTE'; // Token para la instrucción GTE
 RET : 'RET'; // Token para la instrucción RET
 HLT : 'HLT'; // Token para la instrucción HLT
@@ -81,6 +92,7 @@ LDF : 'LDF'; // Token para la instrucción LDF
 INI : 'INI'; // Token para la instrucción INI
 STK : 'STK'; // Token para la instrucción STK
 SRK : 'SRK'; // Token para la instrucción SRK
+HIL : 'HIL'; // **Nuevo Token** para la instrucción HIL
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
@@ -89,7 +101,7 @@ END : '$END'; // Token para el fin de una función
 LABEL_IDENTIFIER : '$' [a-zA-Z0-9]*; // Identificador de etiqueta que comienza con '$' seguido de letras o números
 
 NUMBER
-    : [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)? // Token para números enteros, flotantes y en notación científica
+    : [+-]? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)? // Token para números enteros, flotantes y en notación científica, con un signo opcional al inicio
     ;
 
 // Identificadores
