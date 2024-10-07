@@ -6,6 +6,13 @@ import fs from 'fs';
 import chalk from 'chalk';
 
 // Función que integra el lexer y parser y analiza el archivo
+/**
+ * Analiza un archivo .basm utilizando un lexer y un parser generados por ANTLR.
+ *
+ * @param {string} filePath - La ruta del archivo .basm a analizar.
+ * @param {Logger} logger - Un objeto Logger para registrar mensajes y errores.
+ * @returns {boolean} Devuelve true si el análisis fue exitoso, false en caso contrario.
+ */
 export function analizarArchivoBasm(filePath, logger) {
     try {
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });

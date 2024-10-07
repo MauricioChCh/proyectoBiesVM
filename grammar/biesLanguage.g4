@@ -36,6 +36,7 @@ loadInstr
 
 arithInstr
     : 'ADD' ES? // Instrucción de suma
+    | 'PLUS' ES? NUMBER // Instrucción de incremento
     | 'MUL' ES? // Instrucción de multiplicación
     | 'SUB' ES? // Instrucción de resta
     | 'DIV' ES? // Instrucción de división
@@ -45,12 +46,12 @@ arithInstr
     ;
 
 controlInstr
-    : 'RET' // Instrucción de retorno
-    | 'HLT' // Instrucción de parada
-    | 'BR' ES? NUMBER // Instrucción de salto incondicional
-    | 'BT' ES? NUMBER // Instrucción de salto si verdadero
-    | 'BF' ES? NUMBER // Instrucción de salto si falso
-    | 'NOP' // Instrucción de no operación
+    : 'RET'        // Retorno
+    | 'HLT'        // Parada
+    | 'BR' ES? NUMBER // Bifurcación incondicional con desplazamiento relativo
+    | 'BT' ES? NUMBER // Bifurcación condicional sobre verdadero con desplazamiento relativo
+    | 'BF' ES? NUMBER // Bifurcación condicional sobre falso con desplazamiento relativo
+    | 'NOP'       // No operación
     ;
 
 funcInstr

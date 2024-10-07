@@ -1,167 +1,19 @@
-;let hilera = "   Hola,    Bies!  "; // Definición de la hilera
-;let count = 0; // Contador para la longitud
-;let index = 0; // Índice para recorrer la hilera
+$FUN $1                ; Definir la función '$1'
 
-;// Iterar sobre cada carácter de la hilera hasta llegar al final
-;while (hilera[index] !== undefined) {
-;    count++; // Incrementar el contador por cada carácter encontrado
-;    index++; // Moverse al siguiente índice
-;}
+    LDV 5          ; Cargar el valor 5 en la pila
+    BST 0 0        ; Guardar 0 en la variable `count`
+    BLD 0 0        ; Guardar 0 en la variable `i`
+    ;PLUS 1          ; Sumar 1 a la variable `count`
+    ;BLD 0 0        ; Guardar el valor de la variable `count` en la pila
+    PRN            ; Imprimir el valor en la pila (que es 5)
+    ;BR -4          ; Salto incondicional a la instrucción anterior BLD 0 0 y continua desde ese punto.
 
-;console.log(count); // Imprime: El tamaño de la hilera es: 11
+$END $1        ; Fin de la definición de la función '$1'
 
+$FUN $main     ; Definir la función 'main'
+    LDF $1        ; Cargar la función '$1'
+    APP 0         ; Llamar a la función '$1' con 0 argumentos
+    HLT           ; Parar la ejecución (nunca alcanzará esta instrucción)
+$END $main     ; Fin de la definición de la función 'main'
 
-;// Pruebas para EQ (Igualdad)
-LDV 10
-LDV 10
-EQ
-PRN  ; Esperado: 1
-
-LDV 10
-LDV 5
-EQ
-PRN  ; Esperado: 0
-
-LDV -5
-LDV -5
-EQ
-PRN  ; Esperado: 1
-
-LDV 0
-LDV 0
-EQ
-PRN  ; Esperado: 1
-
-LDV 0
-LDV 1
-EQ
-PRN  ; Esperado: 0
-
-LDV 100
-LDV 100
-EQ
-PRN  ; Esperado: 1
-
-;// Pruebas para GT (Mayor que)
-LDV 10
-LDV 5
-GT
-PRN  ; Esperado: 1
-
-LDV 5
-LDV 10
-GT
-PRN  ; Esperado: 0
-
-LDV 10
-LDV 10
-GT
-PRN  ; Esperado: 0
-
-LDV -5
-LDV -10
-GT
-PRN  ; Esperado: 1
-
-LDV 0
-LDV -1
-GT
-PRN  ; Esperado: 1
-
-LDV 100
-LDV 99
-GT
-PRN  ; Esperado: 1
-
-;// Pruebas para GTE (Mayor o igual que)
-LDV 10
-LDV 10
-GTE
-PRN  ; Esperado: 1
-
-LDV 10
-LDV 5
-GTE
-PRN  ; Esperado: 1
-
-LDV 5
-LDV 10
-GTE
-PRN  ; Esperado: 0
-
-LDV -5
-LDV -5
-GTE
-PRN  ; Esperado: 1
-
-LDV 0
-LDV 1
-GTE
-PRN  ; Esperado: 0
-
-LDV 100
-LDV 99
-GTE
-PRN  ; Esperado: 1
-
-;// Pruebas para LT (Menor que)
-LDV 5
-LDV 10
-LT
-PRN  ; Esperado: 1
-
-LDV 10
-LDV 5
-LT
-PRN  ; Esperado: 0
-
-LDV 10
-LDV 10
-LT
-PRN  ; Esperado: 0
-
-LDV -10
-LDV -5
-LT
-PRN  ; Esperado: 1
-
-LDV 0
-LDV 1
-LT
-PRN  ; Esperado: 1
-
-LDV 99
-LDV 100
-LT
-PRN  ; Esperado: 1
-
-;// Pruebas para LTE (Menor o igual que)
-LDV 10
-LDV 10
-LTE
-PRN  ; Esperado: 1
-
-LDV 5
-LDV 10
-LTE
-PRN  ; Esperado: 1
-
-LDV 10
-LDV 5
-LTE
-PRN  ; Esperado: 0
-
-LDV -5
-LDV -5
-LTE
-PRN  ; Esperado: 1
-
-LDV 1
-LDV 0
-LTE
-PRN  ; Esperado: 0
-
-LDV 100
-LDV 101
-LTE
-PRN  ; Esperado: 1
+INI $main      ; Inicializar la función 'main'

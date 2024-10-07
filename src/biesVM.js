@@ -1,5 +1,10 @@
-#!/usr/bin/env node
-// src/biesVM.js
+/**
+ * Script para la máquina virtual que ejecuta archivos .basm.
+ * Utiliza el módulo commander para gestionar argumentos de línea de comandos
+ * y chalk para el formateo de la salida en consola.
+ *
+ * @module biesVM
+ */
 
 import fs from 'fs';
 import path from 'path';
@@ -10,7 +15,17 @@ import { analizarArchivoBasm } from './integrateLexerParser.js';
 
 const program = new Command();
 
-// Configuramos el programa usando commander
+/**
+ * Configura el programa usando commander.
+ *
+ * - `nombre`: 'biesVM' - Nombre del comando.
+ * - `descripcion`: 'Máquina virtual para ejecutar archivos .basm' - Descripción de la herramienta.
+ * - `version`: '1.0.0' - Versión de la herramienta.
+ *
+ * @argument {string} <archivo> - Archivo BASM a ejecutar.
+ * @option {boolean} -v, --verbose - Modo verbose para salida detallada.
+ * @option {boolean} -d, --detail - Modo detallado para ver el proceso de parseo.
+ */
 program
     .name('biesVM') // Nombre del comando
     .description('Máquina virtual para ejecutar archivos .basm')
@@ -21,7 +36,14 @@ program
     .action((fileName, options) => {
         const logger = new Logger(options.verbose, options.detail);
 
-        // Verificamos que el archivo tenga la extensión .basm
+        /**
+         * Verifica que el archivo tenga la extensión .basm y que exista.
+         * Si hay errores, se detiene la ejecución y se muestra un mensaje en consola.
+         *
+         * @param {string} fileName - Nombre del archivo a verificar.
+         * @param {object} options - Opciones del comando.
+         */
+
         const fileExt = path.extname(fileName);
         if (fileExt !== '.basm') {
             console.error(chalk.red("Error: El archivo debe tener la extensión .basm"));

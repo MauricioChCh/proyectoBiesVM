@@ -1,8 +1,8 @@
-import chalk from 'chalk';
-import Visitor from './Visitor.js';
-import antlr4 from 'antlr4';
 import biesVMLexer from '../output/biesLanguageLexer.js';
 import biesVMParser from '../output/biesLanguageParser.js';
+import Visitor from './Visitor.js';
+import antlr4 from 'antlr4';
+import chalk from 'chalk';
 
 /**
  * Clase VM que representa la máquina virtual biesVM.
@@ -25,32 +25,22 @@ class VM {
         /** @type {Array<Object>} contextStack - Pila de contextos de ejecución (D). */
         this.contextStack = [];
 
-        /** @type {Array<Object>} environment - Entorno de ejecución actual (no usado directamente en la primera versión). */
+        /** @type {Array<Object>} code - Código a ejecutar (C). */
+        this.code = [];
+
+        /** @type {Array<Object>} environment - Entorno de ejecución actual */
         this.environment = [];
 
         /** @type {Object} functions - Almacén de funciones definidas. */
         this.functions = {};
 
-        /** @type {Array<Object>} code - Código a ejecutar (C). */
-        this.code = [];
+        /** @type {number} programCounter - Puntero de instrucción actual. */
+        this.programCounter = 0;
 
-        /** @type {number} instructionPointer - Puntero de instrucción actual. */
-        this.instructionPointer = 0;
+        this.isRunning = false;
 
         /** @type {Object} logger - Logger para mensajes de depuración. */
         this.logger = logger;
-    }
-
-    /**
-     * Obtiene la capa actual del entorno de bindings.
-     * @param {number} layerIndex - Índice de la capa a obtener.
-     * @returns {Object} Entorno de la capa especificada.
-     */
-    getCurrentLayer(layerIndex) {
-        if (!this.bindings[layerIndex]) {
-            this.bindings[layerIndex] = {};
-        }
-        return this.bindings[layerIndex];
     }
 
     /**
@@ -60,8 +50,37 @@ class VM {
      * @param {Array<*>} [instr.args=[]] - Argumentos de la instrucción.
      */
 
+    /**
+     * Obtiene la capa actual del entorno de bindings.
+     * @param {number} layerIndex - Índice de la capa a obtener.
+     * @returns {Object} Entorno de la capa especificada.
+     */
+
+    getCurrentLayer(layerIndex) { // Obtiene la capa actual del entorno de bindings
+        if (!this.bindings[layerIndex]) {
+            this.bindings[layerIndex] = {};
+        }
+        return this.bindings[layerIndex];
+    }
+
+    run() {
+        if (this.code.length === 0) {
+            throw new Error("No code loaded to execute");
+        }
+        this.programCounter = 0;
+        this.executeProgram();
+    }
+
+    executeProgram() {
+        this.isRunning = true;
+        while (this.isRunning && this.programCounter < this.code.length) {
+            const instr = this.code[this.programCounter];
+            this.executeInstruction(instr);
+        }
+    }
 
     executeInstruction(instr) {
+        //console.log(chalk.red(`Ejecutando instrucción en posición: ${this.programCounter}, tipo: ${instr.type}`));
         switch (instr.type) {
             // Carga y almacenamiento de valores
             case 'LDV':
@@ -72,19 +91,18 @@ class VM {
                 break;
 
             case 'BLD':
+                console.log("Instrucción BLD: ");
                 // ([BLD L, V], S, B, D) => (C, [B[L][V] | S], B, D)
                 // Carga el valor de la variable `V` en la capa `L` del entorno `B` y lo coloca en `S`.
                 const [bindLayer, bindVarIndex] = instr.args;
-                const valueToLoad = this.getCurrentLayer(bindLayer)[bindVarIndex];
-                this.stack.push(valueToLoad);
+                this.stack.push(this.getCurrentLayer(bindLayer)[bindVarIndex]);
                 break;
 
             case 'STK':
                 // ([STK L, V], S, B, D) => (C, S', [S.pop() | B[L][V]], D)
                 // Almacena el valor superior de la pila en la capa `L` y variable `V` del entorno `B`.
                 const [stkLayerIndex, stkVarIndex] = instr.args;
-                const stkValueToStore = this.stack.pop();
-                this.getCurrentLayer(stkLayerIndex)[stkVarIndex] = stkValueToStore;
+                this.getCurrentLayer(stkLayerIndex)[stkVarIndex] = this.stack.pop();
                 break;
 
             case 'LIN':
@@ -108,7 +126,18 @@ class VM {
                 // ([ADD| C], [N, M| S], B, D) => (C, [N + M | S], B, D)
                 // La instrucción `ADD` suma los dos elementos superiores de la pila `S`
                 // y coloca el resultado de la suma en la cima de la pila.
-                this.stack.push(this.stack.pop() + this.stack.pop());
+
+                this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
+                break;
+
+            case 'PLUS':
+                const currentLayer = this.bindings[0]; // Accedemos directamente a la capa 0 del entorno de bindings
+                let currentValue = currentLayer[0];    // Accedemos directamente al índice 0
+                if (currentValue == null) {  // Usamos == para cubrir undefined y null
+                    currentValue = 1;   // Asignamos el valor 1
+                }
+                currentValue =+ currentValue + +instr.args[0];  // Conversión y suma en una línea
+                currentLayer[0] = this.stack[this.stack.length - 1] = currentValue;  // Actualizamos bindings y stack
                 break;
 
             case 'SUB':
@@ -218,27 +247,27 @@ class VM {
             case 'APP':
                 // ([APP k], S, B, D) => (C, [FCL | S], B, [FCL, S, B, C, I | D])
                 // Aplica la función closure `FCL` en la cima de la pila `S`.
-                let closureAPP = this.stack.pop();
-                const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1;
-                if (closureAPP && closureAPP.body) {
-                    this.contextStack.push({
-                        code: this.code,
-                        instructionPointer: this.instructionPointer,
-                        stack: this.stack.slice(),
-                        bindings: this.bindings.slice()
+                let closureAPP = this.stack.pop();  // Obtiene la closure de la pila
+                const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1; // Obtiene el número de argumentos
+                if (closureAPP && closureAPP.body) {    // Verifica que la closure y el cuerpo de la función no sean nulos
+                    this.contextStack.push({    // Guarda el contexto actual en la pila de contextos
+                        code: this.code,    // Guarda el código actual
+                        programCounter: this.programCounter,    // Guarda el contador de programa actual
+                        stack: this.stack.slice(),  // Guarda una copia de la pila
+                        bindings: this.bindings.slice() // Guarda una copia de los bindings
                     });
-                    let newBinding = {};
-                    for (let i = argCount - 1; i >= 0; i--) {
-                        if (this.stack.length > 0) {
-                            newBinding[i] = this.stack.pop();
-                        } else {
+                    let newBinding = {};    // Crea un nuevo binding
+                    for (let i = argCount - 1; i >= 0; i--) {   // Recorre los argumentos
+                        if (this.stack.length > 0) {    // Verifica que haya suficientes argumentos en la pila
+                            newBinding[i] = this.stack.pop();   // Asigna el argumento al binding
+                        } else {    // Si no hay suficientes argumentos en la pila
                             console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closureAPP.functionName}`);
                             break;
                         }
                     }
                     this.bindings.unshift(newBinding);
                     this.code = closureAPP.body;
-                    this.instructionPointer = 0;
+                    this.programCounter = 0;
                     const functionBody = this.code.join('\n');
                     this.logger.log(chalk.magenta(`Ejecutando función ${closureAPP.functionName} con cuerpo:`) + `\n${functionBody}`);
                     const chars = new antlr4.InputStream(functionBody);
@@ -255,6 +284,29 @@ class VM {
                 }
                 break;
 
+            case 'BR':
+                console.log("Instrucción BR: ");
+                const branchOffset = Number(instr.args[0]) -1; // Obtiene el offset de la instrucción
+                this.programCounter += branchOffset; // Actualiza el contador de programa
+                break;
+
+            case 'BT':
+                // ([BT j | C], [V | S], B, D) => Si V es true, (C, S, B, D) con el programCounter = j; si no, sigue con la siguiente instrucción.
+                const conditionTrue = this.stack.pop();
+                if (conditionTrue) {
+                    this.programCounter = parseInt(instr.args[0], 10);
+                }
+                break;
+
+            case 'BF':
+                // ([BF j | C], [V | S], B, D) => Si V es false, (C, S, B, D) con el programCounter = j; si no, sigue con la siguiente instrucción.
+                console.log("Signed number: ", parseInt(instr.args[0], 10));
+                const conditionFalse = this.stack.pop();
+                if (!conditionFalse) {
+                    this.programCounter = parseInt(instr.args[0], 10);
+                }
+                break;
+
             case 'RET':
                 // ([RET], S, B, D) => (C, S', B', D)
                 // Retorna desde una función, restaurando el estado anterior.
@@ -264,7 +316,7 @@ class VM {
                     this.code = previousContext.code;
                     this.stack = previousContext.stack;
                     this.bindings = previousContext.bindings;
-                    this.instructionPointer = previousContext.instructionPointer;
+                    this.programCounter = previousContext.programCounter;
                     if (typeof returnValue !== 'undefined') {
                         this.stack.push(returnValue);
                     }
@@ -284,11 +336,12 @@ class VM {
                 this.stack = [];
                 this.bindings = [{}];
                 this.contextStack = [];
-                this.instructionPointer = 0;
+                this.programCounter = 0;
                 break;
 
             // Salida y finalización
             case 'PRN':
+                console.log("Instrucción PRN: ");
                 // ([PRN| C], [V | S], B, D) => (C, S, B, D)
                 // Imprime el valor superior de `S` y lo elimina.
                 const print = this.stack.pop();
@@ -310,6 +363,7 @@ class VM {
                 this.logger.log(`Unknown instruction: ${instr.type} ejecutada con argumentos ${JSON.stringify(instr.args)}`);
                 throw new Error(`Instrucción desconocida: ${instr.type}`);
         }
+        this.programCounter++; // Mover al siguiente índice de instrucción
     }
 }
 
