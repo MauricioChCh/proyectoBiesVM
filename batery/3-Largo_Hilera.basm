@@ -1,12 +1,12 @@
-$FUN $1                ; Definir la función '$1'
+$FUN $1            ; Definir la función '$1'
 
     LDV 5          ; Cargar el valor 5 en la pila
     BST 0 0        ; Guardar 0 en la variable `count`
     BLD 0 0        ; Guardar 0 en la variable `i`
-    ;PLUS 1          ; Sumar 1 a la variable `count`
-    ;BLD 0 0        ; Guardar el valor de la variable `count` en la pila
+    PLUS 1         ; Sumar 1 a la variable `count`
+    BLD 0 0        ; Guardar el valor de la variable `count` en la pila
     PRN            ; Imprimir el valor en la pila (que es 5)
-    ;BR -4          ; Salto incondicional a la instrucción anterior BLD 0 0 y continua desde ese punto.
+    BR -4          ; Salto incondicional a la instrucción anterior BLD 0 0 y continua desde ese punto.
 
 $END $1        ; Fin de la definición de la función '$1'
 

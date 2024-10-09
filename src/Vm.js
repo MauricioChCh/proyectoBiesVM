@@ -37,8 +37,6 @@ class VM {
         /** @type {number} programCounter - Puntero de instrucción actual. */
         this.programCounter = 0;
 
-        this.isRunning = false;
-
         /** @type {Object} logger - Logger para mensajes de depuración. */
         this.logger = logger;
     }
@@ -63,24 +61,20 @@ class VM {
         return this.bindings[layerIndex];
     }
 
-    run() {
-        if (this.code.length === 0) {
-            throw new Error("No code loaded to execute");
-        }
-        this.programCounter = 0;
-        this.executeProgram();
-    }
+    run(code) {
+        this.code = code;
 
-    executeProgram() {
-        this.isRunning = true;
-        while (this.isRunning && this.programCounter < this.code.length) {
+        while(this.programCounter < this.code.length) {
+
             const instr = this.code[this.programCounter];
+
+            this.programCounter++;
             this.executeInstruction(instr);
         }
     }
 
     executeInstruction(instr) {
-        //console.log(chalk.red(`Ejecutando instrucción en posición: ${this.programCounter}, tipo: ${instr.type}`));
+        this.logger.log(`Visitando instrucción: ${instr.type} ${instr.args.join(' ')}`);
         switch (instr.type) {
             // Carga y almacenamiento de valores
             case 'LDV':
@@ -91,7 +85,6 @@ class VM {
                 break;
 
             case 'BLD':
-                console.log("Instrucción BLD: ");
                 // ([BLD L, V], S, B, D) => (C, [B[L][V] | S], B, D)
                 // Carga el valor de la variable `V` en la capa `L` del entorno `B` y lo coloca en `S`.
                 const [bindLayer, bindVarIndex] = instr.args;
@@ -210,7 +203,6 @@ class VM {
                 this.stack.push(Number(m) >= Number(n));
                 break;
 
-
             case 'LT':
                 // ([LT|C], [N, M|S], B, D) => (C, [(M < N ? 1 : 0)|S], B, D)
                 const nLt = this.stack.pop(); // Valor N
@@ -246,8 +238,11 @@ class VM {
 
             case 'APP':
                 // ([APP k], S, B, D) => (C, [FCL | S], B, [FCL, S, B, C, I | D])
-                // Aplica la función closure `FCL` en la cima de la pila `S`.
+                // Aplica la función closure FCL en la cima de la pila S.
                 let closureAPP = this.stack.pop();  // Obtiene la closure de la pila
+
+                //console.log("ClosureAPP: ", closureAPP);
+
                 const argCount = instr.args && instr.args.length > 0 ? parseInt(instr.args[0]) : 1; // Obtiene el número de argumentos
                 if (closureAPP && closureAPP.body) {    // Verifica que la closure y el cuerpo de la función no sean nulos
                     this.contextStack.push({    // Guarda el contexto actual en la pila de contextos
@@ -265,27 +260,29 @@ class VM {
                             break;
                         }
                     }
-                    this.bindings.unshift(newBinding);
-                    this.code = closureAPP.body;
-                    this.programCounter = 0;
-                    const functionBody = this.code.join('\n');
-                    this.logger.log(chalk.magenta(`Ejecutando función ${closureAPP.functionName} con cuerpo:`) + `\n${functionBody}`);
-                    const chars = new antlr4.InputStream(functionBody);
-                    const lexer = new biesVMLexer(chars);
-                    const tokens = new antlr4.CommonTokenStream(lexer);
-                    const parser = new biesVMParser(tokens);
-                    parser.buildParseTrees = true;
+                    this.bindings.unshift(newBinding);  // Agrega el nuevo binding al principio de la lista
+                    this.code = closureAPP.body; // Asigna el cuerpo de la función a this.code
+                    this.programCounter = 0;    // Reinicia el contador de programa
+                    const functionBody = this.code.join('\n');  // Obtiene el cuerpo de la función
+                    this.logger.log(chalk.magenta(`Ejecutando función ${closureAPP.functionName} con cuerpo:`) + `\n${functionBody}`);  // Muestra un mensaje en consola
+                    const chars = new antlr4.InputStream(functionBody);   // Crea un nuevo InputStream con el cuerpo de la función
+                    const lexer = new biesVMLexer(chars);   // Crea un nuevo lexer con el InputStream
+                    const tokens = new antlr4.CommonTokenStream(lexer);   // Crea un nuevo token stream con el lexer
+                    const parser = new biesVMParser(tokens);    // Crea un nuevo parser con el token stream
+                    parser.buildParseTrees = true;  // Construye los árboles de análisis
                     const tree = parser.program();
                     const visitor = new Visitor();
                     visitor.vm = this;
                     visitor.visit(tree);
+
+                    // No restauramos el contexto aquí, eso se hará en RET
                 } else {
                     throw new Error('Closure or closure body is undefined');
                 }
                 break;
 
             case 'BR':
-                console.log("Instrucción BR: ");
+                //console.log("Instrucción BR: " + instr.args[0]);
                 const branchOffset = Number(instr.args[0]) -1; // Obtiene el offset de la instrucción
                 this.programCounter += branchOffset; // Actualiza el contador de programa
                 break;
@@ -341,7 +338,6 @@ class VM {
 
             // Salida y finalización
             case 'PRN':
-                console.log("Instrucción PRN: ");
                 // ([PRN| C], [V | S], B, D) => (C, S, B, D)
                 // Imprime el valor superior de `S` y lo elimina.
                 const print = this.stack.pop();
@@ -363,7 +359,6 @@ class VM {
                 this.logger.log(`Unknown instruction: ${instr.type} ejecutada con argumentos ${JSON.stringify(instr.args)}`);
                 throw new Error(`Instrucción desconocida: ${instr.type}`);
         }
-        this.programCounter++; // Mover al siguiente índice de instrucción
     }
 }
 

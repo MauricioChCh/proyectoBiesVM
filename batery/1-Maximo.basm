@@ -4,27 +4,27 @@
 ;   print( esMayor(a, b) )
 
 $FUN $1          ; Definir la función '$1' (esMayor)
-BLD 0 0          ; Cargar el argumento 'x' del entorno
-BLD 0 1          ; Cargar el argumento 'y' del entorno
-GTE              ; Comparar x > y
-RET              ; Retornar de la función
+    BLD 0 0          ; Cargar el argumento 'x' del entorno
+    BLD 0 1          ; Cargar el argumento 'y' del entorno
+    GTE              ; Comparar x > y
+    RET              ; Retornar de la función
 $END $1          ; Fin de la definición de la función '$1'
 
 $FUN $main       ; Definir la función 'main'
+    LDV 8            ; Cargar el valor de 'a' (8)
+    BST 0 0          ; Guardar 'a' en el nivel 0 argumento 0
 
-LDV 8            ; Cargar el valor de 'a' (8)
-BST 0 0          ; Guardar 'a' en el nivel 0 argumento 0
+    LDV 5            ; Cargar el valor de 'b' (5)
+    BST 0 1          ; Guardar 'b' en el nivel 0 argumento 1
 
-LDV 5            ; Cargar el valor de 'b' (5)
-BST 0 1          ; Guardar 'b' en el nivel 0 argumento 1
+    BLD 0 0          ; Cargar el argumento 'a' del entorno
+    BLD 0 1          ; Cargar el argumento 'b' del entorno
 
-BLD 0 0          ; Cargar el argumento 'a' del entorno
-BLD 0 1          ; Cargar el argumento 'b' del entorno
+    LDF $1           ; Cargar la función 'esMayor'
+    APP 2            ; Llamar a la función 'esMayor' con 2 argumentos
 
-LDF $1           ; Cargar la función 'esMayor'
-APP 2            ; Llamar a la función 'esMayor' con 2 argumentos
-
-PRN              ; Imprimir el valor retornado
-HLT              ; Detener la ejecución
+    PRN              ; Imprimir el valor retornado
+    HLT              ; Detener la ejecución
 $END $main       ; Fin de la definición de la función 'main'
+
 INI $main        ; Inicializar la función 'main'

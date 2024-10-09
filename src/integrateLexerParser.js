@@ -15,27 +15,29 @@ import chalk from 'chalk';
  */
 export function analizarArchivoBasm(filePath, logger) {
     try {
+        // Lee el contenido del archivo especificado en `filePath`
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });
 
+        // Crea un flujo de entrada para el lexer
         const chars = new antlr4.InputStream(input);
         const lexer = new biesVMLexer(chars);
         const tokens = new antlr4.CommonTokenStream(lexer);
+
+        // Crea el parser con los tokens generados por el lexer
         const parser = new biesVMParser(tokens);
 
-        parser.buildParseTrees = true;
-        const tree = parser.program();
-
-        //console.log("Tree: " + tree.toStringTree(null, parser));
+        parser.buildParseTrees = true; // Habilita la construcción de árboles de análisis
+        const tree = parser.program(); // Inicia el análisis sintáctico
 
         logger.debug(chalk.cyanBright('Árbol de análisis sintáctico:'));
         logger.debug(tree.toStringTree(null, parser)); // Muestra el árbol de análisis
 
-        const visitor = new Visitor(logger);
+        const visitor = new Visitor(logger); // Crea una instancia del visitor
         visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones
-
-        return true;
+        return true; // Indica que el análisis fue exitoso
     } catch (error) {
+        // Captura y muestra cualquier error que ocurra durante el análisis
         console.error(chalk.red('Error durante el análisis del archivo:'), error);
-        return false;
+        return false; // Indica que el análisis falló
     }
 }
