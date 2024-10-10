@@ -69,8 +69,8 @@ comparisonInstr
     ;
 
 stringInstr
-    : 'STK' ES? NUMBER // Instrucción para seleccionar el k-ésimo elemento de la pila
-    | 'SRK' ES? NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
+    : 'STK' ES? // Instrucción para seleccionar el k-ésimo elemento de la pila
+    | 'SRK' NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
     ;
 
 listInstr

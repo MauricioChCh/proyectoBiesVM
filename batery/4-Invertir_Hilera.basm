@@ -1,0 +1,17 @@
+;const invertirHilera = (hilera) => {
+;    let resultado = '';
+;    for (let i = hilera.length - 1; i >= 0; i--) {
+;        resultado += hilera[i];
+;    }
+;    return resultado;
+;};
+
+;const hileraOriginal = "Hola Mundo!";
+;console.log(invertirHilera(hileraOriginal));
+
+
+
+
+
+
+;Fabi dijo que haría este
