@@ -149,22 +149,29 @@ class VM {
         INO: (instruction) => {
             const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
 
-            const convertValue = (value) =>
-                typeof value === 'string' && !isNaN(Number(value)) ? Number(value) : value;
-
-            if (!['number', 'list', 'string'].includes(argumento)) { // Validar el argumento
+            if (!['number', 'list', 'string', 'non_empty_string'].includes(argumento)) {
                 throw new Error('Argumento en instrucción INO no válido');
             }
 
-            const checkType = (arg, val) => { // Comprobar si el valor es del tipo especificado
+            const checkType = (arg, val) => {
                 const typeChecks = {
                     number: () => typeof val === 'number' && !isNaN(val),
                     list: () => Array.isArray(val),
-                    string: () => typeof val === 'string'
+                    string: () => typeof val === 'string' && val !== '',
+                    non_empty_string: () => typeof val === 'string' && val.trim() !== ''
                 };
                 return typeChecks[arg] ? typeChecks[arg]() : false;
             };
-            this.stack.push(checkType(argumento, convertValue(this.stack.pop())));  // Empujar el resultado booleano a la pila
+
+            const value = this.stack.pop();
+
+            // Manejo especial para cadenas vacías
+            if (value === '' && argumento === 'string') {
+                this.stack.push(false);
+            } else {
+                const result = checkType(argumento, value);
+                this.stack.push(result);
+            }
         },
 
 

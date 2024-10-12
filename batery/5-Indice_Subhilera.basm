@@ -1,26 +1,15 @@
-;let largoHilera = hilera => {
-;    let count = 0;
-;
-;    while (hilera[count] !== undefined) {
-;        count++;
-;    }
-;    return count;
-;}
-;
-;let hilera = "Hola Mundo! ";
-
 ;const indiceSubhilera = (hilera, subhilera) => {
-;    const maxIndex = largoHilera(hilera) - largoHilera(subhilera);
+;    const maxIndex = hilera.length - subhilera.length;
 ;
 ;    for (let i = 0; i <= maxIndex; i++) {
 ;        let j = 0;
 ;
-;        while (j < largoHilera(subhilera) && hilera[i + j] === subhilera[j]) {
+;        while (j < subhilera.length && hilera[i + j] === subhilera[j]) {
 ;            j++;
 ;        }
 ;
 ;        // Si el índice j recorrió toda la subhilera, significa que la encontramos.
-;        if (j === largoHilera(subhilera)) return i;
+;        if (j === subhilera.length) return i;
 ;    }
 ;
 ;    return -1; // Si no se encontró la subhilera
@@ -30,113 +19,88 @@
 ;const hileraPrincipal = "Hola Mundo!";
 ;const subhileraBuscar = "Mundo";
 ;console.log(indiceSubhilera(hileraPrincipal, subhileraBuscar)); // Salida: 5
-
-$FUN $3                       ; Definir la función largoHilera
-    LDV 0                     ; Cargar el 0
-    BST 0 1                   ; Inicializar count = 0
-
-    ; Inicio del while (hilera[count] !== undefined)
-    BLD 0 0                   ; Cargar la hilera
-    BLD 0 1                   ; Cargar el count
-    IDX                       ; Acceder al valor de hilera[count]
-    UNDEF                     ; Comparar con undefined
-    EQ                        ; Verificar si hilera[count] !== undefined
-    BF 6                      ; Si es false, saltar fuera del while
-
-        ; Cuerpo del while
-        BLD 0 1               ; Cargar el count
-        LDV 1                 ; Cargar el 1
-        ADD                   ; Incrementar count
-        BST 0 1               ; Guardar el resultado en count
-        BR -12                ; Saltar al inicio del while
-    ; Fin del while
-
-    BLD 0 1                   ; Cargar el valor de count
-    RET                       ; Retornar count
-$END $3
-
-$FUN $4                       ; Definir la función indiceSubhilera
-    LDF $3                    ; Cargar la función largoHilera
-    BLD 0 0                   ; Cargar la hilera
-    APP 1                     ; Calcular largoHilera(hilera)
-    LDF $3                    ; Cargar la función largoHilera
-    BLD 0 1                   ; Cargar la subhilera
-    APP 1                     ; Calcular largoHilera(subhilera)
-    SUB                       ; maxIndex = largoHilera(hilera) - largoHilera(subhilera)
-    BST 0 2                   ; Guardar maxIndex
-
-    LDV 0                     ; Inicializar i = 0
-    BST 0 3                   ; Guardar i
-
-    ; Inicio del for (i <= maxIndex)
-    BLD 0 3                   ; Cargar i
-    BLD 0 2                   ; Cargar maxIndex
-    LTE                       ; Comparar i <= maxIndex
-    BF 22                     ; Si es false, saltar fuera del for
-
-        LDV 0                 ; Inicializar j = 0
-        BST 0 4               ; Guardar j
-
-        ; Inicio del while (j < largoHilera(subhilera) && hilera[i + j] === subhilera[j])
-        LDF $3                ; Cargar la función largoHilera
-        BLD 0 1               ; Cargar la subhilera
-        APP 1                 ; Calcular largoHilera(subhilera)
-        BLD 0 4               ; Cargar j
-        LT                    ; Comparar j < largoHilera(subhilera)
-        BF 15                 ; Si es false, salir del while
-
-        BLD 0 0               ; Cargar la hilera
-        BLD 0 3               ; Cargar i
-        BLD 0 4               ; Cargar j
-        ADD                   ; i + j
-        IDX                   ; hilera[i + j]
-        BLD 0 1               ; Cargar la subhilera
-        BLD 0 4               ; Cargar j
-        IDX                   ; subhilera[j]
-        EQ                    ; Comparar hilera[i + j] === subhilera[j]
-        BF 15                 ; Si es false, salir del while
-
-        BLD 0 4               ; Cargar j
-        LDV 1                 ; Cargar 1
-        ADD                   ; j++
-        BST 0 4               ; Guardar j
-        BR -30                ; Saltar al inicio del while
-        ; Fin del while
-
-        LDF $3                ; Cargar la función largoHilera
-        BLD 0 1               ; Cargar la subhilera
-        APP 1                 ; Calcular largoHilera(subhilera)
-        BLD 0 4               ; Cargar j
-        EQ                    ; Comparar j === largoHilera(subhilera)
-        BF 19                 ; Si es false, continuar con el siguiente i
-        BLD 0 3               ; Retornar i si se encontró la subhilera
-        RET
-
-        BLD 0 3               ; Cargar i
-        LDV 1                 ; Cargar 1
-        ADD                   ; i++
-        BST 0 3               ; Guardar i
-        BR -50                ; Saltar al inicio del for
-    ; Fin del for
-
-    LDV -1                    ; Si no se encuentra la subhilera, retornar -1
+$FUN $1                     ; Definir la función '$1'
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 0                 ; Guardar la dirección de la variable 'count' en la pila
+    LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'hilera' en la pila
+    ;Inicio del while
+        BLD 0 1             ; Cargar la dirección de la variable 'hilera' en la pila
+        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (contador)
+        STK                 ; Seleccionar el primer elemento de la pila (la dirección de la variable 'hilera')
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (0)
+        PLUS 1              ; Sumar 1 al valor del argumento 0 0
+        BLD 0 2             ; Cargar el valor del argumento 0 0 en la pila
+        LDV ""              ; Cargar el valor vacío, null...
+        EQ
+        BF -10              ; Si EQ === false, saltar a BLD 0 1
+    ;Fin del while
+    BLD 0 0                 ; Cargar el valor del argumento 0 0 en la pila
+    LDV 1                   ; Cargar el valor de la variable 'count'
+    SUB                     ; Restar el valor de la pila
+    RET                     ; Retornar el valor de la pila  ;Nota: El código biesVM no está completamente optimizado, pero de la manera optimizada, por algún motivo no me funciona.
+$END $1                     ; Fin de la definición de la función '$1'
+$FUN $2                     ; Definir la función '$1'
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 0                 ; Guardar la dirección de la variable 'count' en la pila
+    LDV "Mundo"       ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'hilera' en la pila
+    ;Inicio del while
+        BLD 0 1             ; Cargar la dirección de la variable 'hilera' en la pila
+        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (contador)
+        STK                 ; Seleccionar el primer elemento de la pila (la dirección de la variable 'hilera')
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (0)
+        PLUS 1              ; Sumar 1 al valor del argumento 0 0
+        BLD 0 2             ; Cargar el valor del argumento 0 0 en la pila
+        LDV ""              ; Cargar el valor vacío, null...
+        EQ
+        BF -10              ; Si EQ === false, saltar a BLD 0 1
+    ;Fin del while
+    BLD 0 0                 ; Cargar el valor del argumento 0 0 en la pila
+    LDV 1                   ; Cargar el valor de la variable 'count'
+    SUB                     ; Restar el valor de la pila
+    RET                     ; Retornar el valor de la pila  ;Nota: El código biesVM no está completamente optimizado, pero de la manera optimizada, por algún motivo no me funciona.
+$END $2                     ; Fin de la definición de la función '$1'
+;---------------------------------------------------------------------------------
+$FUN $3
+    BLD 0 0         ; Hilera "Hola Mundo!"
+    BLD 0 1         ; Subhilera "Mundo"
+    BLD 0 2         ; hilera.length
+    BLD 0 3         ; hilera.length
+    SUB             ; hilera.length - hilera.length
+    BST 0 4         ; maxIndex
+    ; Inicio bucle for
+            LDV 0
+            BST 0 5 ;contador
+            BLD 0 5 ;contador
+            LDV 1
+            ADD
+            BST 0 5 ;contador = contador + 1
+            BLD 0 5
+            LDV 4
+            LTE
+            BT -7
+    ; Fin bucle for
+    BLD 0 5
+    PRN
     RET
-$END $4
-
-$FUN $main                    ; Definir la función main
-    STR "Hola Mundo!"         ; Cargar la hilera "Hola Mundo!"
-    BST 0 0                   ; Guardar la hilera en el nivel 0 argumento 0
-
-    STR "Mundo"               ; Cargar la subhilera "Mundo"
-    BST 0 1                   ; Guardar la subhilera en el nivel 0 argumento 1
-
-    LDF $4                    ; Cargar la función indiceSubhilera
-    BLD 0 0                   ; Cargar la hilera
-    BLD 0 1                   ; Cargar la subhilera
-    APP 2                     ; Llamar a la función indiceSubhilera con 2 argumentos
-    PRN                       ; Imprimir el valor retornado
-
-    HLT                       ; Detener la ejecución
-$END $main
-
-INI $main                     ; Inicializar la función main
+$END $3
+$FUN $0
+    LDF $1
+    APP
+    BST 0 0     ; Tamaño de "Hola Mundo!"
+    LDF $2
+    APP
+    BST 0 1     ; Tamaño de "Mundo"
+    LDV "Hola Mundo!"
+    LDV "Mundo"
+    BLD 0 0
+    BLD 0 1
+    LDF $3
+    APP 4
+    PRN
+    HLT
+$END $0
+INI $0

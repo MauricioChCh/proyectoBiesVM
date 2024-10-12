@@ -11,43 +11,38 @@
 ;console.log(largoHilera(hilera));
 
 $FUN $1                     ; Definir la función '$1'
-
-    LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
-    BST 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
+    BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
 
     LDV 0                   ; Cargar el valor de la variable 'hilera'
     BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
 
     ;Inicio del while
-        BLD 0 0             ; Cargar la dirección de la variable 'hilera' en la pila
-        BLD 0 1             ; Cargar el valor del argumento 0 0 en la pila (contador)
-        STK                 ; Seleccionar el primer elemento de la pila (la dirección de la variable 'hilera')
+        BLD 0 0             ; Carga 'hilera'
+        BLD 0 1             ; Carga 'count'
+        STK                 ; Extraer posición count de hilera
         BST 0 2             ; Guardar el valor de la hilera obtenido
 
-        BLD 0 1             ; Cargar el valor del argumento 0 0 en la pila (0)
-        LDV 1
-        ADD
-        BST 0 1             ; Guardar la dirección de la variable 'count' en la pila
+        BLD 0 2             ; Cargar el valor de la hilera obtenido
+        INO "string"        ; Cargar el valor de la variable 'hilera'
+        BF 6                ; Si EQ === false, saltar a BLD 0 0
 
-        BLD 0 2             ; Cargar el valor del argumento 0 0 en la pila
-        LDV ""              ; Cargar el valor vacío, null...
-        EQ
-        BF -11              ; Si EQ === false, saltar a BLD 0 1
+        BLD 0 1             ; Cargar 'count'
+        LDV 1               ; Cargar 1
+        ADD                 ; Sumar 1 a 'count'
+        BST 0 1             ; count = count + 1
+        BR -11              ; Volver al inicio del while
     ;Fin del while
 
     BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
-    LDV 1                   ; Cargar el valor de la variable 'count'
-    SUB                     ; Restar el valor de la pila
 
-    RET                     ; Retornar el valor de la pila  ;Nota: El código biesVM no está completamente optimizado, pero de la manera optimizada, por algún motivo no me funciona.
-
+    RET                     ; Retornar el valor de la pila
 $END $1                     ; Fin de la definición de la función '$1'
 
-$FUN $main                  ; Definir la función 'main'
+$FUN $0                  ; Definir la función 'main'
     LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
     LDF $1                  ; Cargar la función '$1'
     APP 1                   ; Llamar a la función '$1' con 0 argumentos
     PRN                     ; Imprimir el valor retornado por la función '$1'
     HLT                     ; Parar la ejecución (nunca alcanzará esta instrucción)
-$END $main                  ; Fin de la definición de la función 'main'
-INI $main                   ; Inicializar la función 'main'
+$END $0                  ; Fin de la definición de la función 'main'
+INI $0                   ; Inicializar la función 'main'
