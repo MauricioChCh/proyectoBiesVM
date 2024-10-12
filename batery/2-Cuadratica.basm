@@ -1,11 +1,137 @@
+;function squareRoot(a) {
+;    if (typeof a !== 'number' || a < 0)
+;        throw new Error(`SquareRoot: invalid call for ${a}`);
+
+;    if (a === 0 || a === 1) return a;
+
+;    const max = 20;
+;    const epsilon = -12.28171817;
+;    let x = a / 2;
+;    let xSquared = x * x;
+;    let iterations = 0;
+
+;    // Valor absoluto manual
+;    while ( (iterations < max) && ((xSquared - a >= epsilon) || (a - xSquared >= epsilon)) ) {
+;        x = 0.5 * (x + a / x);
+;        xSquared = x * x; // Solo calculamos x^2 una vez por iteración
+;        iterations++;
+;    }
+
+;    return x;
+;}
+
 ;let cuadrática = (a, b, c) => {
-;    let d = Math.sqrt(b * b -4 * a * c);
+;    let d = squareRoot(b * b - 4 * a * c);
 ;    return [(-b + d) / (2 * a),(-b - d) / (2 * a)]
 ;};
 
-; print(cuadrática(1, -5, 6))
+$FUN $1
+    ;BLD 0 0                     ;Cargar el parámetro 'a' del entorno
+    ;INO "number"                ;typeOf a
+    ;BST 0 1                     ;Guardar el resultado en el nivel 0 argumento 1
+    ;BLD 0 0                     ;Cargar el parámetro 'a' del entorno
+    ;LDV 0                       ;Cargar el 0
+    ;LT                          ;Comparar a < 0
+    ;BST 0 2                     ;Guardar el resultado en el nivel 0 argumento 2
+    ;BLD 0 1                     ;Cargar el resultado de typeOf a
+    ;NOT                         ;Negar el resultado
+    ;BLD 0 2                     ;Cargar el resultado de a < 0
+    ;OR                          ;typeOf a !== 'number' || a < 0
+    ;BT 1                        ;if true
+    ;throw new Error(`SquareRoot: invalid call for ${a}`);
 
-$FUN $1                ; Definir la función '$1'
+    BLD 0 0                      ;Cargar el parámetro 'a' del entorno
+    LDV 0                        ;Cargar el 0
+    EQ                           ;a === 0
+    BST 0 3                      ;Guardar el resultado en el nivel 0 argumento 3
+    BLD 0 0                      ;Cargar el parámetro 'a' del entorno
+    LDV 1                        ;Cargar el 1
+    EQ                           ;a === 1
+    BST 0 4                      ;Guardar el resultado en el nivel 0 argumento 4
+    BLD 0 3                      ;Cargar el resultado de a === 0
+    OR                           ;a === 0 || a === 1
+    BF 4                         ;if false saltar a const max = 20, ... etc
+    BLD 0 0                      ;Cargar el parámetro 'a' del entorno
+    RET                          ;Retornar el resultado
+
+    LDV 20                       ;Cargar el 20
+    BST 0 1                      ;max = 20
+
+    LDV -12.28171817             ;Cargar el -12.28171817
+    BST 0 2                      ;epsilon = -12.28171817
+
+    BLD 0 0                      ;Cargar el parámetro 'a' del entorno
+    LDV 2                        ;Cargar el 2
+    DIV                          ;a / 2
+    BST 0 3                      ;x = a / 2
+
+    BLD 0 3                      ;Cargar el valor de x
+    BLD 0 3                      ;Cargar el valor de x
+    MUL                          ;x * x
+    BST 0 4                      ;xSquared = x * x
+
+    LDV 0                        ;Cargar el 0
+    BST 0 5                      ;iterations = 0
+
+    ; inicio del while
+    BLD 0 5                      ;iterations
+    BLD 0 1                      ;max
+    LT                           ;iterations < max
+    BST 0 6                      ;Guardar el resultado (iterations < max)
+
+    BLD 0 4                      ;Cargar el valor de xSquared
+    BLD 0 0                      ;Cargar el valor de a
+    SUB                          ;xSquared - a
+    BLD 0 2                      ;Cargar el valor de epsilon
+    GTE                          ;xSquared - a >= epsilon
+    BST 0 7                      ;Guardar el resultado (xSquared - a >= epsilon)
+
+    BLD 0 0                      ;Cargar el valor de a
+    BLD 0 4                      ;Cargar el valor de xSquared
+    SUB                          ;a - xSquared
+    BLD 0 2                      ;Cargar el valor de epsilon
+    GTE                          ;a - xSquared >= epsilon
+    BST 0 8                      ;Guardar el resultado (a - xSquared >= epsilon)
+
+    BLD 0 7                      ;Cargar el resultado de xSquared - a >= epsilon
+    BLD 0 8                      ;Cargar el resultado de a - xSquared >= epsilon
+    OR                           ;(xSquared - a >= epsilon) || (a - xSquared >= epsilon)
+    BST 0 9                      ;Guardar el resultado
+    BLD 0 6                      ;Cargar el resultado de iterations < max
+    BLD 0 9                      ;Cargar el resultado de (xSquared - a >= epsilon) || (a - xSquared >= epsilon)
+    AND                          ;(iterations < max) && ((xSquared - a >= epsilon) || (a - xSquared >= epsilon))
+    BF 19                        ;if false saltar a return x
+
+        ;body del while
+            BLD 0 0                      ;Cargar el valor de a
+            BLD 0 3                      ;Cargar el valor de x
+            DIV                          ;a / x
+            BLD 0 3                      ;Cargar el valor de x
+            ADD                          ;x + a / x
+            LDV 0.5                      ;Cargar el 0.5
+            MUL                          ;0.5 * (x + a / x)
+            BST 0 3                      ;Guardar el resultado en x
+
+            BLD 0 3                      ;Cargar el valor de x
+            BLD 0 3                      ;Cargar el valor de x
+            MUL                          ;x * x
+            BST 0 4                      ;Guardar el resultado en xSquared
+
+            BLD 0 5                      ;Cargar el valor de iterations
+            LDV 1                        ;Cargar el 1
+            ADD                          ;iterations + 1
+            BST 0 5                      ;Guardar el resultado en iterations
+            BR -40                       ;Saltar al inicio del while
+        ;Fin del body del while
+
+    ; fin del while
+
+    BLD 0 3                      ;Cargar el valor de x
+    RET                          ;Retornar el resultado
+
+$END $1
+
+$FUN $2                ; Definir la función '$1'
     BLD 0 1            ; Cargar el primer b (-5)
     BLD 0 1            ; Cargar el segundo b (-5)
     MUL                ; Multiplicar b * b
@@ -19,7 +145,8 @@ $FUN $1                ; Definir la función '$1'
 
     SUB                ; Restar b * b - 4 * a * c
 
-    SQRT               ; Calcular la raíz cuadrada de b * b - 4 * a * c
+    LDF $1             ; Calcular la raíz cuadrada de b * b - 4 * a * c
+    APP 1              ; Llamar a la función raíz cuadrada de un número con 1 argumento
     BST 0 3            ; Guardar el resultado en el nivel 0 argumento 3
 
     BLD 0 1            ; Cargar el segundo b (-5)
@@ -55,23 +182,23 @@ $FUN $1                ; Definir la función '$1'
 
     RET                ; Retornar el resultado
 
-$END $1                ; Fin de la definición de la función '$1'
+$END $2                ; Fin de la definición de la función '$1'
 
 $FUN $main             ; Definir la función 'main'
-    LDV 1              ; Cargar el valor de 'a' (5)
+    LDV 2              ; Cargar el valor de 'a' (1)
     BST 0 0            ; Guardar 'a' en el nivel 0 argumento 0
 
-    LDV -5             ; Cargar el valor de 'b' (5)
+    LDV -4             ; Cargar el valor de 'b' (-5)
     BST 0 1            ; Guardar 'b' en el nivel 0 argumento 1
 
-    LDV 6              ; Cargar el valor de 'c' (6)
+    LDV 1              ; Cargar el valor de 'c' (6)
     BST 0 2            ; Guardar 'c' en el nivel 0 argumento 2
 
     BLD 0 0            ; Cargar el argumento 'a' del entorno
     BLD 0 1            ; Cargar el argumento 'b' del entorno
     BLD 0 2            ; Cargar el argumento 'c' del entorno
 
-    LDF $1             ; Cargar la función 'cuadrática'
+    LDF $2             ; Cargar la función 'cuadrática'
     APP 3              ; Llamar a la función 'cuadrática' con 1 argumento
     PRN                ; Imprimir el valor retornado
 

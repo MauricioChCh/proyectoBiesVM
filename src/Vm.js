@@ -33,6 +33,7 @@ class VM {
     }
 
     executeInstruction(instruction) {
+
         this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args.join(' ')}`);
         const handler = this.instructionHandlers[instruction.type];
         if (handler) {
@@ -69,15 +70,22 @@ class VM {
             this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
         },
 
-        PLUS: (instruction) => {
-            const currentLayer = this.bindings[0]; // Accedemos directamente a la capa 0 del entorno de bindings
-            let currentValue = currentLayer[0];    // Accedemos directamente al índice 0
-            if (currentValue == null) {  // Usamos == para cubrir undefined y null
-                currentValue = 1;   // Asignamos el valor 1
-            }
-            currentValue =+ currentValue + +instruction.args[0];  // Conversión y suma en una línea
-            currentLayer[0] = this.stack[this.stack.length - 1] = currentValue;  // Actualizamos bindings y stack
+        PLUS: (instruction) => {                                                                                    //Hay que quitar esta
+            const currentLayer = this.bindings[0]; // Accedemos a la capa 0 del entorno de bindings
+            let currentValue = this.stack.pop();   // Obtener el valor actual de la pila
+
+            const numValue = Number(currentValue);       // Convertir a número
+            const numToAdd = Number(instruction.args[0]); // Convertir a número el argumento de la instrucción
+
+            const result = numValue + numToAdd;          // Realizar la suma
+
+            this.stack.push(result);  // Empujar el resultado a la pila
+
+            // En lugar de actualizar siempre currentLayer[0], actualizamos el binding correcto
+            //const varIndex = 5 || 0;  // Usar el índice proporcionado o 0 como fallback
+            currentLayer[0] = result;  // Actualizar el valor en el binding correcto
         },
+
 
         SUB: () => {
             const topValue = this.stack.pop();
@@ -102,57 +110,93 @@ class VM {
             this.stack.push(-this.stack.pop());
         },
 
-        POW: () => {
-            const exponent = this.stack.pop();
-            const base = this.stack.pop();
-            this.stack.push(Math.pow(base, exponent));
+        // Lógica Binaria
+
+        AND: () => {
+            this.stack.push(this.stack.pop() && this.stack.pop());
         },
 
-        SQRT: () => {
-            const value = this.stack.pop();
-            if (value < 0) {
-                throw new Error('Error: La raíz cuadrada de un número negativo no es un número real');
-            }
-            this.stack.push(Math.sqrt(value));
+        OR: () => {
+            this.stack.push(this.stack.pop() || this.stack.pop());
+        },
+
+        XOR: () => {
+            this.stack.push((this.stack.pop() !== this.stack.pop()));
+        },
+
+        // Lógica Unaria
+        NOT: () => {
+            this.stack.push(!this.stack.pop());
         },
 
         // Comparaciones
-        EQ: () => {
+        EQ: () => { // Igualdad
             this.stack.push(this.stack.pop() === this.stack.pop());
         },
 
-        GT: () => {
+        GT: () => { // Mayor que
             const valueA = this.stack.pop();
             const valueB = this.stack.pop();
             this.stack.push(Number(valueB) > Number(valueA));
         },
 
-        GTE: () => {
+        GTE: () => {    // Mayor o igual que
             const valueA = this.stack.pop();
             const valueB = this.stack.pop();
             this.stack.push(Number(valueB) >= Number(valueA));
         },
 
-        LT: () => {
+        LT: () => { // Menor que
             const valueA = this.stack.pop();
             const valueB = this.stack.pop();
             this.stack.push(Number(valueB) < Number(valueA));
         },
 
-        LTE: () => {
+        LTE: () => {    // Menor o igual que
             const valueA = this.stack.pop();
             const valueB = this.stack.pop();
+
             this.stack.push(Number(valueB) <= Number(valueA));
         },
 
+        //Casting
+
+        // Type Of
+
+        INO: (instruction) => {
+            const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
+
+            const convertValue = (value) =>
+                typeof value === 'string' && !isNaN(Number(value)) ? Number(value) : value;
+
+            if (!['number', 'list', 'string'].includes(argumento)) { // Validar el argumento
+                throw new Error('Argumento en instrucción INO no válido');
+            }
+
+            const checkType = (arg, val) => { // Comprobar si el valor es del tipo especificado
+                const typeChecks = {
+                    number: () => typeof val === 'number' && !isNaN(val),
+                    list: () => Array.isArray(val),
+                    string: () => typeof val === 'string'
+                };
+                return typeChecks[arg] ? typeChecks[arg]() : false;
+            };
+            this.stack.push(checkType(argumento, convertValue(this.stack.pop())));  // Empujar el resultado booleano a la pila
+        },
+
+
         // Operaciones de listas e hileras
 
-        STK: () => {
-            const index = this.stack.pop();       // Obtiene el índice de la pila
-            const str = this.stack.pop();       // Obtiene la cadena de la pila
+        STK: function() {
+            const index = this.stack.pop();  // Obtiene el índice de la pila
+            const str = this.stack.pop();    // Obtiene la cadena de la pila
 
-            this.stack.push(str.charAt(index)); // Extrae el carácter en la posición N y lo empuja a la pila
+            // Validar que index sea un número y str sea una cadena
+            if (typeof index === 'number' && Number.isInteger(index) && typeof str === 'string') {
+                this.stack.push(str.charAt(index)); // Extrae el carácter en la posición N y lo empuja a la pila
+            }
         },
+
 
         SRK: (instruction) => {  //Tomar el resto de la hilera
             const [stackLayerIndex, stackVariableIndex] = instruction.args;
@@ -222,6 +266,7 @@ class VM {
 
         BT: (instruction) => {
             if (this.stack.pop()) { // Verifica si el valor es verdadero
+                console.log("BT: True" )
                 const branchOffset = Number(instruction.args[0]) - 2;
                 this.programCounter += branchOffset;
             }
@@ -251,23 +296,25 @@ class VM {
         INI: (instruction) => {
             const mainFunctionName = instruction.args[0];
             const mainFunctionBody = this.functions[mainFunctionName];
+
             if (!mainFunctionBody) {
                 this.logger.log(`Error: Main function ${mainFunctionName} not defined`);
                 throw new Error(`Main function ${mainFunctionName} not defined`);
             }
-            this.code = mainFunctionBody;
+
+
+            this.code = mainFunctionBody;   // Cargar el cuerpo de la función principal
+
+            // Inicializar la pila (S), los bindings (B) y el contexto (D)
             this.stack = [];
             this.bindings = [{}];
-            this.contextStack = [];
-            this.programCounter = 0;
+            this.contextStack = [];     // Contexto actual D.current = C
+            this.programCounter = 0;    // Inicializar el contador de programa
         },
 
         // Salida y finalización
         PRN: () => {
-            const printValue = this.stack.pop();
-            if (printValue !== undefined) {
-                console.log(chalk.yellow(`${printValue}`));
-            }
+            console.log(chalk.yellow(`${this.stack.pop()}`));
         },
 
         HLT: () => {

@@ -23,7 +23,9 @@ instruction
     | funcInstr // O una instrucción de función
     | stringInstr // O instrucciones de manipulación de hileras
     | comparisonInstr // O instrucciones de comparación
+    | logicalInst // O instrucciones lógicas
     | listInstr // **Nueva regla** para manejar la instrucción LIN
+    | inputString // **Nueva regla** para manejar la instrucción INO
     ;
 
 loadInstr
@@ -36,13 +38,18 @@ loadInstr
 
 arithInstr
     : 'ADD' ES? // Instrucción de suma
-    | 'PLUS' ES? NUMBER // Instrucción de incremento
+    | 'PLUS' ES? NUMBER // Instrucción de incremento        hay que quitar esta instrucción
     | 'MUL' ES? // Instrucción de multiplicación
     | 'SUB' ES? // Instrucción de resta
     | 'DIV' ES? // Instrucción de división
     | 'NEG' ES? // Instrucción de negación
-    | 'SQRT' ES? // Instrucción de raíz cuadrada
-    | 'POW' ES? // Instrucción de potencia
+    ;
+
+logicalInst
+    :  'AND' ES? // Instrucción de negación lógica
+    |  'NOT' ES? // Instrucción de conjunción lógica
+    |  'OR' ES? // Instrucción de disyunción lógica
+    |  'XOR' ES? // Instrucción de disyunción exclusiva lógica
     ;
 
 controlInstr
@@ -81,6 +88,10 @@ array
     : '[' ( (NUMBER | STRING) (',' (NUMBER | STRING))* )? ']' // Acepta números o cadenas dentro de corchetes
     ;
 
+inputString
+    : 'INO' ES* (STRING)? ES*  // Permitir TYPE o STRING
+    ;
+
 // Instrucciones principales
 LDV : 'LDV'; // Token para la instrucción LDV
 ADD : 'ADD'; // Token para la instrucción ADD
@@ -88,8 +99,6 @@ MUL : 'MUL'; // Token para la instrucción MUL
 SUB : 'SUB'; // Token para la instrucción SUB
 DIV : 'DIV'; // Token para la instrucción DIV
 NEG : 'NEG'; // Token para la instrucción NEG
-SQRT : 'SQRT'; // Token para la instrucción SQRT
-POW : 'POW'; // Token para la instrucción POW
 EQ : 'ET'; // Token para la instrucción GQ
 GT : 'GT'; // Token para la instrucción GT
 GTE : 'GTE'; // Token para la instrucción GTE
@@ -106,6 +115,12 @@ INI : 'INI'; // Token para la instrucción INI
 STK : 'STK'; // Token para la instrucción STK
 SRK : 'SRK'; // Token para la instrucción SRK
 LIN : 'LIN'; // Token para la instrucción LIN
+CST : 'CST'; // Token para la instrucción CST
+INO : 'INO'; // Token para la instrucción INO
+AND : 'AND'; // Token para la instrucción AND
+OR : 'OR'; // Token para la instrucción OR
+XOR : 'XOR'; // Token para la instrucción XOR
+NOT : 'NOT'; // Token para la instrucción NOT
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
@@ -122,6 +137,16 @@ ID : [a-zA-Z_][a-zA-Z_0-9]*; // Identificadores que comienzan con una letra o gu
 
 // Literales de hileras
 STRING : '"' (~["\r\n])* '"' ; // Captura correctamente las cadenas entre comillas manteniendo los espacios
+
+TYPE
+    : '"number"'
+    | '"list2"'
+    | '"string"'
+    ;
+
+VALUE
+    : NUMBER | STRING // Valores que se pueden usar en el casting // NUMBER | LIST | STRING
+    ;
 
 // Comentarios
 COMMENT : ';' ~[\r\n]* -> skip; // Comentarios que comienzan con ';' y se omiten

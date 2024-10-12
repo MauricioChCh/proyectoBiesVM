@@ -30,22 +30,22 @@ $FUN $1                     ; Definir la función '$1'
         BLD 0 2             ; Cargar el valor del argumento 0 0 en la pila
         LDV ""              ; Cargar el valor vacío, null...
         EQ
-        BF -10               ; Si EQ === false, saltar a BLD 0 1
+        BF -10              ; Si EQ === false, saltar a BLD 0 1
     ;Fin del while
 
-    BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila
-    LDV 1
-    SUB
+    BLD 0 0                 ; Cargar el valor del argumento 0 0 en la pila
+    LDV 1                   ; Cargar el valor de la variable 'count'
+    SUB                     ; Restar el valor de la pila
 
-    RET                 ; Retornar el valor de la pila  ;Nota: El código biesVM no está completamente optimizado, pero de la manera optimizada, por algún motivo no me funciona.
+    RET                     ; Retornar el valor de la pila  ;Nota: El código biesVM no está completamente optimizado, pero de la manera optimizada, por algún motivo no me funciona.
 
-$END $1        ; Fin de la definición de la función '$1'
+$END $1                     ; Fin de la definición de la función '$1'
 
-$FUN $main     ; Definir la función 'main'
-    LDV "Hola Mundo!"   ; Cargar el valor de la variable 'hilera'
-    LDF $1        ; Cargar la función '$1'
-    APP 1         ; Llamar a la función '$1' con 0 argumentos
-    PRN           ; Imprimir el valor retornado por la función '$1'
-    HLT           ; Parar la ejecución (nunca alcanzará esta instrucción)
-$END $main     ; Fin de la definición de la función 'main'
-INI $main      ; Inicializar la función 'main'
+$FUN $main                  ; Definir la función 'main'
+    LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
+    LDF $1                  ; Cargar la función '$1'
+    APP 1                   ; Llamar a la función '$1' con 0 argumentos
+    PRN                     ; Imprimir el valor retornado por la función '$1'
+    HLT                     ; Parar la ejecución (nunca alcanzará esta instrucción)
+$END $main                  ; Fin de la definición de la función 'main'
+INI $main                   ; Inicializar la función 'main'
