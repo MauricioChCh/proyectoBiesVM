@@ -70,23 +70,6 @@ class VM {
             this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
         },
 
-        PLUS: (instruction) => {                                                                                    //Hay que quitar esta
-            const currentLayer = this.bindings[0]; // Accedemos a la capa 0 del entorno de bindings
-            let currentValue = this.stack.pop();   // Obtener el valor actual de la pila
-
-            const numValue = Number(currentValue);       // Convertir a número
-            const numToAdd = Number(instruction.args[0]); // Convertir a número el argumento de la instrucción
-
-            const result = numValue + numToAdd;          // Realizar la suma
-
-            this.stack.push(result);  // Empujar el resultado a la pila
-
-            // En lugar de actualizar siempre currentLayer[0], actualizamos el binding correcto
-            //const varIndex = 5 || 0;  // Usar el índice proporcionado o 0 como fallback
-            currentLayer[0] = result;  // Actualizar el valor en el binding correcto
-        },
-
-
         SUB: () => {
             const topValue = this.stack.pop();
             const secondValue = this.stack.pop();
@@ -192,8 +175,8 @@ class VM {
             const str = this.stack.pop();    // Obtiene la cadena de la pila
 
             // Validar que index sea un número y str sea una cadena
-            if (typeof index === 'number' && Number.isInteger(index) && typeof str === 'string') {
-                this.stack.push(str.charAt(index)); // Extrae el carácter en la posición N y lo empuja a la pila
+            if (typeof Number(index) === 'number' && Number.isInteger(Number(index)) && typeof str === 'string') {
+                this.stack.push(str.charAt(Number(index))); // Extrae el carácter en la posición N y lo empuja a la pila
             }
         },
 
@@ -266,15 +249,14 @@ class VM {
 
         BT: (instruction) => {
             if (this.stack.pop()) { // Verifica si el valor es verdadero
-                console.log("BT: True" )
-                const branchOffset = Number(instruction.args[0]) - 2;
+                const branchOffset = Number(instruction.args[0]) - 1;
                 this.programCounter += branchOffset;
             }
         },
 
         BF: (instruction) => {
             if (!this.stack.pop()) { // Verifica si el valor es falso
-                const branchOffset = Number(instruction.args[0]) -2;
+                const branchOffset = Number(instruction.args[0]) -1;
                 this.programCounter += branchOffset;
             }
         },

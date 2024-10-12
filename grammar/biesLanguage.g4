@@ -38,7 +38,6 @@ loadInstr
 
 arithInstr
     : 'ADD' ES? // Instrucción de suma
-    | 'PLUS' ES? NUMBER // Instrucción de incremento        hay que quitar esta instrucción
     | 'MUL' ES? // Instrucción de multiplicación
     | 'SUB' ES? // Instrucción de resta
     | 'DIV' ES? // Instrucción de división

@@ -12,28 +12,30 @@
 
 $FUN $1                     ; Definir la función '$1'
 
-    LDV 0                   ; Cargar el valor de la variable 'hilera'
-    BST 0 0                 ; Guardar la dirección de la variable 'count' en la pila
-
     LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
-    BST 0 1                 ; Guardar la dirección de la variable 'hilera' en la pila
+    BST 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
+
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
 
     ;Inicio del while
-        BLD 0 1             ; Cargar la dirección de la variable 'hilera' en la pila
-        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (contador)
+        BLD 0 0             ; Cargar la dirección de la variable 'hilera' en la pila
+        BLD 0 1             ; Cargar el valor del argumento 0 0 en la pila (contador)
         STK                 ; Seleccionar el primer elemento de la pila (la dirección de la variable 'hilera')
         BST 0 2             ; Guardar el valor de la hilera obtenido
 
-        BLD 0 0             ; Cargar el valor del argumento 0 0 en la pila (0)
-        PLUS 1              ; Sumar 1 al valor del argumento 0 0
+        BLD 0 1             ; Cargar el valor del argumento 0 0 en la pila (0)
+        LDV 1
+        ADD
+        BST 0 1             ; Guardar la dirección de la variable 'count' en la pila
 
         BLD 0 2             ; Cargar el valor del argumento 0 0 en la pila
         LDV ""              ; Cargar el valor vacío, null...
         EQ
-        BF -10              ; Si EQ === false, saltar a BLD 0 1
+        BF -11              ; Si EQ === false, saltar a BLD 0 1
     ;Fin del while
 
-    BLD 0 0                 ; Cargar el valor del argumento 0 0 en la pila
+    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
     LDV 1                   ; Cargar el valor de la variable 'count'
     SUB                     ; Restar el valor de la pila
 

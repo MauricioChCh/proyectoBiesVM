@@ -50,7 +50,7 @@ $FUN $1
     BST 0 4                      ;Guardar el resultado en el nivel 0 argumento 4
     BLD 0 3                      ;Cargar el resultado de a === 0
     OR                           ;a === 0 || a === 1
-    BF 4                         ;if false saltar a const max = 20, ... etc
+    BF 3                         ;if false saltar a const max = 20, ... etc
     BLD 0 0                      ;Cargar el parámetro 'a' del entorno
     RET                          ;Retornar el resultado
 
@@ -73,7 +73,7 @@ $FUN $1
     LDV 0                        ;Cargar el 0
     BST 0 5                      ;iterations = 0
 
-    ; inicio del while
+    ;inicio del while
     BLD 0 5                      ;iterations
     BLD 0 1                      ;max
     LT                           ;iterations < max
@@ -100,9 +100,9 @@ $FUN $1
     BLD 0 6                      ;Cargar el resultado de iterations < max
     BLD 0 9                      ;Cargar el resultado de (xSquared - a >= epsilon) || (a - xSquared >= epsilon)
     AND                          ;(iterations < max) && ((xSquared - a >= epsilon) || (a - xSquared >= epsilon))
-    BF 19                        ;if false saltar a return x
+    BF 18                        ;if false saltar a return x
 
-        ;body del while
+        ;Inicio body del while
             BLD 0 0                      ;Cargar el valor de a
             BLD 0 3                      ;Cargar el valor de x
             DIV                          ;a / x
@@ -124,7 +124,7 @@ $FUN $1
             BR -40                       ;Saltar al inicio del while
         ;Fin del body del while
 
-    ; fin del while
+    ;fin del while
 
     BLD 0 3                      ;Cargar el valor de x
     RET                          ;Retornar el resultado
