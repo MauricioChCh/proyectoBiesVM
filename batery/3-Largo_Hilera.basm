@@ -16,7 +16,8 @@ $FUN $1                     ; Definir la función '$1'
     LDV 0                   ; Cargar el valor de la variable 'hilera'
     BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
 
-    ;Inicio del while
+    ; Inicio del while
+
         BLD 0 0             ; Carga 'hilera'
         BLD 0 1             ; Carga 'count'
         STK                 ; Extraer posición count de hilera
@@ -26,12 +27,17 @@ $FUN $1                     ; Definir la función '$1'
         INO "string"        ; Cargar el valor de la variable 'hilera'
         BF 6                ; Si EQ === false, saltar a BLD 0 0
 
-        BLD 0 1             ; Cargar 'count'
-        LDV 1               ; Cargar 1
-        ADD                 ; Sumar 1 a 'count'
-        BST 0 1             ; count = count + 1
-        BR -11              ; Volver al inicio del while
-    ;Fin del while
+        ; Inicio body del while
+
+            BLD 0 1             ; Cargar 'count'
+            LDV 1               ; Cargar 1
+            ADD                 ; Sumar 1 a 'count'
+            BST 0 1             ; count = count + 1
+            BR -11              ; Volver al inicio del while
+
+        ; Fin body del while
+
+    ; Fin del while
 
     BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
 
@@ -39,7 +45,7 @@ $FUN $1                     ; Definir la función '$1'
 $END $1                     ; Fin de la definición de la función '$1'
 
 $FUN $0                  ; Definir la función 'main'
-    LDV "Hola Mundo!"       ; Cargar el valor de la variable 'hilera'
+    LDV " Hola   Mundo! "       ; Cargar el valor de la variable 'hilera'
     LDF $1                  ; Cargar la función '$1'
     APP 1                   ; Llamar a la función '$1' con 0 argumentos
     PRN                     ; Imprimir el valor retornado por la función '$1'

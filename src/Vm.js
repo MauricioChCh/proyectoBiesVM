@@ -149,7 +149,7 @@ class VM {
         INO: (instruction) => {
             const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
 
-            if (!['number', 'list', 'string', 'non_empty_string'].includes(argumento)) {
+            if (!['number', 'list', 'string'].includes(argumento)) {
                 throw new Error('Argumento en instrucción INO no válido');
             }
 
@@ -157,21 +157,16 @@ class VM {
                 const typeChecks = {
                     number: () => typeof val === 'number' && !isNaN(val),
                     list: () => Array.isArray(val),
-                    string: () => typeof val === 'string' && val !== '',
-                    non_empty_string: () => typeof val === 'string' && val.trim() !== ''
+                    string: () => typeof val === 'string',
                 };
                 return typeChecks[arg] ? typeChecks[arg]() : false;
             };
 
             const value = this.stack.pop();
 
-            // Manejo especial para cadenas vacías
-            if (value === '' && argumento === 'string') {
-                this.stack.push(false);
-            } else {
-                const result = checkType(argumento, value);
-                this.stack.push(result);
-            }
+            // Manejo de cadenas vacías utilizando
+            const result = (value === '' && argumento === 'string') ? false : checkType(argumento, value);
+            this.stack.push(result);
         },
 
 
