@@ -44,8 +44,8 @@ $FUN $1                     ; Definir la función '$1'
     RET                     ; Retornar el valor de la pila
 $END $1                     ; Fin de la definición de la función '$1'
 
-$FUN $0                  ; Definir la función 'main'
-    LDV " Hola   Mundo! "       ; Cargar el valor de la variable 'hilera'
+$FUN $0                     ; Definir la función 'main'
+    LDV " Hola   Mundo! "   ; Cargar el valor de la variable 'hilera'
     LDF $1                  ; Cargar la función '$1'
     APP 1                   ; Llamar a la función '$1' con 0 argumentos
     PRN                     ; Imprimir el valor retornado por la función '$1'

@@ -1,0 +1,14 @@
+;function fibonacci(n) {
+;    if (n <= 1) return n; // Casos base
+;
+;    let a = 0, b = 1; // Inicializar los primeros dos valores de Fibonacci
+;    for (let i = 2; i <= n; i++) {
+;        let temp = a + b; // Calcular el siguiente número en la secuencia
+;        a = b;            // Actualizar el valor de a
+;        b = temp;         // Actualizar el valor de b
+;    }
+;
+;    return b; // El valor de b contiene el Fibonacci(n)
+;}
+;
+;console.log(fibonacci(10));  // Output: 55
