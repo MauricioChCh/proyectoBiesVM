@@ -10,7 +10,6 @@ class VM {
         this.bindings = [{}];
         this.contextStack = [];
         this.code = [];
-        this.environment = [];
         this.functions = {};
         this.programCounter = 0;
         this.logger = logger;
@@ -215,7 +214,6 @@ class VM {
                 functionName: functionName,
                 body: functionBody,
                 paramCount: paramCountValue,
-                environment: this.environment.slice()
             };
             this.stack.push(closure);
         },

@@ -84,29 +84,6 @@ export class Visitor extends biesLanguageVisitor {
         return super.visitInstruction(ctx);
     }
 
-    /*visitInstruction(ctx) {
-        const text = ctx.getText().trim();
-        const parts = text.split(/\s+/);
-        const type = parts[0];
-        const args = parts.slice(1);
-
-        // Verifica si la instrucción es de bifurcación
-        const isBranchingInstruction = (type === 'BR' || type === 'BF' || type === 'BT');
-
-        // Acumula la instrucción en el código
-        this.code.push({ type, args });
-
-        // Si no es una bifurcación, ejecuta la instrucción
-        if (!isBranchingInstruction) {
-            this.vm.executeInstruction({ type, args });
-
-            // Limpia las instrucciones acumuladas
-            //this.code = [];
-        }
-
-        return super.visitInstruction(ctx);
-    }*/
-
     /**
      * Envía el código acumulado a la máquina virtual (`VM`) para su ejecución.
      * Llama a la función `run` de la máquina virtual con el arreglo de instrucciones `this.code`.

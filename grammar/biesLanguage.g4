@@ -139,7 +139,7 @@ STRING : '"' (~["\r\n])* '"' ; // Captura correctamente las cadenas entre comill
 
 TYPE
     : '"number"'
-    | '"list2"'
+    | '"list"'
     | '"string"'
     ;
 
