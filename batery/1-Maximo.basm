@@ -10,7 +10,7 @@ $FUN $1          ; Definir la función '$1' (esMayor)
     RET              ; Retornar de la función
 $END $1          ; Fin de la definición de la función '$1'
 
-$FUN $main       ; Definir la función 'main'
+$FUN $0       ; Definir la función 'main'
     LDV 8            ; Cargar el valor de 'a' (8)
     BST 0 0          ; Guardar 'a' en el nivel 0 argumento 0
 
@@ -25,6 +25,6 @@ $FUN $main       ; Definir la función 'main'
 
     PRN              ; Imprimir el valor retornado
     HLT              ; Detener la ejecución
-$END $main       ; Fin de la definición de la función 'main'
+$END $0       ; Fin de la definición de la función 'main'
 
-INI $main        ; Inicializar la función 'main'
+INI $0        ; Inicializar la función 'main'

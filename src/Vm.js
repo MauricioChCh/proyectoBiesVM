@@ -298,7 +298,6 @@ class VM {
                 throw new Error(`Main function ${mainFunctionName} not defined`);
             }
 
-
             this.code = mainFunctionBody;   // Cargar el cuerpo de la función principal
 
             // Inicializar la pila (S), los bindings (B) y el contexto (D)
