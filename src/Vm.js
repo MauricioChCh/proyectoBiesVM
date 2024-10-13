@@ -33,7 +33,6 @@ class VM {
     }
 
     executeInstruction(instruction) {
-
         this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args.join(' ')}`);
         const handler = this.instructionHandlers[instruction.type];
         if (handler) {
@@ -47,7 +46,21 @@ class VM {
         // Carga y almacenamiento de valores
         LDV: (instruction) => {
             const valueArgument = instruction.args.join(' ');
-            this.stack.push(valueArgument.replace(/^"(.*)"$/, '$1'));
+            let value;
+
+            // Comprobar si es un string entre comillas
+            if (valueArgument.startsWith('"') && valueArgument.endsWith('"')) {
+                // Es un string, eliminamos las comillas
+                value = valueArgument.slice(1, -1);
+            } else {
+                // Intentamos convertirlo a número
+                const numberValue = Number(valueArgument);
+
+                // Si es un número válido (incluyendo enteros, negativos y decimales), lo usamos
+                // Si no, lo dejamos como string
+                value = !isNaN(numberValue) ? numberValue : valueArgument;
+            }
+            this.stack.push(value);
         },
 
         BLD: (instruction) => {
@@ -132,6 +145,7 @@ class VM {
         LT: () => { // Menor que
             const valueA = this.stack.pop();
             const valueB = this.stack.pop();
+
             this.stack.push(Number(valueB) < Number(valueA));
         },
 
@@ -155,7 +169,7 @@ class VM {
 
             const checkType = (arg, val) => {
                 const typeChecks = {
-                    number: () => typeof val === 'number' && !isNaN(val),
+                    number: () => !isNaN(Number(val)),  // Modificado para convertir a número
                     list: () => Array.isArray(val),
                     string: () => typeof val === 'string',
                 };
@@ -164,7 +178,7 @@ class VM {
 
             const value = this.stack.pop();
 
-            // Manejo de cadenas vacías utilizando
+            // Manejo de cadenas vacías
             const result = (value === '' && argumento === 'string') ? false : checkType(argumento, value);
             this.stack.push(result);
         },

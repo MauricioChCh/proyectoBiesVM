@@ -12,3 +12,70 @@
 ;}
 ;
 ;console.log(fibonacci(10));  // Output: 55
+
+$FUN $1
+    BLD 0 0         ; Cargar el parámetro 'n'
+    LDV 1           ; Cargar 1
+    LTE             ; n <= 1
+    BF 3            ; Si n > 1, saltar al
+
+    ; Inicio body del if
+
+        BLD 0 0     ; Cargar el parámetro 'n'
+        RET         ; Retornar el valor de 'n'
+
+    ; Fin body del if
+
+    LDV 0           ; Cargar 0
+    BST 0 1         ; a = 0
+
+    LDV 1           ; Cargar 1
+    BST 0 2         ; b = 1
+
+    ; Inicio bucle for
+
+        LDV 2       ; Cargar 2
+        BST 0 3     ; i = 2
+
+        BLD 0 3     ; Cargar el valor de 'i'
+        BLD 0 0     ; Cargar el valor de 'n'
+        LTE         ; i <= n
+        BF 14       ; Si i > n, saltar al final del bucle for
+
+        ; Inicio body del for
+
+            BLD 0 1         ; Cargar 'a'
+            BLD 0 2         ; Cargar 'b'
+            ADD             ; a + b
+            BST 0 4         ; 'temp'
+
+            BLD 0 2         ; 'b'
+            BST 0 1         ; 'a' = 'b'
+
+            BLD 0 4         ; 'temp'
+            BST 0 2         ; 'b' = 'temp'
+
+        ; Fin body del for
+
+        BLD 0 3         ; Cargar el valor de 'i'
+        LDV 1           ; Cargar 1
+        ADD             ; i + 1
+        BST 0 3         ; 'i' = 'i' + 1
+        BR -16          ; Saltar al inicio del bucle for
+
+    ; Fin bucle for
+
+    BLD 0 2         ; Cargar el valor de 'b'
+    RET             ; Retornar el valor de 'b'
+
+$END $1
+
+$FUN $0
+    LDV 10  ; Cargar el valor de 'n' (10)
+    LDF $1  ; Cargar la función 'fibonacci'
+    APP 1   ; Llamar a la función 'fibonacci' con 1 argumento
+    PRN     ; Imprimir el valor retornado
+    HLT     ; Detener la ejecución
+$END $0
+
+INI $0        ; Iniciar el programa desde main
