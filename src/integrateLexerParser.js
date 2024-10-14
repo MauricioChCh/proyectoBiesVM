@@ -26,7 +26,8 @@ export function analizarArchivoBasm(filePath, logger) {
         // Crea el parser con los tokens generados por el lexer
         const parser = new biesVMParser(tokens);
 
-        parser.buildParseTrees = true; // Habilita la construcción de árboles de análisis
+        parser.buildParseTrees = true
+        ; // Habilita la construcción de árboles de análisis
         const tree = parser.program(); // Inicia el análisis sintáctico
 
         logger.debug(chalk.cyanBright('Árbol de análisis sintáctico:'));

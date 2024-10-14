@@ -19,3 +19,8 @@
 ;
 ;console.log(isPalindrome("radar"));  // Output: true
 ;console.log(isPalindrome("hello"));  // Output: false
+
+
+
+LDV "FALTA"
+PRN 
