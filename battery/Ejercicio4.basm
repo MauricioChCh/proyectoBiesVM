@@ -32,6 +32,8 @@ $FUN $0      ; Definir la función 'main'
     BLD 0 1         ; Cargar el argumento 'b' del entorno
     ADD             ; Sumar 'a' * 10 + 'b'
 
+    
+    
     LDF $1          ; Cargar la función 'salude'
     APP 1           ; Llamar a la función 'salude'
 

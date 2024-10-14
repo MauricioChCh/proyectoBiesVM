@@ -65,19 +65,28 @@ class VM {
             this.stack.push(value);
         },
 
-        BLD: (instruction) => {
-            const [bindLayerIndex, bindVariableIndex] = instruction.args;
-            this.stack.push(this.getCurrentLayer(bindLayerIndex)[bindVariableIndex]);
+        BLD: function(instruction) {
+            const [bindLayerIndex, bindVariableIndex] = instruction.args.map(Number);
+            const value = this.getCurrentLayer(bindLayerIndex)[bindVariableIndex];
+            this.logger.log(chalk.blue(`BLD: Cargando valor ${value} desde capa ${bindLayerIndex}, variable ${bindVariableIndex}`));
+            this.stack.push(value);
         },
-
         LIN: () => {
             const listValues = "[" + this.stack.join(", ") + "]";
             this.stack = [listValues];
         },
 
-        BST: (instruction) => {
-            const [layerIndex, variableIndex] = instruction.args;
-            this.getCurrentLayer(layerIndex)[variableIndex] = this.stack.pop();
+        BST: function(instruction) {
+            const [layerIndex, variableIndex] = instruction.args.map(Number);
+            const value = this.stack.pop();
+            this.getCurrentLayer(layerIndex)[variableIndex] = value;
+            this.logger.log(chalk.blue(`BST: Almacenando valor ${value} en capa ${layerIndex}, variable ${variableIndex}`));
+        },
+        getCurrentLayer: function(layerIndex) {
+            while (this.bindings.length <= layerIndex) {
+                this.bindings.push({});
+            }
+            return this.bindings[layerIndex];
         },
 
         // Operaciones aritméticas--------------------------------------------------------------------------------
@@ -126,6 +135,7 @@ class VM {
         NOT: () => {
             this.stack.push(!this.stack.pop());
         },
+
 
         // Comparaciones------------------------------------------------------------------------------------------
         EQ: () => { // Igualdad
@@ -205,6 +215,22 @@ class VM {
             this.stack.push(value);
         },
 
+        //String Operations-----------------------------------------------------------------------------------------
+        SNT: () => {
+            const str = this.stack.pop();
+            this.stack.push(str === "" ? 0 : 1);
+        },
+        
+        CAT: () => {
+            const b = this.stack.pop();
+            const a = this.stack.pop();
+            this.stack.push(a + b);
+        },
+        TOS:()=>{
+
+        },
+
+
         // Control de flujo----------------------------------------------------------------------------------------
         LDF: (instruction) => {
             const [functionName, paramCount] = instruction.args;
@@ -222,37 +248,54 @@ class VM {
         },
 
         // Funciones
-        APP: (instruction) => {
+        APP: function(instruction) {
             let closure = this.stack.pop();
+            this.logger.log(chalk.yellow('Closure:', JSON.stringify(closure)));
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
+            
             if (closure && closure.body) {
+                // Guardar el contexto actual
                 this.contextStack.push({
                     code: this.code,
                     programCounter: this.programCounter,
-                    stack: this.stack.slice(),
                     bindings: this.bindings.slice()
                 });
+        
+                // Crear un nuevo contexto para la función
                 let newBinding = {};
-                for (let i = argCount - 1; i >= 0; i--) {
+                let args = [];
+                for (let i = 0; i < argCount; i++) {
                     if (this.stack.length > 0) {
-                        newBinding[i] = this.stack.pop();
+                        args.unshift(this.stack.pop());
                     } else {
                         console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closure.functionName}`);
                         break;
                     }
                 }
+        
+                // Asignar los argumentos al nuevo binding
+                for (let i = 0; i < args.length; i++) {
+                    newBinding[i] = args[i];
+                }
+        
+                // Añadir el nuevo binding al principio de la lista de bindings
                 this.bindings.unshift(newBinding);
+        
+                // Configurar el nuevo contexto de ejecución
                 this.code = closure.body;
                 this.programCounter = 0;
+        
                 const functionBody = this.code.join('\n');
                 this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:`) + `\n${functionBody}`);
+                
+                // Ejecutar la función
                 const chars = new antlr4.InputStream(functionBody);
                 const lexer = new biesVMLexer(chars);
                 const tokens = new antlr4.CommonTokenStream(lexer);
                 const parser = new biesVMParser(tokens);
                 parser.buildParseTrees = true;
                 const tree = parser.program();
-                const visitor = new Visitor();
+                const visitor = new Visitor(this.logger);
                 visitor.vm = this;
                 visitor.visit(tree);
             } else {
@@ -282,9 +325,9 @@ class VM {
 
         // Salida, Entrada y finalización-------------------------------------------------------------------------------------
         PRN: () => {
-            const print = this.stack.pop();
-                print===undefined? "": console.log(chalk.yellow(print));
-            //console.log(chalk.yellow(`${this.stack.pop()}`));
+            // const print = this.stack.pop();
+            //     print===undefined? "": console.log(chalk.yellow(print));
+            console.log(chalk.yellow(`${this.stack.pop()}`));
         },
         
         INP: async function() {
@@ -300,38 +343,37 @@ class VM {
             this.stack.push(userInput);
         },
         
-        RET: () => {
+        RET: function() {
             let returnValue = this.stack.pop();
+            this.logger.log(chalk.cyan('Valor de retorno:', returnValue));
+        
             let previousContext = this.contextStack.pop();
             if (previousContext) {
                 this.code = previousContext.code;
-                this.stack = previousContext.stack;
                 this.bindings = previousContext.bindings;
                 this.programCounter = previousContext.programCounter;
-                if (typeof returnValue !== 'undefined') {
-                    this.stack.push(returnValue);
-                }
+                
+                // Empujar el valor de retorno a la pila del contexto anterior
+                this.stack.push(returnValue);
             }
         },
 
-        INI: (instruction) => {
-            const mainFunctionName = instruction.args[0];
-            const mainFunctionBody = this.functions[mainFunctionName];
-
-            if (!mainFunctionBody) {
-                this.logger.log(`Error: Main function ${mainFunctionName} not defined`);
-                throw new Error(`Main function ${mainFunctionName} not defined`);
+        INI: async function () {
+            const mainFunction = this.functions[`$0`];
+            if (!mainFunction) {
+                throw new Error("Función de entrada `$0` no encontrada.");
             }
-
-            this.code = mainFunctionBody;   // Cargar el cuerpo de la función principal
-
-            // Inicializar la pila (S), los bindings (B) y el contexto (D)
-            this.stack = [];
-            this.bindings = [{}];
-            this.contextStack = [];     // Contexto actual D.current = C
-            this.programCounter = 0;    // Inicializar el contador de programa
+        
+            this.logger.log(chalk.blue("Ejecutando la función de entrada `$0`..."));
+            
+            // Ejecutar directamente las instrucciones de la función principal
+            for (const instruction of mainFunction) {
+                const parts = instruction.split(/\s+/);
+                const type = parts[0];
+                const args = parts.slice(1);
+                await this.executeInstruction({ type, args });
+            }
         },
-
         
 
         HLT: () => {

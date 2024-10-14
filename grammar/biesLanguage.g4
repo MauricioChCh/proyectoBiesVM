@@ -77,6 +77,9 @@ comparisonInstr
 stringInstr
     : 'STK' ES? // Instrucción para seleccionar el k-ésimo elemento de la pila
     | 'SRK' NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
+    | 'CAT' // Instrucción para concatenar dos cadenas
+    | 'SNT' // Instrucción para verificar si una cadena está vacía
+    | 'TOS' // Instruccion para convertir el valor en la cima de la pila a cadena
     ;
 
 listInstr
