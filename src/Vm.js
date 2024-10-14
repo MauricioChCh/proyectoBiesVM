@@ -3,6 +3,8 @@ import biesVMParser from '../output/biesLanguageParser.js';
 import Visitor from './Visitor.js';
 import antlr4 from 'antlr4';
 import chalk from 'chalk';
+import readline from 'readline';
+
 
 class VM {
     constructor(logger = { log: () => {} }) {
@@ -22,27 +24,28 @@ class VM {
         return this.bindings[layerIndex];
     }
 
-    run(code) {
+    async run(code) {
         this.code = code;
         while (this.programCounter < this.code.length) {
             const instruction = this.code[this.programCounter];
             this.programCounter++;
-            this.executeInstruction(instruction);
+            await this.executeInstruction(instruction);
         }
     }
 
-    executeInstruction(instruction) {
-        this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args.join(' ')}`);
+    async executeInstruction(instruction) {
+        this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args ? instruction.args.join(' ') : ''}`);
         const handler = this.instructionHandlers[instruction.type];
         if (handler) {
-            handler.call(this, instruction);
+            await handler.call(this, instruction);
         } else {
             throw new Error(`Instrucción desconocida: ${instruction.type}`);
         }
     }
+    
 
     instructionHandlers = {
-        // Carga y almacenamiento de valores
+        // Carga y almacenamiento de valores----------------------------------------------------------------------
         LDV: (instruction) => {
             const valueArgument = instruction.args.join(' ');
             let value;
@@ -77,7 +80,7 @@ class VM {
             this.getCurrentLayer(layerIndex)[variableIndex] = this.stack.pop();
         },
 
-        // Operaciones aritméticas
+        // Operaciones aritméticas--------------------------------------------------------------------------------
         ADD: () => {
             this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
         },
@@ -105,7 +108,7 @@ class VM {
             this.stack.push(-this.stack.pop());
         },
 
-        // Lógica Binaria
+        // Lógica Binaria-----------------------------------------------------------------------------------------
 
         AND: () => {
             this.stack.push(this.stack.pop() && this.stack.pop());
@@ -119,12 +122,12 @@ class VM {
             this.stack.push((this.stack.pop() !== this.stack.pop()));
         },
 
-        // Lógica Unaria
+        // Lógica Unaria-----------------------------------------------------------------------------------------
         NOT: () => {
             this.stack.push(!this.stack.pop());
         },
 
-        // Comparaciones
+        // Comparaciones------------------------------------------------------------------------------------------
         EQ: () => { // Igualdad
             this.stack.push(this.stack.pop() === this.stack.pop());
         },
@@ -155,7 +158,7 @@ class VM {
             this.stack.push(Number(valueB) <= Number(valueA));
         },
 
-        //Casting
+        //Casting------------------------------------------------------------------------------------------
 
         // Type Of
 
@@ -183,7 +186,7 @@ class VM {
         },
 
 
-        // Operaciones de listas e hileras
+        // Operaciones de listas e hileras-----------------------------------------------------------------------
 
         STK: function() {
             const index = this.stack.pop();  // Obtiene el índice de la pila
@@ -202,7 +205,7 @@ class VM {
             this.stack.push(value);
         },
 
-        // Control de flujo
+        // Control de flujo----------------------------------------------------------------------------------------
         LDF: (instruction) => {
             const [functionName, paramCount] = instruction.args;
             const functionBody = this.functions[functionName];
@@ -218,6 +221,7 @@ class VM {
             this.stack.push(closure);
         },
 
+        // Funciones
         APP: (instruction) => {
             let closure = this.stack.pop();
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
@@ -256,6 +260,7 @@ class VM {
             }
         },
 
+        // Saltos/bifurcaciones
         BR: (instruction) => {
             const branchOffset = Number(instruction.args[0]) - 1;
             this.programCounter += branchOffset;
@@ -275,6 +280,24 @@ class VM {
             }
         },
 
+        // Salida, Entrada y finalización-------------------------------------------------------------------------------------
+        PRN: () => {
+            console.log(chalk.yellow(`${this.stack.pop()}`));
+        },
+        
+        INP: async function() {
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout,
+            });
+            
+            const userInput = await new Promise((resolve) => rl.question('Ingrese un valor: ', resolve));
+            rl.close();
+            
+            // Almacenar el valor en la pila
+            this.stack.push(userInput);
+        },
+        
         RET: () => {
             let returnValue = this.stack.pop();
             let previousContext = this.contextStack.pop();
@@ -307,10 +330,7 @@ class VM {
             this.programCounter = 0;    // Inicializar el contador de programa
         },
 
-        // Salida y finalización
-        PRN: () => {
-            console.log(chalk.yellow(`${this.stack.pop()}`));
-        },
+        
 
         HLT: () => {
             this.code = [];

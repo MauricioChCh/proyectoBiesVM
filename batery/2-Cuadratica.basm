@@ -1,3 +1,10 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
 ;function squareRoot(a) {
 ;    if (typeof a !== 'number' || a < 0)
 ;        throw new Error(`SquareRoot: invalid call for ${a}`);

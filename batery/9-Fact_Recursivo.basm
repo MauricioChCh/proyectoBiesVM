@@ -1,3 +1,11 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+
 ;function $1(n) {
 ;   if (typeof n !== "number") {
 ;       if (n === 0 || n === 1) {

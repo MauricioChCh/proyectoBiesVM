@@ -1,3 +1,9 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
 ;const invertirHilera = (hilera) => {
 ;    let resultado = '';
 ;    for (let i = hilera.length - 1; i >= 0; i--) {

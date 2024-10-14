@@ -1,3 +1,11 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+
 ;function fibonacci(n) {
 ;    if (n <= 1) return n; // Casos base
 ;

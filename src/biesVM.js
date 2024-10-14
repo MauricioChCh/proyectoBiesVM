@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Script para la máquina virtual que ejecuta archivos .basm.
  * Utiliza el módulo commander para gestionar argumentos de línea de comandos

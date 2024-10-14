@@ -1,3 +1,11 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+
 ;function isPalindrome(str, left = 0, right = str.length - 1) {
 ;    // Caso base: si los índices se cruzan, es un palíndromo
 ;    if (left >= right) {
