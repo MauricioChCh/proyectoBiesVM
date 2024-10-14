@@ -282,7 +282,9 @@ class VM {
 
         // Salida, Entrada y finalización-------------------------------------------------------------------------------------
         PRN: () => {
-            console.log(chalk.yellow(`${this.stack.pop()}`));
+            const print = this.stack.pop();
+                print===undefined? "": console.log(chalk.yellow(print));
+            //console.log(chalk.yellow(`${this.stack.pop()}`));
         },
         
         INP: async function() {
