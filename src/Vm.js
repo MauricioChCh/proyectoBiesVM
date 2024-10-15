@@ -8,10 +8,10 @@ import readline from 'readline';
 
 class VM {
     constructor(logger = { log: () => {} }) {
-        this.stack = [];
-        this.bindings = [{}];
-        this.contextStack = [];
-        this.code = [];
+        this.stack = []; //S Stack
+        this.bindings = [{}]; //B Bindings
+        this.contextStack = []; 
+        this.code = []; //C Code
         this.functions = {};
         this.programCounter = 0;
         this.logger = logger;
@@ -388,7 +388,7 @@ class VM {
                 
                 this.stack.push(returnValue); // Empujar valor de retorno a la pila del contexto anterior
                 
-                console.log("Pila tras RET:", this.stack);
+                this.logger.debug("Pila tras RET:", this.stack);
 
                 
             } else {
