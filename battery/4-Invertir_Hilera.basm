@@ -1,62 +1,38 @@
-;Autores
-;Joshua Yarit Amador Lara 
-;Mauricio Alberto Chaves Chaves
-;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
-
-;const invertirHilera = (hilera) => {
-;    let resultado = '';
-;    for (let i = hilera.length - 1; i >= 0; i--) {
-;        resultado += hilera[i];
-;    }
-;    return resultado;
-;};
-
-;const hileraOriginal = "INVERTIMOS!";
-;console.log(invertirHilera(hileraOriginal));
-
-
-
-
-
-
+; Función principal
 $FUN $0
-    ; Cargamos la hilera original en la pila
-    LDV "INVERTIMOS!"  ; Cargar la hilera original en la pila
-    BST 0 0            ; Guardamos la hilera en el binding 0, posición 0
-
-    ; Llamamos a la función recursiva para invertir la hilera
+    LDV "Invertimos"  ; Cargar la hilera original en la pila
     LDF $1             ; Cargar la función recursiva de inversión
-    APP 0              ; Ejecutar la función sin argumentos
+    APP 1              ; Ejecutar la función con 1 argumento
     PRN                ; Imprimir la hilera invertida
     HLT                ; Detener la ejecución
 $END $0
 
 ; Función recursiva para invertir la hilera
 $FUN $1
-    BLD 0 0            ; Cargar la hilera original desde el binding 0
+    BLD 0 0            ; Cargar la hilera actual
     SNT                ; Verificar si la hilera está vacía (caso base)
-    BT 10              ; Si es nula (fin de la cadena), retornar la hilera vacía
-    
+    BT 9               ; Si es vacía, saltar a RET
+
     ; Extraer el último carácter de la hilera
-    BLD 0 0            ; Cargar la hilera original
-    LDV 0
-    STK                ; Tomar el caracter en la posicion 0
+    BLD 0 0            ; Cargar la hilera actual
+    LDV 0              ; Cargar 0 para obtener el primer carácter
+    STK                ; Tomar el primer carácter
 
-    ; Llamada recursiva para invertir el resto de la hilera
-    BLD 0 0            ; Cargar nuevamente la hilera original
+    ; Obtener el resto de la hilera
+    BLD 0 0            ; Cargar nuevamente la hilera actual
+    LDV 1              ; Cargar 1 para obtener el resto de la hilera
+    SRK                ; Obtener el resto de la hilera
 
-    SRK 1
-    BST 0 0            ; Se guarda la hilera sin el primer caracter
-    LDF $1             ; Cargar la función recursiva de inversión
-    APP 0              ; Llamar recursivamente
-    
-    ; Concatenar el carácter extraído al final de la hilera invertida
-    CAT                ; Concatenar el carácter al final de la hilera invertida
+    LDF $1             ; Cargar la función recursiva
+    APP 1              ; Llamada recursiva con 1 argumento
+
+    SWP                ; Intercambiar el resultado recursivo y el primer carácter
+    CAT                ; Concatenar
+
     RET                ; Retornar la hilera invertida
+
+    LDV ""             ; Cargar cadena vacía para el caso base
+    RET                ; Retornar cadena vacía en caso base
 $END $1
 
-
-
-
-INI $0        ; Iniciar el programa desde main
+INI $0                 ; Iniciar el programa desde main

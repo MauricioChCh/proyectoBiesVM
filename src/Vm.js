@@ -203,27 +203,32 @@ class VM {
 
         // Operaciones de listas e hileras-----------------------------------------------------------------------
 
-        STK: function() {
-            const index = this.stack.pop();  // Obtiene el índice de la pila
-            const str = this.stack.pop();    // Obtiene la cadena de la pila
-
-            // Validar que index sea un número y str sea una cadena
-            if (typeof Number(index) === 'number' && Number.isInteger(Number(index)) && typeof str === 'string') {
-                this.stack.push(str.charAt(Number(index))); // Extrae el carácter en la posición N y lo empuja a la pila
+        SRK: () => {
+            const k = Number(this.stack.pop());
+            const str = this.stack.pop();
+            if (typeof str === 'string' && k >= 0 && k <= str.length) {
+                this.stack.push(str.slice(k));
+            } else {
+                this.stack.push(''); // Pushes an empty string instead of throwing an error
             }
         },
+        
 
-
-        SRK: (instruction) => {  //Tomar el resto de la hilera
-            const [stackLayerIndex, stackVariableIndex] = instruction.args;
-            const value = this.getCurrentLayer(stackLayerIndex)[stackVariableIndex];
-            this.stack.push(value);
+        STK: () => {
+            const k = Number(this.stack.pop());
+            const str = this.stack.pop();
+            if (typeof str === 'string' && k >= 0 && k < str.length) {
+                this.stack.push(str[k]);
+            } else {
+                this.stack.push(''); // Pushes an empty string instead of throwing an error
+            }
         },
+        
 
         //String Operations-----------------------------------------------------------------------------------------
-        SNT: () => {
+        SNT: () => { // String Null test
             const str = this.stack.pop();
-            this.stack.push(str === "" ? 0 : 1);
+            this.stack.push(str === "" ? 1 : 0);
         },
         
         CAT: () => {
@@ -231,8 +236,9 @@ class VM {
             const a = this.stack.pop();
             this.stack.push(a + b);
         },
-        TOS:()=>{
-
+        TOS: () => {
+            const value = this.stack.pop();
+            this.stack.push(String(value));
         },
 
 
@@ -254,6 +260,14 @@ class VM {
 
         // Funciones
         APP: async (instruction) => {
+
+            this.contextStack.push({
+                code: this.code,
+                programCounter: this.programCounter,
+                bindings: this.bindings.slice()
+            });
+           
+
             let closure = this.stack.pop();
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
             
@@ -296,6 +310,7 @@ class VM {
                 }
             }
 
+            
             // Restaurar el contexto anterior
             if (this.contextStack.length > 0) {
                 const context = this.contextStack.pop();
@@ -305,25 +320,37 @@ class VM {
             } else {
                 console.warn('Advertencia: No hay contexto para restaurar después de APP');
             }
+
+            
+
         },
 
         // Saltos/bifurcaciones
         BR: (instruction) => {
             const branchOffset = Number(instruction.args[0]) - 1;
             this.programCounter += branchOffset;
+            this.logger.debug(chalk.green(`Branching a ${branchOffset}`));
         },
-
+        
         BT: (instruction) => {
             if (this.stack.pop()) {
                 const branchOffset = Number(instruction.args[0]) - 1;
                 this.programCounter += branchOffset;
+                this.logger.debug(chalk.green(`Branch a ${branchOffset}`));
+            } else {
+                this.logger.debug(chalk.red('No branching'));
             }
         },
-
+        
         BF: (instruction) => {
             if (!this.stack.pop()) {
                 const branchOffset = Number(instruction.args[0]) - 1;
                 this.programCounter += branchOffset;
+                this.logger.debug(chalk.green(`Branch a ${branchOffset}`));
+
+            } else {
+                this.logger.debug(chalk.red('No branching'));
+
             }
         },
 
@@ -348,29 +375,37 @@ class VM {
             this.stack.push(userInput);
         },
         
-        RET: async function() {
-            let returnValue = this.stack.pop();
-            this.logger.log(chalk.cyan('Valor de retorno:', returnValue));
-        
-            let previousContext = this.contextStack.pop();
-            if (previousContext) {
+        // RET - Retorno con restauración de contexto anterior
+        RET: function() {
+            if (this.contextStack.length > 0) {
+                const returnValue = this.stack.pop();
+                this.logger.log(chalk.cyan('Valor de retorno:', returnValue));
+                
+                const previousContext = this.contextStack.pop();
                 this.code = previousContext.code;
                 this.bindings = previousContext.bindings;
                 this.programCounter = previousContext.programCounter;
                 
-                // Empujar el valor de retorno a la pila del contexto anterior
-                this.stack.push(returnValue);
+                this.stack.push(returnValue); // Empujar valor de retorno a la pila del contexto anterior
+                
+                console.log("Pila tras RET:", this.stack);
+
+                
+            } else {
+                console.warn("Advertencia: No hay contexto para restaurar después de RET");
             }
+            this.contextStack.pop(); // Eliminar el contexto actual de la pila
+            this.contextStack = this.contextStack.slice(0, -1);
         },
 
-        INI: async function (instruction) {
-            const mainFunctionName = instruction.args[0];
-            const mainFunction = this.functions[mainFunctionName];
+
+        INI: async function () {
+            const mainFunction = this.functions['$0'];
             if (!mainFunction) {
-                throw new Error(`Función de entrada ${mainFunctionName} no encontrada.`);
+                throw new Error("Función de entrada $0 no encontrada.");
             }
         
-            this.logger.log(chalk.blue(`Ejecutando la función de entrada ${mainFunctionName}...`));
+            this.logger.log(chalk.blue("Ejecutando la función de entrada $0..."));
             
             this.code = mainFunction;
             this.programCounter = 0;
@@ -382,6 +417,15 @@ class VM {
             }
         },
         
+        //Amiente y stack
+        SWP: () => {
+            const a = this.stack.pop();
+            const b = this.stack.pop();
+            this.stack.push(a);
+            this.stack.push(b);
+        },
+        
+        // Fin de la ejecución
 
         HLT: () => {
             this.code = [];
