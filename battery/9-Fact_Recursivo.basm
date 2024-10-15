@@ -1,0 +1,70 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+
+;function $1(n) {
+;   if (typeof n !== "number") {
+;       if (n === 0 || n === 1) {
+;           return 1;
+;       }
+;       return n * $1(n - 1);
+;   }
+;   return null;
+;}
+;
+;console.log($1(5))
+
+$FUN $1
+    BLD 0 0         ; Cargar n
+    INO "number"    ; Verificar que n sea un número
+    BF 23           ; Si no es un número, return null
+
+    LDV 0           ; Cargar 0
+    BLD 0 0         ; Cargar el argumento n
+    EQ              ; n === 0
+    BST 0 2         ; Guardar el resultado en el nivel 0 argumento 2
+
+    LDV 1           ; Cargar 1
+    BLD 0 0         ; Cargar el argumento n
+    EQ              ; n === 1
+    BST 0 3         ; Guardar el resultado en el nivel 0 argumento 3
+
+    BLD 0 2         ; Cargar el resultado de n === 0
+    BLD 0 3         ; Cargar el resultado de n === 1
+    OR              ; n === 0 || n === 1
+    BF 3            ; Si OR === false, return n * $1(n - 1)
+
+    ; Inicio body del if
+
+        LDV 1           ; Cargar 1
+        RET             ; return 1
+
+    ; Fin del body del if
+
+    BLD 0 0         ; Cargar el argumento n
+    LDV 1           ; Cargar 1
+    SUB             ; n - 1
+    LDF $1          ; Cargar la función $1
+    APP 1           ; $1(n - 1)
+    BLD 0 0         ; Cargar el argumento n
+    MUL             ; n * $1(n - 1)
+    RET             ; Retornar el resultado
+
+    LDV "null"      ; Cargar 0
+    RET             ; return 0
+
+$END $1
+
+$FUN $0
+    LDV 5
+    LDF $1
+    APP 1
+
+    PRN
+    HLT
+$END $0
+INI $0

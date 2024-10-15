@@ -42,6 +42,12 @@ export default class biesLanguageVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesLanguageParser#logicalInst.
+	visitLogicalInst(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesLanguageParser#controlInstr.
 	visitControlInstr(ctx) {
 	  return this.visitChildren(ctx);
@@ -50,6 +56,36 @@ export default class biesLanguageVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesLanguageParser#funcInstr.
 	visitFuncInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#comparisonInstr.
+	visitComparisonInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#stringInstr.
+	visitStringInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#listInstr.
+	visitListInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#array.
+	visitArray(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#inputString.
+	visitInputString(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

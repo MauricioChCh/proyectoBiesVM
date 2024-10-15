@@ -1,0 +1,29 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+
+;function isPalindrome(str, left = 0, right = str.length - 1) {
+;    // Caso base: si los índices se cruzan, es un palíndromo
+;    if (left >= right) {
+;        return true;
+;    }
+;
+;    // Si los caracteres en las posiciones izquierda y derecha no coinciden, no es un palíndromo
+;    if (str[left] !== str[right]) {
+;        return false;
+;    }
+;
+;    // Llamada recursiva, avanzando los índices hacia el centro
+;    return isPalindrome(str, left + 1, right - 1);
+;}
+;
+;console.log(isPalindrome("radar"));  // Output: true
+;console.log(isPalindrome("hello"));  // Output: false
+
+
+LDV "FALTA"
+PRN 

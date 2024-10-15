@@ -1,47 +1,120 @@
+import chalk from 'chalk';
 import biesLanguageVisitor from '../output/biesLanguageVisitor.js';
-import biesLanguageParser from '../output/biesLanguageParser.js';
 import VM from './Vm.js';
 
+/**
+ * Clase que implementa un visitante para el lenguaje Bies.
+ * Extiende la funcionalidad de `biesLanguageVisitor` para recorrer un árbol de sintaxis y
+ * generar las instrucciones correspondientes que se ejecutarán en la máquina virtual (VM).
+ */
 export class Visitor extends biesLanguageVisitor {
-    constructor() {
+    /**
+     * Crea una instancia de la clase Visitor.
+     * @param {Object} [logger={ log: () => {} }] - Objeto que define el comportamiento del logger. Por defecto, usa un logger vacío.
+     */
+    constructor(logger = { log: () => {} }) {
         super();
-        this.vm = new VM(); 
+        /**
+         * Máquina virtual utilizada para ejecutar las instrucciones generadas.
+         * @type {VM}
+         */
+        this.vm = new VM(logger);
+
+        /**
+         * Logger para registrar las operaciones del visitante.
+         * @type {Object}
+         */
+        this.logger = logger;
+
+        /**
+         * Código acumulado durante el recorrido del árbol de sintaxis.
+         * @type {Array<{ type: string, args: string[] }>}
+         */
+        this.code = [];
     }
 
+    /**
+     * Visita el nodo raíz del programa y recorre todos sus elementos.
+     * Al finalizar el recorrido, envía el código acumulado para su ejecución en la máquina virtual.
+     * @param {Object} ctx - Contexto del nodo del programa en el árbol de sintaxis.
+     * @returns {VM} Instancia de la máquina virtual (`VM`) con las funciones y código cargado.
+     */
     visitProgram(ctx) {
-        console.log('Visitando el programa');
-        super.visitProgram(ctx);
+        
+        this.logger.log(chalk.cyanBright('Visitando el programa'));
+        super.visitProgram(ctx); // Visita cada elemento del programa y acumula las instrucciones
+        this.sendCode(); // Envía el código para que sea ejecutado en `run()`
         return this.vm;
+       
     }
+
+    /**
+     * Visita la definición de una función en el programa.
+     * Almacena el nombre de la función y su cuerpo en la máquina virtual (`VM`).
+     * @param {Object} ctx - Contexto del nodo de la definición de la función en el árbol de sintaxis.
+     * @returns {*} El resultado de la visita a la definición de la función.
+     */
+    // visitFunctionDef(ctx) {
+    //     const functionName = ctx.LABEL_IDENTIFIER(0).getText();
+    //     const functionBody = ctx.statement().map(stmt => stmt.getText());
+
+    //     if (!this.vm.functions) {
+    //         this.vm.functions = {};
+    //     }
+
+    //     this.vm.functions[functionName] = functionBody;
+    //     this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
+
+    //     return super.visitFunctionDef(ctx);
+    // }
 
     visitFunctionDef(ctx) {
         const functionName = ctx.LABEL_IDENTIFIER(0).getText();
         const functionBody = ctx.statement().map(stmt => stmt.getText());
+    
+
         if (!this.vm.functions) {
             this.vm.functions = {};
         }
+
+            
+        // Almacena solo el cuerpo de la función en el diccionario de funciones de la VM
         this.vm.functions[functionName] = functionBody;
-        console.log(`Definida función ${functionName} con cuerpo:`, functionBody);
-        return super.visitFunctionDef(ctx);
+        this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
+    
+        // Evita ejecutar el cuerpo de la función inmediatamente al omitir el super.
+        return null; // Opcionalmente, si deseas que no se ejecute nada al definirla
     }
 
+    /**
+     * Visita una instrucción en el programa.
+     * Divide la instrucción en sus partes (`type` y `args`) y la acumula en el arreglo `this.code`.
+     * @param {Object} ctx - Contexto del nodo de la instrucción en el árbol de sintaxis.
+     * @returns {*} El resultado de la visita a la instrucción.
+     */
     visitInstruction(ctx) {
         const text = ctx.getText().trim();
-        console.log('Visitando instrucción', text);
-        
-        // Usar expresión regular para separar tipo y argumentos
-        const match = text.match(/^([A-Z]+)(\d+|\$[a-zA-Z][a-zA-Z0-9]*|(\d+ \d+))*$/);
-        if (!match) {
-            throw new Error(`Formato de instrucción desconocido: ${text}`);
-        }
 
-        const type = match[1];
-        const args = match[2] ? match[2].split(' ').map(arg => isNaN(arg) ? arg : parseInt(arg)) : [];
+        const parts = text.split(/\s+/);
+        const type = parts[0];
+        const args = parts.slice(1);
 
-        this.vm.executeInstruction({ type, args });
+        this.code.push({ type, args });
+
         return super.visitInstruction(ctx);
     }
-   
+
+    /**
+     * Envía el código acumulado a la máquina virtual (`VM`) para su ejecución.
+     * Llama a la función `run` de la máquina virtual con el arreglo de instrucciones `this.code`.
+     */
+    sendCode() {
+        try {
+            this.vm.run(this.code); // Ejecuta todas las instrucciones almacenadas en `this.code`
+        } catch (error) {
+            console.error(`Error al ejecutar el código: ${error.message}`);
+        }
+    }
 }
 
 export default Visitor;

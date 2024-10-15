@@ -25,3 +25,27 @@ sudo npm link
 ```
 para likear todo yt que se pueda usar ciertas cosas 
 Esto crea un enlace simbólico global al comando `biesVM`. Ahora puedes usar `biesVM` en cualquier lugar de tu sistema. en
+
+
+
+### Arreglar posibles problemas con el linker
+
+linux
+```bash
+sudo rm /usr/local/bin/biesVM
+```
+
+en el archivo por ejecutar, en este caso biesVM.js
+```js
+#!/usr/bin/env node
+```
+
+linkeamos
+```bash
+sudo npm link
+```
+y por si acaso darle permisos
+```bash
+sudo npm link
+```
+

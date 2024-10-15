@@ -1,0 +1,42 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+;let salude = saludo => print(saludo)
+;let a = 1
+;let b = 656
+;salude( a*10 + b )
+
+$FUN $1         ; Definir la función '$1'
+    BLD 0 0         ; Cargar el argumento 'saludo' del entorno
+    PRN             ; Imprimir el valor
+    RET            ; Retornar de la función
+$END $1         ; Fin de la definición de la función '$1'
+
+$FUN $0      ; Definir la función 'main'
+
+    LDV 1           ; Cargar el valor de 'a' (1)
+    BST 0 0         ; Guardar 'a' en el nivel 0 argumento 0
+
+    LDV 656         ; Cargar el valor de 'b' (656)
+    BST 0 1         ; Guardar 'b' en el nivel 0 argumento 1
+
+    BLD 0 0         ; Cargar el argumento 'a' del entorno
+    LDV 10.4        ; Cargar el valor de 10
+
+    MUL             ; Multiplicar 'a' por 10
+
+    BLD 0 1         ; Cargar el argumento 'b' del entorno
+    ADD             ; Sumar 'a' * 10 + 'b'
+
+    
+    
+    LDF $1          ; Cargar la función 'salude'
+    APP 1           ; Llamar a la función 'salude'
+
+    HLT             ; Detener la ejecución
+$END $0      ; Fin de la definición de la función 'main'
+INI $0       ; Inicializar la función 'main'

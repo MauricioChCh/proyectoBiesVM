@@ -1,0 +1,22 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+$FUN $1         ; Definir la función '$1'
+    BLD 0 0         ; Cargar el argumento 'saludo' del entorno
+    PRN             ; Imprimir el valor
+    RET            ; Retornar de la función
+$END $1         ; Fin de la definición de la función '$1'
+
+$FUN $0      ; Definir la función 'main'
+
+    INP
+   ; LDV "hola"
+    LDF $1          ; Cargar la función 'salude'
+    APP 1           ; Llamar a la función 'salude'
+
+    HLT             ; Detener la ejecución
+$END $0      ; Fin de la definición de la función 'main'
+INI $0       ; Inicializar la función 'main'

@@ -1,0 +1,26 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+
+;function isPalindrome(str) {
+;    const len = str.length;
+;
+;    for (let i = 0; i < len / 2; i++) {
+;        if (str[i] !== str[len - 1 - i]) {
+;            return false;  // Si hay un desajuste, no es un palíndromo
+;        }
+;    }
+;
+;    return true;  // Si no se encontró ningún desajuste, es un palíndromo
+;}
+;
+;console.log(isPalindrome("radar"));  // Output: true
+;console.log(isPalindrome("hello"));  // Output: false
+
+
+
+LDV "FALTA"
+PRN 
