@@ -18,6 +18,20 @@
 
 
 
+
+
+$FUN $0
+    ; Cargamos la hilera original en la pila
+    LDV "INVERTIMOS!"  ; Cargar la hilera original en la pila
+    BST 0 0            ; Guardamos la hilera en el binding 0, posición 0
+
+    ; Llamamos a la función recursiva para invertir la hilera
+    LDF $1             ; Cargar la función recursiva de inversión
+    APP 0              ; Ejecutar la función sin argumentos
+    PRN                ; Imprimir la hilera invertida
+    HLT                ; Detener la ejecución
+$END $0
+
 ; Función recursiva para invertir la hilera
 $FUN $1
     BLD 0 0            ; Cargar la hilera original desde el binding 0
@@ -43,17 +57,6 @@ $FUN $1
 $END $1
 
 
-$FUN $0
-    ; Cargamos la hilera original en la pila
-    LDV "INVERTIMOS!"  ; Cargar la hilera original en la pila
-    BST 0 0            ; Guardamos la hilera en el binding 0, posición 0
-
-    ; Llamamos a la función recursiva para invertir la hilera
-    LDF $1             ; Cargar la función recursiva de inversión
-    APP 0              ; Ejecutar la función sin argumentos
-    PRN                ; Imprimir la hilera invertida
-    HLT                ; Detener la ejecución
-$END $0
 
 
-INI $0        ; Iniciar el programa desde main
+;INI $0        ; Iniciar el programa desde main

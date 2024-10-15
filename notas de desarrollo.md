@@ -44,8 +44,4 @@ linkeamos
 ```bash
 sudo npm link
 ```
-y por si acaso darle permisos
-```bash
-sudo npm link
-```
 

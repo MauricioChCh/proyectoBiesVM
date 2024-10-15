@@ -15,6 +15,8 @@ class VM {
         this.functions = {};
         this.programCounter = 0;
         this.logger = logger;
+
+        
     }
 
     getCurrentLayer(layerIndex) {
@@ -248,7 +250,7 @@ class VM {
         },
 
         // Funciones
-        APP: function(instruction) {
+        APP: async function(instruction) {
             let closure = this.stack.pop();
             this.logger.log(chalk.yellow('Closure:', JSON.stringify(closure)));
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
@@ -285,19 +287,19 @@ class VM {
                 this.code = closure.body;
                 this.programCounter = 0;
         
-                const functionBody = this.code.join('\n');
-                this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:`) + `\n${functionBody}`);
+                const functionBody = this.code;
+                this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:`) + `\n${functionBody.join('\n')}`);
                 
                 // Ejecutar la función
-                const chars = new antlr4.InputStream(functionBody);
-                const lexer = new biesVMLexer(chars);
-                const tokens = new antlr4.CommonTokenStream(lexer);
-                const parser = new biesVMParser(tokens);
-                parser.buildParseTrees = true;
-                const tree = parser.program();
-                const visitor = new Visitor(this.logger);
-                visitor.vm = this;
-                visitor.visit(tree);
+                for (const instruction of functionBody) {
+                    const parts = instruction.split(/\s+/);
+                    const type = parts[0];
+                    const args = parts.slice(1);
+                    await this.executeInstruction({ type, args });
+                    if (type === 'RET') {
+                        break;  // Salir del bucle si encontramos una instrucción RET
+                    }
+                }
             } else {
                 throw new Error('Closure or closure body is undefined');
             }
@@ -317,9 +319,12 @@ class VM {
         },
 
         BF: (instruction) => {
+            
             if (!this.stack.pop()) { // Verifica si el valor es falso
                 const branchOffset = Number(instruction.args[0]) -1;
                 this.programCounter += branchOffset;
+                
+                
             }
         },
 
@@ -343,7 +348,7 @@ class VM {
             this.stack.push(userInput);
         },
         
-        RET: function() {
+        RET: async function() {
             let returnValue = this.stack.pop();
             this.logger.log(chalk.cyan('Valor de retorno:', returnValue));
         
