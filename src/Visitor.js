@@ -70,20 +70,22 @@ export class Visitor extends biesLanguageVisitor {
 
     visitFunctionDef(ctx) {
         const functionName = ctx.LABEL_IDENTIFIER(0).getText();
-        const functionBody = ctx.statement().map(stmt => stmt.getText());
-    
+        const functionBody = ctx.statement().map(stmt => {
+            const instruction = stmt.instruction();
+            if (instruction) {
+                return this.parseInstruction(instruction.getText());
+            }
+            return null;
+        }).filter(instr => instr !== null);
 
         if (!this.vm.functions) {
             this.vm.functions = {};
         }
 
-            
-        // Almacena solo el cuerpo de la función en el diccionario de funciones de la VM
         this.vm.functions[functionName] = functionBody;
-        this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
-    
-        // Evita ejecutar el cuerpo de la función inmediatamente al omitir el super.
-        return null; // Opcionalmente, si deseas que no se ejecute nada al definirla
+        this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${JSON.stringify(functionBody)}`));
+
+        return null;
     }
 
     /**
@@ -93,16 +95,19 @@ export class Visitor extends biesLanguageVisitor {
      * @returns {*} El resultado de la visita a la instrucción.
      */
     visitInstruction(ctx) {
-        const text = ctx.getText().trim();
-
+        const instruction = this.parseInstruction(ctx.getText().trim());
+        if (instruction) {
+            this.code.push(instruction);
+        }
+        return super.visitInstruction(ctx);
+    }
+    parseInstruction(text) {
         const parts = text.split(/\s+/);
         const type = parts[0];
         const args = parts.slice(1);
-
-        this.code.push({ type, args });
-
-        return super.visitInstruction(ctx);
+        return { type, args };
     }
+
 
     /**
      * Envía el código acumulado a la máquina virtual (`VM`) para su ejecución.
@@ -110,7 +115,7 @@ export class Visitor extends biesLanguageVisitor {
      */
     sendCode() {
         try {
-            this.vm.run(this.code); // Ejecuta todas las instrucciones almacenadas en `this.code`
+            this.vm.run(this.code);
         } catch (error) {
             console.error(`Error al ejecutar el código: ${error.message}`);
         }

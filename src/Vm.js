@@ -36,6 +36,9 @@ class VM {
     }
 
     async executeInstruction(instruction) {
+        if (!instruction || typeof instruction !== 'object' || !instruction.type) {
+            throw new Error(`Instrucción inválida: ${JSON.stringify(instruction)}`);
+        }
         this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args ? instruction.args.join(' ') : ''}`);
         const handler = this.instructionHandlers[instruction.type];
         if (handler) {
@@ -250,58 +253,57 @@ class VM {
         },
 
         // Funciones
-        APP: async function(instruction) {
+        APP: async (instruction) => {
             let closure = this.stack.pop();
-            this.logger.log(chalk.yellow('Closure:', JSON.stringify(closure)));
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
             
-            if (closure && closure.body) {
-                // Guardar el contexto actual
-                this.contextStack.push({
-                    code: this.code,
-                    programCounter: this.programCounter,
-                    bindings: this.bindings.slice()
-                });
-        
-                // Crear un nuevo contexto para la función
-                let newBinding = {};
-                let args = [];
-                for (let i = 0; i < argCount; i++) {
-                    if (this.stack.length > 0) {
-                        args.unshift(this.stack.pop());
-                    } else {
-                        console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closure.functionName}`);
-                        break;
-                    }
-                }
-        
-                // Asignar los argumentos al nuevo binding
-                for (let i = 0; i < args.length; i++) {
-                    newBinding[i] = args[i];
-                }
-        
-                // Añadir el nuevo binding al principio de la lista de bindings
-                this.bindings.unshift(newBinding);
-        
-                // Configurar el nuevo contexto de ejecución
-                this.code = closure.body;
-                this.programCounter = 0;
-        
-                const functionBody = this.code;
-                this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:`) + `\n${functionBody.join('\n')}`);
-                
-                // Ejecutar la función
-                for (const instruction of functionBody) {
-                    const parts = instruction.split(/\s+/);
-                    const type = parts[0];
-                    const args = parts.slice(1);
-                    await this.executeInstruction({ type, args });
-                    if (type === 'RET') {
-                        break;  // Salir del bucle si encontramos una instrucción RET
-                    }
-                }
-            } else {
+            if (!closure || !closure.body) {
                 throw new Error('Closure or closure body is undefined');
+            }
+
+            // Guardar el contexto actual
+            this.contextStack.push({
+                code: this.code,
+                programCounter: this.programCounter,
+                bindings: this.bindings.slice()
+            });
+
+            // Preparar los argumentos
+            let newBinding = {};
+            for (let i = argCount - 1; i >= 0; i--) {
+                if (this.stack.length > 0) {
+                    newBinding[i] = this.stack.pop();
+                } else {
+                    console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closure.functionName}`);
+                    break;
+                }
+            }
+
+            // Añadir el nuevo binding al principio de la lista de bindings
+            this.bindings.unshift(newBinding);
+
+            // Configurar el nuevo contexto de ejecución
+            this.code = closure.body;
+            this.programCounter = 0;
+
+            // Ejecutar la función
+            while (this.programCounter < this.code.length) {
+                const instr = this.code[this.programCounter];
+                this.programCounter++;
+                await this.executeInstruction(instr);
+                if (instr.type === 'RET') {
+                    break;
+                }
+            }
+
+            // Restaurar el contexto anterior
+            if (this.contextStack.length > 0) {
+                const context = this.contextStack.pop();
+                this.code = context.code;
+                this.programCounter = context.programCounter;
+                this.bindings = context.bindings;
+            } else {
+                console.warn('Advertencia: No hay contexto para restaurar después de APP');
             }
         },
 
@@ -312,21 +314,19 @@ class VM {
         },
 
         BT: (instruction) => {
-            if (this.stack.pop()) { // Verifica si el valor es verdadero
+            if (this.stack.pop()) {
                 const branchOffset = Number(instruction.args[0]) - 1;
                 this.programCounter += branchOffset;
             }
         },
 
         BF: (instruction) => {
-            
-            if (!this.stack.pop()) { // Verifica si el valor es falso
-                const branchOffset = Number(instruction.args[0]) -1;
+            if (!this.stack.pop()) {
+                const branchOffset = Number(instruction.args[0]) - 1;
                 this.programCounter += branchOffset;
-                
-                
             }
         },
+
 
         // Salida, Entrada y finalización-------------------------------------------------------------------------------------
         PRN: () => {
@@ -363,20 +363,22 @@ class VM {
             }
         },
 
-        INI: async function () {
-            const mainFunction = this.functions[`$0`];
+        INI: async function (instruction) {
+            const mainFunctionName = instruction.args[0];
+            const mainFunction = this.functions[mainFunctionName];
             if (!mainFunction) {
-                throw new Error("Función de entrada `$0` no encontrada.");
+                throw new Error(`Función de entrada ${mainFunctionName} no encontrada.`);
             }
         
-            this.logger.log(chalk.blue("Ejecutando la función de entrada `$0`..."));
+            this.logger.log(chalk.blue(`Ejecutando la función de entrada ${mainFunctionName}...`));
             
-            // Ejecutar directamente las instrucciones de la función principal
-            for (const instruction of mainFunction) {
-                const parts = instruction.split(/\s+/);
-                const type = parts[0];
-                const args = parts.slice(1);
-                await this.executeInstruction({ type, args });
+            this.code = mainFunction;
+            this.programCounter = 0;
+            
+            while (this.programCounter < this.code.length) {
+                const instruction = this.code[this.programCounter];
+                this.programCounter++;
+                await this.executeInstruction(instruction);
             }
         },
         

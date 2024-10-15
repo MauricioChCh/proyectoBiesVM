@@ -1,0 +1,6 @@
+LDV 2   ; Empuja valor a la pila
+LDV 1   ; Otro valor para condición
+LTE     ; Verifica si LDV0 <= LDV1 y empuja resultado
+BF 3    ; Si la condición es falsa, salta
+LDV 2   ; Si es verdadera, ejecuta esta línea
+RET     ; Termina ejecución
