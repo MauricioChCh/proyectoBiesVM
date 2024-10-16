@@ -67,7 +67,9 @@ class VM {
 
         BLD: (instruction) => {
             const [bindLayerIndex, bindVariableIndex] = instruction.args;
-            this.stack.push(this.getCurrentLayer(bindLayerIndex)[bindVariableIndex]);
+            const value = this.getCurrentLayer(bindLayerIndex)[bindVariableIndex];
+            this.stack.push(value);
+            this.logger.debug(chalk.red(`Loaded value: ${value}`));
         },
 
         LIN: () => {
@@ -77,9 +79,10 @@ class VM {
 
         BST: (instruction) => {
             const [layerIndex, variableIndex] = instruction.args;
-            this.getCurrentLayer(layerIndex)[variableIndex] = this.stack.pop();
+            const value = this.stack.pop();
+            this.getCurrentLayer(layerIndex)[variableIndex] = value;
+            this.logger.debug(chalk.red(`Stored value: ${value}`));
         },
-
         // Operaciones aritméticas--------------------------------------------------------------------------------
         ADD: () => {
             this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
@@ -189,20 +192,40 @@ class VM {
         // Operaciones de listas e hileras-----------------------------------------------------------------------
 
         STK: function() {
-            const index = this.stack.pop();  // Obtiene el índice de la pila
-            const str = this.stack.pop();    // Obtiene la cadena de la pila
-
-            // Validar que index sea un número y str sea una cadena
-            if (typeof Number(index) === 'number' && Number.isInteger(Number(index)) && typeof str === 'string') {
-                this.stack.push(str.charAt(Number(index))); // Extrae el carácter en la posición N y lo empuja a la pila
+            const k = Number(this.stack.pop());
+            const str = this.stack.pop();
+            if (typeof str === 'string' && k >= 0 && k < str.length) {
+                this.stack.push(str[k]);
+            } else {
+                this.stack.push(''); // Pushes an empty string instead of throwing an error
             }
         },
 
 
-        SRK: (instruction) => {  //Tomar el resto de la hilera
-            const [stackLayerIndex, stackVariableIndex] = instruction.args;
-            const value = this.getCurrentLayer(stackLayerIndex)[stackVariableIndex];
-            this.stack.push(value);
+        SRK: () => {  //Tomar el resto de la hilera
+            const k = Number(this.stack.pop());
+            const str = this.stack.pop();
+            if (typeof str === 'string' && k >= 0 && k <= str.length) {
+                this.stack.push(str.slice(k));
+            } else {
+                this.stack.push(''); // Pushes an empty string instead of throwing an error
+            }
+        },
+
+        //String Operations-----------------------------------------------------------------------------------------
+        SNT: () => { // String Null test
+            const str = this.stack.pop();
+            this.stack.push(str === "" ? 1 : 0);
+        },
+        
+        CAT: () => {
+            const b = this.stack.pop();
+            const a = this.stack.pop();
+            this.stack.push(a + b);
+        },
+        TOS: () => {
+            const value = this.stack.pop();
+            this.stack.push(String(value));
         },
 
         // Control de flujo----------------------------------------------------------------------------------------
@@ -332,7 +355,13 @@ class VM {
             this.programCounter = 0;    // Inicializar el contador de programa
         },
 
-        
+        //Amiente y stack
+        SWP: () => {
+            const a = this.stack.pop();
+            const b = this.stack.pop();
+            this.stack.push(a);
+            this.stack.push(b);
+        },
 
         HLT: () => {
             this.code = [];

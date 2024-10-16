@@ -26,6 +26,7 @@ instruction
     | logicalInst // O instrucciones lógicas
     | listInstr // **Nueva regla** para manejar la instrucción LIN
     | inputString // **Nueva regla** para manejar la instrucción INO
+    | stackInstr // **Nueva regla** para manejar la instrucción SWP
     ;
 
 loadInstr
@@ -60,6 +61,11 @@ controlInstr
     | 'NOP'       // No operación
     ;
 
+
+stackInstr
+    : 'SWP' // Instrucción para intercambiar los dos elementos superiores de la pila
+    ;
+
 funcInstr
     : 'APP' ES? NUMBER? // Instrucción de aplicación con un número opcional de argumentos (k)
     | 'PRN' // Instrucción de impresión
@@ -75,8 +81,11 @@ comparisonInstr
     ;
 
 stringInstr
-    : 'STK' ES? // Instrucción para seleccionar el k-ésimo elemento de la pila
-    | 'SRK' NUMBER // Instrucción para seleccionar el resto de la pila a partir de un índice
+    : 'STK' // Instrucción para seleccionar el k-ésimo elemento de la pila
+    | 'SRK' // Instrucción para seleccionar el resto de la pila a partir de un índice
+    | 'CAT' // Instrucción para concatenar dos cadenas
+    | 'SNT' // Instrucción para verificar si una cadena está vacía
+    | 'TOS' // Instruccion para convertir el valor en la cima de la pila a cadena
     ;
 
 listInstr
@@ -120,6 +129,7 @@ AND : 'AND'; // Token para la instrucción AND
 OR : 'OR'; // Token para la instrucción OR
 XOR : 'XOR'; // Token para la instrucción XOR
 NOT : 'NOT'; // Token para la instrucción NOT
+SWP : 'SWP'; // Token para la instrucción SWP
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
