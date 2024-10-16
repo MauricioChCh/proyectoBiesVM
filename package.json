@@ -16,12 +16,14 @@
     "start": "node src/biesVM.js",
     "test": "node test/runTest.js",
     "link": "npm link",
+    "docs": "jsdoc -c jsdoc.json",
     "run:linux": "chmod +x ./build.sh && ./build.sh",
     "run:windows": "build.bat"
   },
   "keywords": [],
   "dependencies": {
-    "antlr4": "^4.13.2"
+    "antlr4": "^4.13.2",
+    "jsdoc": "^4.0.3"
   },
   "devDependencies": {
     "chalk": "^5.3.0",

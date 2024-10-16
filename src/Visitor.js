@@ -6,10 +6,24 @@ import VM from './Vm.js';
  * Clase que implementa un visitante para el lenguaje Bies.
  * Extiende la funcionalidad de `biesLanguageVisitor` para recorrer un árbol de sintaxis y
  * generar las instrucciones correspondientes que se ejecutarán en la máquina virtual (VM).
+ * 
+ * @class
+ * @extends biesLanguageVisitor
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @version 1.0.0
+ * @since 2024-10-15
+ * @license ISC
  */
 export class Visitor extends biesLanguageVisitor {
     /**
      * Crea una instancia de la clase Visitor.
+     * 
+     * @constructor
      * @param {Object} [logger={ log: () => {} }] - Objeto que define el comportamiento del logger. Por defecto, usa un logger vacío.
      */
     constructor(logger = { log: () => {} }) {
@@ -89,6 +103,7 @@ export class Visitor extends biesLanguageVisitor {
     /**
      * Visita una instrucción en el programa.
      * Divide la instrucción en sus partes (`type` y `args`) y la acumula en el arreglo `this.code`.
+     * 
      * @param {Object} ctx - Contexto del nodo de la instrucción en el árbol de sintaxis.
      * @returns {*} El resultado de la visita a la instrucción.
      */

@@ -5,10 +5,22 @@ import Visitor from './Visitor.js';
 import fs from 'fs';
 import chalk from 'chalk';
 
-// Función que integra el lexer y parser y analiza el archivo
+
 /**
+ * Función que integra el lexer y parser y analiza el archivo
  * Analiza un archivo .basm utilizando un lexer y un parser generados por ANTLR.
  *
+ * @function analizarArchivoBasm
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @version 1.0.0
+ * @since 2024-10-15
+ * @license ISC
+ * 
  * @param {string} filePath - La ruta del archivo .basm a analizar.
  * @param {Logger} logger - Un objeto Logger para registrar mensajes y errores.
  * @returns {boolean} Devuelve true si el análisis fue exitoso, false en caso contrario.

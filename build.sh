@@ -7,5 +7,7 @@ rm -r output/grammar
 
 sudo npm run link
 
+npm run docs
+
 npm run test
 

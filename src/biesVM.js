@@ -5,6 +5,36 @@
  * y chalk para el formateo de la salida en consola.
  *
  * @module biesVM
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @version 1.0.0
+ * @since 2024-10-15
+ * @license ISC
+ * 
+ * @requires fs
+ * @requires path
+ * @requires commander
+ * @requires chalk
+ * @requires Logger
+ * @requires integrateLexerParser
+ *
+ * @example
+ * // Ejecutar la VM con un archivo .basm
+ * $ biesVM archivo.basm -v
+ *
+ * @example
+ * // Ejecutar con modo detallado
+ * $ biesVM archivo.basm -d --verbose
+ * 
+ * 
+ * @param {string} archivo - El archivo `.basm` a ejecutar.
+ * @param {object} [options] - Opciones adicionales del programa.
+ * @param {boolean} [options.verbose] - Activa el modo verbose para salida detallada.
+ * @param {boolean} [options.detail] - Muestra detalles del proceso de parseo.
  */
 
 import fs from 'fs';
@@ -44,7 +74,6 @@ program
          * @param {string} fileName - Nombre del archivo a verificar.
          * @param {object} options - Opciones del comando.
          */
-
         const fileExt = path.extname(fileName);
         if (fileExt !== '.basm') {
             console.error(chalk.red("Error: El archivo debe tener la extensión .basm"));
