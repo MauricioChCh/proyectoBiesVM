@@ -1,4 +1,4 @@
-// Generated from ./grammar/biesLanguage.g4 by ANTLR 4.13.1
+// Generated from grammar/biesLanguage.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -123,6 +123,7 @@ const serializedATN = [4,0,53,368,6,-1,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,
 0,0];
 
 
+
 const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
 const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DFA(ds, index) );
@@ -217,6 +218,7 @@ biesLanguageLexer.COMMENT = 50;
 biesLanguageLexer.ES = 51;
 biesLanguageLexer.WS = 52;
 biesLanguageLexer.NL = 53;
+
 
 
 

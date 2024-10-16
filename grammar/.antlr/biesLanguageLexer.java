@@ -22,6 +22,7 @@ public class biesLanguageLexer extends Lexer {
 		BST=29, LDF=30, INI=31, STK=32, SRK=33, LIN=34, CST=35, INO=36, AND=37, 
 		OR=38, XOR=39, NOT=40, SWP=41, FUN=42, END=43, LABEL_IDENTIFIER=44, NUMBER=45, 
 		ID=46, STRING=47, TYPE=48, VALUE=49, COMMENT=50, ES=51, WS=52, NL=53;
+
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -122,6 +123,7 @@ public class biesLanguageLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
+
 		"\u0004\u00005\u0170\u0006\uffff\uffff\u0002\u0000\u0007\u0000\u0002\u0001"+
 		"\u0007\u0001\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004"+
 		"\u0007\u0004\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007"+
@@ -349,6 +351,7 @@ public class biesLanguageLexer extends Lexer {
 		"\u0000\u0000\u0000\u016e\u016f\u0001\u0000\u0000\u0000\u016fj\u0001\u0000"+
 		"\u0000\u0000\u0010\u0000\u010f\u0113\u0118\u011e\u0120\u0124\u0129\u012b"+
 		"\u0131\u0138\u0153\u0157\u015d\u0167\u016e\u0001\u0006\u0000\u0000";
+
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

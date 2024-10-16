@@ -1,0 +1,19 @@
+{
+    "plugins": [],
+    "source": {
+        "include": ["src"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "exclude": [".idea", "node_modules", "output", "test", "grammar", "lib", "docs"]
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true
+        }
+    },
+    "opts": {
+        "destination": "./docs",
+        "recurse": true
+    }
+}

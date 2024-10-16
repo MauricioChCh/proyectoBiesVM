@@ -12,10 +12,10 @@
 ;    return resultado;
 ;};
 
-;const hileraOriginal = "Hola Mundo!";
+;const hileraOriginal = "INVERTIMOS!";
 ;console.log(invertirHilera(hileraOriginal));
 
-;Fabi dijo que haría este
+
 
 
 ; Función principal
@@ -56,3 +56,4 @@ $FUN $1
 $END $1
 
 INI $0                 ; Iniciar el programa desde main
+

@@ -1431,7 +1431,6 @@ public class biesLanguageParser extends Parser {
 				}
 				}
 			}
-
 			setState(234);
 			match(T__11);
 			}
@@ -1496,7 +1495,6 @@ public class biesLanguageParser extends Parser {
 				match(STRING);
 				}
 			}
-
 			setState(249);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -1701,6 +1699,7 @@ public class biesLanguageParser extends Parser {
 		"-15<@LRV[`dhlptx|\u0080\u0084\u0086\u008a\u008e\u0092\u0096\u009a\u009c"+
 		"\u00a0\u00a4\u00a8\u00ac\u00ae\u00b4\u00b9\u00be\u00c2\u00c8\u00cb\u00cf"+
 		"\u00d7\u00dc\u00e5\u00e8\u00f0\u00f4\u00f9";
+
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
