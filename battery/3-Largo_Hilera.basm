@@ -2,9 +2,9 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
+;elaboración propia
 ;let largoHilera = hilera => {
 ;    let count = 0;
 ;
@@ -17,6 +17,8 @@
 ;let hilera = "Hola Mundo! ";
 ;console.log(largoHilera(hilera));
 
+
+;elaboración propia
 $FUN $1                     ; Definir la función '$1'
     BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
 

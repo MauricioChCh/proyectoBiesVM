@@ -2,26 +2,29 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
-
+;elaboración propia
 ;function $1(n) {
-;   if (typeof n !== "number") {
-;       if (n === 0 || n === 1) {
-;           return 1;
-;       }
-;       return n * $1(n - 1);
+;   if (typeof n !== "number") return null;
+;   if (n === 0 || n === 1) {
+;       return 1;
 ;   }
-;   return null;
+;   return n * $1(n - 1);
+;
 ;}
 ;
 ;console.log($1(5))
 
+
+;elaboración propia
 $FUN $1
     BLD 0 0         ; Cargar n
     INO "number"    ; Verificar que n sea un número
-    BF 23           ; Si no es un número, return null
+    BT 3           ; Si no es un número, return null
+
+    LDV "null"      ; Cargar 0
+    RET             ; return 0
 
     LDV 0           ; Cargar 0
     BLD 0 0         ; Cargar el argumento n
@@ -53,9 +56,6 @@ $FUN $1
     BLD 0 0         ; Cargar el argumento n
     MUL             ; n * $1(n - 1)
     RET             ; Retornar el resultado
-
-    LDV "null"      ; Cargar 0
-    RET             ; return 0
 
 $END $1
 

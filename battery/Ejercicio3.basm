@@ -1,10 +1,11 @@
 ;Autores
 ;Joshua Yarit Amador Lara 
-;Mauricio Alberto Chaves Chaves
+;Mauricio Alberto Chaves Chaves principal
 ;Fabiola Rojas Alvarado
 ;Eddy Villarreal Muñoz 
 
 
+;elaboración propia
 LDV 1       ; cargo el 1 (a)
 BST 0 0     ; lo guardo en a
 LDV 665     ; lo guardo en b

@@ -1,9 +1,10 @@
 ;Autores
 ;Joshua Yarit Amador Lara 
-;Mauricio Alberto Chaves Chaves
+;Mauricio Alberto Chaves Chaves principal
 ;Fabiola Rojas Alvarado
 ;Eddy Villarreal Muñoz 
 
+;elaboración propia
 ;const invertirHilera = (hilera) => {
 ;    let resultado = '';
 ;    for (let i = hilera.length - 1; i >= 0; i--) {
@@ -15,9 +16,9 @@
 ;const hileraOriginal = "Hola Mundo!";
 ;console.log(invertirHilera(hileraOriginal));
 
-;Fabi dijo que haría este
 
 
+;elaboración propia
 ; Función principal
 $FUN $0
     LDV "Invertimos"  ; Cargar la hilera original en la pila
@@ -31,7 +32,7 @@ $END $0
 $FUN $1
     BLD 0 0            ; Cargar la hilera actual
     SNT                ; Verificar si la hilera está vacía (caso base)
-    BT 9               ; Si es vacía, saltar a RET
+    BT 11               ; Si es vacía, saltar a RET
 
     ; Extraer el último carácter de la hilera
     BLD 0 0            ; Cargar la hilera actual

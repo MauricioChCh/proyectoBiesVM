@@ -2,13 +2,16 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
+;elaboración propia 
 ;   let esMayor = (x, y) => x > y
 ;   let a = 8
 ;   let b = 5
 ;   print( esMayor(a, b) )
 
+
+;elaboración propia
 $FUN $1          ; Definir la función '$1' (esMayor)
     BLD 0 0          ; Cargar el argumento 'x' del entorno
     BLD 0 1          ; Cargar el argumento 'y' del entorno

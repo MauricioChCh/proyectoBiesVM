@@ -2,9 +2,9 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
 ;function fibonacci2(n, a = 0, b = 1) {
 ;    if (typeof n !== "number") return null;
 ;    if (n === 0) return a;
@@ -13,7 +13,7 @@
 ;}
 
 
-
+;elaboración propia
 $FUN $1
     BLD 0 0         ; Cargar n
     INO "number"    ; Verificar que n sea un número
@@ -64,9 +64,8 @@ $FUN $1
 
 $END $1
 
-
 $FUN $0
-    LDV 10         ; Cargar el valor de 'n' (10)
+    LDV 20         ; Cargar el valor de 'n' (10)
     LDV 0          ; Cargar 0
     LDV 1          ; Cargar 1
     LDF $1         ; Cargar la función 'fibonacci2'

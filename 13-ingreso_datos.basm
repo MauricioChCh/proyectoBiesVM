@@ -1,9 +1,10 @@
 ;Autores
 ;Joshua Yarit Amador Lara 
-;Mauricio Alberto Chaves Chaves
+;Mauricio Alberto Chaves Chaves  principal 
 ;Fabiola Rojas Alvarado
 ;Eddy Villarreal Muñoz 
 
+;elaboración propia
 $FUN $1         ; Definir la función '$1'
     BLD 0 0         ; Cargar el argumento 'saludo' del entorno
     PRN             ; Imprimir el valor
@@ -11,9 +12,10 @@ $FUN $1         ; Definir la función '$1'
 $END $1         ; Fin de la definición de la función '$1'
 
 $FUN $0      ; Definir la función 'main'
-
+    LDV "Ingrese un valor:"
+    PRN
     INP
-   ; LDV "hola"
+
     LDF $1          ; Cargar la función 'salude'
     APP 1           ; Llamar a la función 'salude'
 

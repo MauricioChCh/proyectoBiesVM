@@ -2,10 +2,10 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
 
-
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
 ;let largoHilera = hilera => {
 ;    let count = 0;
 ;
@@ -37,6 +37,9 @@
 ;const subhileraBuscar = "Mundo";
 ;console.log(indiceSubhilera(hileraPrincipal, subhileraBuscar));
 
+
+
+;elaboración propia
 $FUN $1                     ; Definir la función '$1'
     BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
 

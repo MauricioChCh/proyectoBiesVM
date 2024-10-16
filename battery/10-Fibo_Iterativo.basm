@@ -2,10 +2,9 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
-
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
 ;function fibonacci(n) {
 ;    if (n <= 1) return n; // Casos base
 ;
@@ -21,6 +20,9 @@
 ;
 ;console.log(fibonacci(10));  // Output: 55
 
+
+
+;elaboración propia
 $FUN $1
     BLD 0 0         ; Cargar el parámetro 'n'
     LDV 1           ; Cargar 1

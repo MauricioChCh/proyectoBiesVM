@@ -2,9 +2,9 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
 ;function squareRoot(a) {
 ;    if (typeof a !== 'number' || a < 0)
 ;        throw new Error(`SquareRoot: invalid call for ${a}`);
@@ -32,6 +32,9 @@
 ;    return [(-b + d) / (2 * a),(-b - d) / (2 * a)]
 ;};
 
+
+
+;elaboración propia
 $FUN $1
     ;BLD 0 0                     ;Cargar el parámetro 'a' del entorno
     ;INO "number"                ;typeOf a

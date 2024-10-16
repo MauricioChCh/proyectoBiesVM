@@ -327,7 +327,7 @@ class VM {
                 output: process.stdout,
             });
             
-            const userInput = await new Promise((resolve) => rl.question('Ingrese un valor: ', resolve));
+            const userInput = await new Promise((resolve) => rl.question('', resolve));
             rl.close();
             
             // Almacenar el valor en la pila

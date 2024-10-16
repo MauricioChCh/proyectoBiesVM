@@ -1,22 +1,24 @@
 ;Autores
 ;Joshua Yarit Amador Lara 
-;Mauricio Alberto Chaves Chaves
+;Mauricio Alberto Chaves Chaves principal
 ;Fabiola Rojas Alvarado
 ;Eddy Villarreal Muñoz 
 
-
+;elaboración propia
 ;let salude = saludo => print(saludo)
 ;let a = 1
 ;let b = 656
 ;salude( a*10 + b )
 
+
+;elaboración propia
 $FUN $1         ; Definir la función '$1'
     BLD 0 0         ; Cargar el argumento 'saludo' del entorno
     PRN             ; Imprimir el valor
     RET            ; Retornar de la función
 $END $1         ; Fin de la definición de la función '$1'
 
-$FUN $0      ; Definir la función 'main'
+$FUN $main      ; Definir la función 'main'
 
     LDV 1           ; Cargar el valor de 'a' (1)
     BST 0 0         ; Guardar 'a' en el nivel 0 argumento 0
@@ -36,5 +38,5 @@ $FUN $0      ; Definir la función 'main'
     APP 1           ; Llamar a la función 'salude'
 
     HLT             ; Detener la ejecución
-$END $0      ; Fin de la definición de la función 'main'
-INI $0       ; Inicializar la función 'main'
+$END $main      ; Fin de la definición de la función 'main'
+INI $main       ; Inicializar la función 'main'

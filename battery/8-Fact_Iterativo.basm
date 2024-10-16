@@ -2,10 +2,9 @@
 ;Joshua Yarit Amador Lara 
 ;Mauricio Alberto Chaves Chaves
 ;Fabiola Rojas Alvarado
-;Eddy Villarreal Muñoz 
+;Eddy Villarreal Muñoz principal
 
-
-
+;elaboración propia
 ;function factorial(n) {
 ;    let result = 1;
 ;
@@ -19,6 +18,8 @@
 ;
 ;console.log(factorial(120));  // Output: 6.689503e+198
 
+
+;elaboración propia
 $FUN $1
     BLD 0 0         ; Cargar el parámetro 'n'
     LDV 1           ; Cargar 1
