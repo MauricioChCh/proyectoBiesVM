@@ -110,3 +110,19 @@ Puedes hacer un link a biesVM con:
 ```bash
 npm link
 ```
+
+## run:linux
+
+Con este se ejecuta el build.sh para el sistema operativo linux
+
+```bash
+npm run:linux
+```
+
+## run:windows
+
+Con este se ejecuta el build.bat para el sistema operativo windows
+
+```cmd
+npm run:windows
+```
