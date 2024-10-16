@@ -25,5 +25,74 @@
 ;console.log(isPalindrome("hello"));  // Output: false
 
 
-LDV "FALTA"
-PRN 
+; Función principal para probar
+$FUN $0
+    LDV "hello"  ; Cargar la primera cadena a verificar
+    LDV 0        ; left inicial
+    LDV 4        ; right inicial (length - 1)
+    LDF $1
+    APP 3
+    PRN          ; Imprimir el resultado
+
+    LDV "radar"  ; Cargar la segunda cadena a verificar
+    LDV 0        ; left inicial
+    LDV 4        ; right inicial (length - 1)
+    LDF $1
+    APP 3
+    PRN          ; Imprimir el resultado
+
+    HLT          ; Detener la ejecución
+$END $0
+
+
+
+$FUN $1
+    ; Cargar los argumentos
+    BLD 0 0  ; Cargar la cadena (str)
+    BLD 0 1  ; Cargar left
+    BLD 0 2  ; Cargar right
+
+    ; Comprobar si left >= right
+    BLD 0 1  ; Cargar left
+    BLD 0 2  ; Cargar right
+    GTE
+    BT 3     ; Si es verdadero, saltar a retornar true
+
+    ; Obtener str[left]
+    BLD 0 0  ; Cargar str
+    BLD 0 1  ; Cargar left
+    STK      ; Obtener el carácter en la posición left
+
+    ; Obtener str[right]
+    BLD 0 0  ; Cargar str
+    BLD 0 2  ; Cargar right
+    STK      ; Obtener el carácter en la posición right
+
+    ; Comparar los caracteres
+    EQ
+    BF 3     ; Si no son iguales, saltar a retornar false
+
+    ; Recursión: isPalindrome(str, left + 1, right - 1)
+    BLD 0 0  ; Cargar str
+    BLD 0 1  ; Cargar left
+    LDV 1
+    ADD      ; left + 1
+    BLD 0 2  ; Cargar right
+    LDV 1
+    SUB      ; right - 1
+    LDF $1
+    APP 3    ; Llamar a isPalindrome con 3 argumentos
+    RET      ; Retornar el resultado de la llamada recursiva
+
+    ; Retornar true (si left >= right)
+    LDV "true"
+    RET
+
+    ; Retornar false (si los caracteres no coinciden)
+    LDV "false"
+    RET
+$END $1
+
+
+
+INI $0

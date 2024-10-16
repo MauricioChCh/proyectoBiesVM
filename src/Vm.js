@@ -63,6 +63,9 @@ class VM {
                 value = !isNaN(numberValue) ? numberValue : valueArgument;
             }
             this.stack.push(value);
+
+            this.logger.debug(chalk.red(`Stack post LDV  `,  this.stack))
+
         },
 
         BLD: (instruction) => {
@@ -70,6 +73,8 @@ class VM {
             const value = this.getCurrentLayer(bindLayerIndex)[bindVariableIndex];
             this.stack.push(value);
             this.logger.debug(chalk.red(`Loaded value: ${value}`));
+
+            this.logger.debug(chalk.red(`Stack post BLD  `,  this.stack))
         },
 
         LIN: () => {
@@ -195,21 +200,26 @@ class VM {
             const k = Number(this.stack.pop());
             const str = this.stack.pop();
             if (typeof str === 'string' && k >= 0 && k < str.length) {
-                this.stack.push(str[k]);
+                this.logger.debug(chalk.magenta("STACK en strk str[k]"), str[k]);
+                this.stack.push(str[k]===''?'aaa':str[k]);
             } else {
-                this.stack.push(''); // Pushes an empty string instead of throwing an error
+               // this.stack.push(''); // Pushes an empty string instead of throwing an error
             }
+            this.logger.debug("Pila tras SRK:", this.stack);
         },
 
 
         SRK: () => {  //Tomar el resto de la hilera
+            this.logger.debug("Pila pre SRK:", this.stack);
             const k = Number(this.stack.pop());
             const str = this.stack.pop();
             if (typeof str === 'string' && k >= 0 && k <= str.length) {
+                console.log('ESTE HOP: ',str.slice(k))
                 this.stack.push(str.slice(k));
             } else {
-                this.stack.push(''); // Pushes an empty string instead of throwing an error
+                //this.stack.push(''); // Pushes an empty string instead of throwing an error
             }
+            this.logger.debug("Pila tras SRK:", this.stack);
         },
 
         //String Operations-----------------------------------------------------------------------------------------
@@ -246,6 +256,7 @@ class VM {
 
         // Funciones
         APP: (instruction) => {
+            this.logger.debug("Pila tras APP:", this.stack); //quitar
             let closure = this.stack.pop();
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
             if (closure && closure.body) {
@@ -268,7 +279,7 @@ class VM {
                 this.code = closure.body;
                 this.programCounter = 0;
                 const functionBody = this.code.join('\n');
-                this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:`) + `\n${functionBody}`);
+                this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:) + \n${functionBody}`));
                 const chars = new antlr4.InputStream(functionBody);
                 const lexer = new biesVMLexer(chars);
                 const tokens = new antlr4.CommonTokenStream(lexer);
@@ -307,7 +318,7 @@ class VM {
         PRN: () => {
             const print = this.stack.pop();
                 print===undefined? "": console.log(chalk.yellow(print));
-            //console.log(chalk.yellow(`${this.stack.pop()}`));
+            //console.log(chalk.yellow(${this.stack.pop()}));
         },
         
         INP: async function() {
@@ -327,6 +338,7 @@ class VM {
             let returnValue = this.stack.pop();
             let previousContext = this.contextStack.pop();
             if (previousContext) {
+                this.logger.log(chalk.cyan('Valor de retorno:', returnValue));
                 this.code = previousContext.code;
                 this.stack = previousContext.stack;
                 this.bindings = previousContext.bindings;
@@ -335,6 +347,7 @@ class VM {
                     this.stack.push(returnValue);
                 }
             }
+            this.logger.debug("Pila tras RET:", this.stack);
         },
 
         INI: (instruction) => {
@@ -361,6 +374,9 @@ class VM {
             const b = this.stack.pop();
             this.stack.push(a);
             this.stack.push(b);
+        },
+        POP:() => {
+            this.stack.pop();
         },
 
         HLT: () => {
