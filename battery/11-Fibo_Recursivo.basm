@@ -14,3 +14,33 @@
 
 LDV "FALTA"
 PRN 
+
+$FUN $1          ; Definir la función '$1' (fibonacci)
+    BLD 0 0      ; Cargar 'n'
+    LDV 1        ; Cargar 1
+    LTE           ; Comparar n <= 1
+    BF 5         ; Si n > 1, saltar al cálculo
+
+    ; Retornar n
+    BLD 0 0      ; Cargar 'n'
+    RET
+
+    ; Llamadas recursivas
+    BLD 0 0      ; Cargar 'n'
+    LDV 1        ; Cargar 1
+    SUB           ; n - 1
+    LDF $1        ; Cargar la función
+    APP 1        ; Llamar a fibonacci(n - 1)
+
+    ; Almacenar el resultado de fibonacci(n - 1)
+    BST 0 2      ; Guardar en posición 2
+
+    BLD 0 0      ; Cargar 'n'
+    LDV 2        ; Cargar 2
+    SUB           ; n - 2
+    LDF $1        ; Cargar la función
+    APP 1        ; Llamar a fibonacci(n - 2)
+
+    ; Sumar los resultados
+    BLD 0 2      ; Cargar fibonacci(n - 1)
+    ADD          

@@ -21,3 +21,53 @@
 
 LDV "FALTA"
 PRN 
+
+$FUN $1          ; Definir la función '$1' (factorial)
+    BLD 0 0      ; Cargar 'n'
+    LDV 1        ; Cargar 1
+    LTE           ; Comparar n <= 1
+    BF 6         ; Si n > 1, saltar a inicializar result
+
+    ; Retornar 1
+    LDV 1        ; Cargar 1
+    RET
+
+    ; Inicializar result
+    LDV 1        ; Cargar 1
+    BST 0 1      ; result = 1
+
+    LDV 2        ; Cargar 2
+    BST 0 2      ; i = 2
+
+    ; Inicio del bucle for
+    BLD 0 2      ; Cargar 'i'
+    BLD 0 0      ; Cargar 'n'
+    LTE           ; Comparar i <= n
+    BF 10        ; Si i > n, saltar al final del bucle
+
+    ; Cuerpo del bucle
+    BLD 0 1      ; Cargar 'result'
+    BLD 0 2      ; Cargar 'i'
+    MUL           ; result *= i
+    BST 0 1      ; Guardar 'result'
+
+    ; Incrementar i
+    BLD 0 2      ; Cargar 'i'
+    LDV 1        ; Cargar 1
+    ADD           ; i = i + 1
+    BST 0 2      ; Guardar 'i'
+    BR -9         ; Volver al inicio del bucle
+
+    ; Retornar result
+    BLD 0 1      ; Cargar 'result'
+    RET
+$END $1          ; Fin de la definición de la función '$1'
+
+$FUN $0          ; Definir la función 'main'
+    LDV 5        ; Cargar n (5)
+    LDF $1       ; Cargar la función 'factorial'
+    APP 1        ; Llamar a la función
+    PRN          ; Imprimir el resultado
+    HLT          ; Detener la ejecución
+$END $0          ; Fin de la definición de la función 'main'
+INI $0           ; Inicializar la función 'main'

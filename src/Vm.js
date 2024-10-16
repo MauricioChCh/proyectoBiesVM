@@ -8,12 +8,12 @@ import readline from 'readline';
 
 class VM {
     constructor(logger = { log: () => {} }) {
+        this.code = []; //C Code
         this.stack = []; //S Stack
         this.bindings = [{}]; //B Bindings
-        this.contextStack = []; 
-        this.code = []; //C Code
+        this.contextStack = [];  //D Context Stack
         this.functions = {};
-        this.programCounter = 0;
+        this.programCounter = 0; //PC 
         this.logger = logger;
 
         
@@ -76,12 +76,12 @@ class VM {
             this.logger.log(chalk.blue(`BLD: Cargando valor ${value} desde capa ${bindLayerIndex}, variable ${bindVariableIndex}`));
             this.stack.push(value);
         },
-        LIN: () => {
+        LIN: () => { //incertaral inicio 
             const listValues = "[" + this.stack.join(", ") + "]";
             this.stack = [listValues];
         },
 
-        BST: function(instruction) {
+        BST: function(instruction) { 
             const [layerIndex, variableIndex] = instruction.args.map(Number);
             const value = this.stack.pop();
             this.getCurrentLayer(layerIndex)[variableIndex] = value;

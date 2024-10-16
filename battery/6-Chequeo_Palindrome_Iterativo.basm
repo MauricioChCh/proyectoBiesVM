@@ -24,3 +24,59 @@
 
 LDV "FALTA"
 PRN 
+
+$FUN $1          ; Definir la función '$1' (isPalindrome)
+    BLD 0 0      ; Cargar el argumento 'str' del entorno
+    LDV 0        ; Obtener la longitud de 'str'
+    LDV 1        ; Cargar 0 para la variable 'i'
+    STK           ; Guardar i
+
+    ; Inicio del bucle for
+    BLD 0 0      ; Cargar 'str'
+    LDV 0        ; Cargar longitud de 'str'
+    LDV 2        ; Cargar 2
+    DIV           ; longitud / 2
+    BF 12        ; Si i >= longitud / 2, saltar al final
+
+    ; Comparar caracteres
+    BLD 0 0      ; Cargar 'str'
+    LDV 1        ; Cargar i
+    ADD           ; str[i]
+    BLD 0 0      ; Cargar 'str'
+    LDV 0        ; Cargar longitud de 'str'
+    LDV 1        ; Cargar 1
+    SUB           ; longitud - 1
+    ADD           ; str[longitud - 1 - i]
+    EQ            ; Comparar str[i] == str[longitud - 1 - i]
+    BF 6         ; Si son diferentes, saltar a RET false
+
+    ; Incrementar i
+    BLD 0 1      ; Cargar 'i'
+    LDV 1        ; Cargar 1
+    ADD           ; i = i + 1
+    BST 0 1      ; Guardar i
+    BR -11       ; Volver al inicio del bucle for
+
+    ; Si no se encontró ningún desajuste
+    LDV 1        ; Cargar true
+    RET
+
+    ; Caso falso
+    LDV 0        ; Cargar false
+    RET
+$END $1          ; Fin de la definición de la función '$1'
+
+$FUN $0          ; Definir la función 'main'
+    LDV "radar"   ; Cargar la cadena a comprobar
+    BST 0 0      ; Guardar 'str' en el entorno
+    LDF $1        ; Cargar la función 'isPalindrome'
+    APP 1         ; Llamar a la función
+    PRN           ; Imprimir el resultado
+    LDV "hello"   ; Cargar otra cadena
+    BST 0 0      ; Guardar 'str' en el entorno
+    LDF $1        ; Cargar la función 'isPalindrome'
+    APP 1         ; Llamar a la función
+    PRN           ; Imprimir el resultado
+    HLT           ; Detener la ejecución
+$END $0          ; Fin de la definición de la función 'main'
+INI $0           ; Inicializar la función 'main'
