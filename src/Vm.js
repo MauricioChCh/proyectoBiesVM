@@ -8,12 +8,12 @@ import readline from 'readline';
 
 class VM {
     constructor(logger = { log: () => {} }) {
-        this.stack = [];
-        this.bindings = [{}];
-        this.contextStack = [];
-        this.code = [];
+        this.stack = []; //S
+        this.bindings = [{}];//B
+        this.contextStack = [];//D
+        this.code = [];//C
         this.functions = {};
-        this.programCounter = 0;
+        this.programCounter = 0;//Bifurcaciones
         this.logger = logger;
     }
 
@@ -196,15 +196,13 @@ class VM {
 
         // Operaciones de listas e hileras-----------------------------------------------------------------------
 
-        STK: function() {
+        STK: function() { //String take k 
             const k = Number(this.stack.pop());
             const str = this.stack.pop();
             if (typeof str === 'string' && k >= 0 && k < str.length) {
                 this.logger.debug(chalk.magenta("STACK en strk str[k]"), str[k]);
                 this.stack.push(str[k]===''?'aaa':str[k]);
-            } else {
-               // this.stack.push(''); // Pushes an empty string instead of throwing an error
-            }
+            } 
             this.logger.debug("Pila tras SRK:", this.stack);
         },
 
@@ -214,11 +212,9 @@ class VM {
             const k = Number(this.stack.pop());
             const str = this.stack.pop();
             if (typeof str === 'string' && k >= 0 && k <= str.length) {
-                console.log('ESTE HOP: ',str.slice(k))
+                
                 this.stack.push(str.slice(k));
-            } else {
-                //this.stack.push(''); // Pushes an empty string instead of throwing an error
-            }
+            } 
             this.logger.debug("Pila tras SRK:", this.stack);
         },
 
@@ -233,7 +229,7 @@ class VM {
             const a = this.stack.pop();
             this.stack.push(a + b);
         },
-        TOS: () => {
+        TOS: () => {//To string
             const value = this.stack.pop();
             this.stack.push(String(value));
         },

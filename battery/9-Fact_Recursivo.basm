@@ -60,7 +60,7 @@ $FUN $1
 $END $1
 
 $FUN $0
-    LDV 5
+    LDV 7
     LDF $1
     APP 1
 

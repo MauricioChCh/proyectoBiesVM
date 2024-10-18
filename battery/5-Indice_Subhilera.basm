@@ -166,7 +166,7 @@ $FUN $2
 $END $2
 
 $FUN $0
-    LDV "Hola Mundo Ka!"   ; Cargar el valor de la variable 'hilera'
+    LDV "Hola Mundo Ka"   ; Cargar el valor de la variable 'hilera'
     BST 0 0             ; Guardar la dirección de la variable 'hilera' en la pila
 
     LDV "Ka"         ; Cargar el valor de la variable 'subhilera'

@@ -1,0 +1,14 @@
+$FUN $0       ; Definir la función 'main'
+   
+   LDV "prueba de profe"
+   PRN
+   INP
+    
+   PRN 
+
+   HLT
+
+
+$END $0       ; Fin de la definición de la función 'main'
+
+INI $0        ; Inicializar la función 'main'

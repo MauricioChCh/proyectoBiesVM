@@ -30,7 +30,7 @@ const program = new Command();
 program
     .name('biesVM') // Nombre del comando
     .description('Máquina virtual para ejecutar archivos .basm')
-    .version('1.0.0') // Versión de la herramienta
+    .version('1.1.0') // Versión de la herramienta
     .argument('<archivo>', 'Archivo BASM a ejecutar') // Argumento obligatorio (el archivo)
     .option('-v, --verbose', 'Modo verbose') // Opción opcional para ver el proceso más detallado
     .option('-d, --detail', 'Modo detallado') // Opción opcional ver más detalladamente el proceso de parseo

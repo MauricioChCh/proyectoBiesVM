@@ -1,9 +1,16 @@
 @echo off
+echo Generating documentation...
 
-npm run prestart
+echo Running prestart...
+call npm run prestart
 
-npm run link
+echo Linking...
+call npm run link
 
-npm run docs
+echo Generating documentation...
+call npm run docs
 
-npm run test
+echo Running tests...
+call npm run test
+
+pause
