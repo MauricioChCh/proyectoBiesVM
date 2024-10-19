@@ -5,6 +5,7 @@
 ;Eddy Villarreal Muñoz 
 
 
+
 ;elaboración propia
 LDV 1       ; cargo el 1 (a)
 BST 0 0     ; lo guardo en a

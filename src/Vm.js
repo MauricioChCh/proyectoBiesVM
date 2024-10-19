@@ -42,30 +42,25 @@ class VM {
             throw new Error(`Instrucción desconocida: ${instruction.type}`);
         }
     }
+
+    performArithmeticOperation(operation) {
+        const b = this.stack.pop();
+        const a = this.stack.pop();
+        const result = operation(Number(a), Number(b));
+        this.stack.push(result);
+    }
+
     
 
     instructionHandlers = {
         // Carga y almacenamiento de valores----------------------------------------------------------------------
         LDV: (instruction) => {
             const valueArgument = instruction.args.join(' ');
-            let value;
-
-            // Comprobar si es un string entre comillas
-            if (valueArgument.startsWith('"') && valueArgument.endsWith('"')) {
-                // Es un string, eliminamos las comillas
-                value = valueArgument.slice(1, -1);
-            } else {
-                // Intentamos convertirlo a número
-                const numberValue = Number(valueArgument);
-
-                // Si es un número válido (incluyendo enteros, negativos y decimales), lo usamos
-                // Si no, lo dejamos como string
-                value = !isNaN(numberValue) ? numberValue : valueArgument;
-            }
+            let value = valueArgument.startsWith('"') && valueArgument.endsWith('"')
+                ? valueArgument.slice(1, -1)
+                : !isNaN(Number(valueArgument)) ? Number(valueArgument) : valueArgument;
             this.stack.push(value);
-
-            this.logger.debug(chalk.red(`Stack post LDV  `,  this.stack))
-
+            this.logger.debug(chalk.red(`Stack post LDV  `,  this.stack));
         },
 
         BLD: (instruction) => {
@@ -73,9 +68,9 @@ class VM {
             const value = this.getCurrentLayer(bindLayerIndex)[bindVariableIndex];
             this.stack.push(value);
             this.logger.debug(chalk.red(`Loaded value: ${value}`));
-
-            this.logger.debug(chalk.red(`Stack post BLD  `,  this.stack))
+            this.logger.debug(chalk.red(`Stack post BLD  `,  this.stack));
         },
+
 
         LIN: () => {
             const listValues = "[" + this.stack.join(", ") + "]";
@@ -89,27 +84,13 @@ class VM {
             this.logger.debug(chalk.red(`Stored value: ${value}`));
         },
         // Operaciones aritméticas--------------------------------------------------------------------------------
-        ADD: () => {
-            this.stack.push(Number(this.stack.pop()) + Number(this.stack.pop()));
-        },
-
-        SUB: () => {
-            const topValue = this.stack.pop();
-            const secondValue = this.stack.pop();
-            this.stack.push(secondValue - topValue);
-        },
-
-        MUL: () => {
-            this.stack.push(this.stack.pop() * this.stack.pop());
-        },
-
+        ADD: () => this.performArithmeticOperation((a, b) => a + b),
+        SUB: () => this.performArithmeticOperation((a, b) => a - b),
+        MUL: () => this.performArithmeticOperation((a, b) => a * b),
         DIV: () => {
-            const divisor = this.stack.pop();
-            const dividend = this.stack.pop();
-            if (divisor === 0) {
-                throw new Error('Error: Division by zero');
-            }
-            this.stack.push(parseFloat(dividend) / parseFloat(divisor));
+            const [b, a] = [this.stack.pop(), this.stack.pop()];
+            if (b === 0) throw new Error('Error: Division by zero');
+            this.stack.push(a / b);
         },
 
         NEG: () => {
@@ -196,14 +177,14 @@ class VM {
 
         // Operaciones de listas e hileras-----------------------------------------------------------------------
 
-        STK: function() { //String take k 
-            const k = Number(this.stack.pop());
-            const str = this.stack.pop();
-            if (typeof str === 'string' && k >= 0 && k < str.length) {
-                this.logger.debug(chalk.magenta("STACK en strk str[k]"), str[k]);
-                this.stack.push(str[k]===''?'aaa':str[k]);
-            } 
-            this.logger.debug("Pila tras SRK:", this.stack);
+        STK: function() {
+            const index = this.stack.pop();  // Obtiene el índice de la pila
+            const str = this.stack.pop();    // Obtiene la cadena de la pila
+
+            // Validar que index sea un número y str sea una cadena
+            if (typeof Number(index) === 'number' && Number.isInteger(Number(index)) && typeof str === 'string') {
+                this.stack.push(str.charAt(Number(index))); // Extrae el carácter en la posición N y lo empuja a la pila
+            }
         },
 
 
@@ -252,7 +233,7 @@ class VM {
 
         // Funciones
         APP: (instruction) => {
-            this.logger.debug("Pila tras APP:", this.stack); //quitar
+            this.logger.debug("Pila tras APP:", this.stack);
             let closure = this.stack.pop();
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
             if (closure && closure.body) {
@@ -276,19 +257,12 @@ class VM {
                 this.programCounter = 0;
                 const functionBody = this.code.join('\n');
                 this.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:) + \n${functionBody}`));
-                const chars = new antlr4.InputStream(functionBody);
-                const lexer = new biesVMLexer(chars);
-                const tokens = new antlr4.CommonTokenStream(lexer);
-                const parser = new biesVMParser(tokens);
-                parser.buildParseTrees = true;
-                const tree = parser.program();
-                const visitor = new Visitor();
-                visitor.vm = this;
-                visitor.visit(tree);
+                this.executeAntlrParsing(functionBody);
             } else {
                 throw new Error('Closure or closure body is undefined');
             }
         },
+
 
         // Saltos/bifurcaciones
         BR: (instruction) => {
@@ -382,6 +356,30 @@ class VM {
             this.contextStack = [];
         }
     };
+
+    executeAntlrParsing(functionBody) {
+        const chars = new antlr4.InputStream(functionBody);
+        const lexer = new biesVMLexer(chars);
+        const tokens = new antlr4.CommonTokenStream(lexer);
+        const parser = new biesVMParser(tokens);
+        parser.buildParseTrees = true;
+        const tree = parser.program();
+        const visitor = new Visitor();
+        visitor.vm = this;
+        visitor.visit(tree);
+    }
+
+    async getUserInput() {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        
+        const userInput = await new Promise((resolve) => rl.question('', resolve));
+        rl.close();
+        return userInput;
+    }
+    
 }
 
 export default VM;

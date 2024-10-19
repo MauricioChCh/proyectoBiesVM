@@ -2,7 +2,8 @@ $FUN $0       ; Definir la función 'main'
    
    LDV "prueba de profe"
    PRN
-   INP
+  ; INP
+  LDV "hola mundo"
     
    PRN 
 
