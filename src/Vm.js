@@ -17,6 +17,8 @@ class VM {
         this.logger = logger;
     }
 
+
+    //FUNCIONES-------------------------------------------------------------------------------------------- (Seprar en clases)
     getCurrentLayer(layerIndex) {
         if (!this.bindings[layerIndex]) {
             this.bindings[layerIndex] = {};
@@ -43,34 +45,57 @@ class VM {
         }
     }
 
-    performArithmeticOperation(operation) {
-        const b = this.stack.pop();
-        const a = this.stack.pop();
-        const result = operation(Number(a), Number(b));
-        this.stack.push(result);
+    executeAntlrParsing(functionBody) {
+        const chars = new antlr4.InputStream(functionBody);
+        const lexer = new biesVMLexer(chars);
+        const tokens = new antlr4.CommonTokenStream(lexer);
+        const parser = new biesVMParser(tokens);
+        parser.buildParseTrees = true;
+        const tree = parser.program();
+        const visitor = new Visitor();
+        visitor.vm = this;
+        visitor.visit(tree);
     }
 
+    async getUserInput() {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        
+        const userInput = await new Promise((resolve) => rl.question('', resolve));
+        rl.close();
+        return userInput;
+    }
+
+
+
+    performArithmeticOperation(operation) {
+        const [b, a] = [this.stack.pop(), this.stack.pop()];
+        this.stack.push(operation(Number(a), Number(b)));
+    }
+
+    performLogicOperation(operation) {
+        const [b, a] = [this.stack.pop(), this.stack.pop()];
+        this.stack.push(operation(a, b));
+    }
+
+    performComparison(comparison) {
+        const [b, a] = [this.stack.pop(), this.stack.pop()];
+        this.stack.push(comparison(Number(a), Number(b)));
+    }
     
 
     instructionHandlers = {
         // Carga y almacenamiento de valores----------------------------------------------------------------------
         LDV: (instruction) => {
-            const valueArgument = instruction.args.join(' ');
-            let value = valueArgument.startsWith('"') && valueArgument.endsWith('"')
-                ? valueArgument.slice(1, -1)
-                : !isNaN(Number(valueArgument)) ? Number(valueArgument) : valueArgument;
-            this.stack.push(value);
-            this.logger.debug(chalk.red(`Stack post LDV  `,  this.stack));
+            const value = instruction.args.join(' ');
+            this.stack.push(value.startsWith('"') && value.endsWith('"') ? value.slice(1, -1) : !isNaN(Number(value)) ? Number(value) : value);
         },
-
         BLD: (instruction) => {
             const [bindLayerIndex, bindVariableIndex] = instruction.args;
-            const value = this.getCurrentLayer(bindLayerIndex)[bindVariableIndex];
-            this.stack.push(value);
-            this.logger.debug(chalk.red(`Loaded value: ${value}`));
-            this.logger.debug(chalk.red(`Stack post BLD  `,  this.stack));
+            this.stack.push(this.getCurrentLayer(bindLayerIndex)[bindVariableIndex]);
         },
-
 
         LIN: () => {
             const listValues = "[" + this.stack.join(", ") + "]";
@@ -83,6 +108,7 @@ class VM {
             this.getCurrentLayer(layerIndex)[variableIndex] = value;
             this.logger.debug(chalk.red(`Stored value: ${value}`));
         },
+
         // Operaciones aritméticas--------------------------------------------------------------------------------
         ADD: () => this.performArithmeticOperation((a, b) => a + b),
         SUB: () => this.performArithmeticOperation((a, b) => a - b),
@@ -99,17 +125,12 @@ class VM {
 
         // Lógica Binaria-----------------------------------------------------------------------------------------
 
-        AND: () => {
-            this.stack.push(this.stack.pop() && this.stack.pop());
-        },
+        // Operaciones lógicas
+        AND: () => this.performLogicOperation((a, b) => a && b),
+        OR: () => this.performLogicOperation((a, b) => a || b),
+        XOR: () => this.performLogicOperation((a, b) => a !== b),
+        NOT: () => this.stack.push(!this.stack.pop()),
 
-        OR: () => {
-            this.stack.push(this.stack.pop() || this.stack.pop());
-        },
-
-        XOR: () => {
-            this.stack.push((this.stack.pop() !== this.stack.pop()));
-        },
 
         // Lógica Unaria-----------------------------------------------------------------------------------------
         NOT: () => {
@@ -120,37 +141,15 @@ class VM {
         EQ: () => { // Igualdad
             this.stack.push(this.stack.pop() === this.stack.pop());
         },
+        //EQ: () => this.performComparison((a, b) => a === b), NO SIRVE 
 
-        GT: () => { // Mayor que
-            const valueA = this.stack.pop();
-            const valueB = this.stack.pop();
-            this.stack.push(Number(valueB) > Number(valueA));
-        },
-
-        GTE: () => {    // Mayor o igual que
-            const valueA = this.stack.pop();
-            const valueB = this.stack.pop();
-            this.stack.push(Number(valueB) >= Number(valueA));
-        },
-
-        LT: () => { // Menor que
-            const valueA = this.stack.pop();
-            const valueB = this.stack.pop();
-
-            this.stack.push(Number(valueB) < Number(valueA));
-        },
-
-        LTE: () => {    // Menor o igual que
-            const valueA = this.stack.pop();
-            const valueB = this.stack.pop();
-
-            this.stack.push(Number(valueB) <= Number(valueA));
-        },
-
+        GT: () => this.performComparison((a, b) => a > b),   // Mayor que
+        GTE: () => this.performComparison((a, b) => a >= b), // Mayor o igual que
+        LT: () => this.performComparison((a, b) => a < b),   // Menor que
+        LTE: () => this.performComparison((a, b) => a <= b), // Menor o igual que
         //Casting------------------------------------------------------------------------------------------
 
         // Type Of
-
         INO: (instruction) => {
             const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
 
@@ -180,7 +179,6 @@ class VM {
         STK: function() {
             const index = this.stack.pop();  // Obtiene el índice de la pila
             const str = this.stack.pop();    // Obtiene la cadena de la pila
-
             // Validar que index sea un número y str sea una cadena
             if (typeof Number(index) === 'number' && Number.isInteger(Number(index)) && typeof str === 'string') {
                 this.stack.push(str.charAt(Number(index))); // Extrae el carácter en la posición N y lo empuja a la pila
@@ -216,6 +214,9 @@ class VM {
         },
 
         // Control de flujo----------------------------------------------------------------------------------------
+        
+
+        // Funciones-------------------------------------------------
         LDF: (instruction) => {
             const [functionName, paramCount] = instruction.args;
             const functionBody = this.functions[functionName];
@@ -230,8 +231,6 @@ class VM {
             };
             this.stack.push(closure);
         },
-
-        // Funciones
         APP: (instruction) => {
             this.logger.debug("Pila tras APP:", this.stack);
             let closure = this.stack.pop();
@@ -264,7 +263,7 @@ class VM {
         },
 
 
-        // Saltos/bifurcaciones
+        // Saltos/bifurcaciones---------------------------------------------------------------------------------------------
         BR: (instruction) => {
             const branchOffset = Number(instruction.args[0]) - 1;
             this.programCounter += branchOffset;
@@ -357,28 +356,7 @@ class VM {
         }
     };
 
-    executeAntlrParsing(functionBody) {
-        const chars = new antlr4.InputStream(functionBody);
-        const lexer = new biesVMLexer(chars);
-        const tokens = new antlr4.CommonTokenStream(lexer);
-        const parser = new biesVMParser(tokens);
-        parser.buildParseTrees = true;
-        const tree = parser.program();
-        const visitor = new Visitor();
-        visitor.vm = this;
-        visitor.visit(tree);
-    }
-
-    async getUserInput() {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-        
-        const userInput = await new Promise((resolve) => rl.question('', resolve));
-        rl.close();
-        return userInput;
-    }
+    
     
 }
 
