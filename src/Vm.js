@@ -33,7 +33,7 @@ class VM {
             this.programCounter++;
             await this.executeInstruction(instruction);
         }
-    }
+    }                                                                
 
     async executeInstruction(instruction) {
         this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args ? instruction.args.join(' ') : ''}`);
@@ -87,19 +87,53 @@ class VM {
     
 
     instructionHandlers = {
-        // Carga y almacenamiento de valores----------------------------------------------------------------------
-        LDV: (instruction) => {
+        //Carga inicializacion, arracque parada-----------------------------------------------------------------------------
+        INI: (instruction) => { //Inicializar
+            const mainFunctionName = instruction.args[0];
+            const mainFunctionBody = this.functions[mainFunctionName];
+
+            if (!mainFunctionBody) {
+                this.logger.log(`Error: Main function ${mainFunctionName} not defined`);
+                throw new Error(`Main function ${mainFunctionName} not defined`);
+            }
+
+            this.code = mainFunctionBody;   // Cargar el cuerpo de la función principal
+
+            // Inicializar la pila (S), los bindings (B) y el contexto (D)
+            this.stack = [];
+            this.bindings = [{}];
+            this.contextStack = [];     // Contexto actual D.current = C
+            this.programCounter = 0;    // Inicializar el contador de programa
+        },
+
+        HLT: () => {//Stop
+            this.code = [];
+            this.stack = [];
+            this.bindings = [];
+            this.contextStack = [];
+        },
+
+
+         //Amiente y stack--------------------------------------------------------------------------------------------------
+        POP:() => {//Pop
+            this.stack.pop();
+        },
+
+        SWP: () => { //Swap
+            const a = this.stack.pop();
+            const b = this.stack.pop();
+            this.stack.push(a);
+            this.stack.push(b);
+        },
+
+        LDV: (instruction) => { //Load value
             const value = instruction.args.join(' ');
             this.stack.push(value.startsWith('"') && value.endsWith('"') ? value.slice(1, -1) : !isNaN(Number(value)) ? Number(value) : value);
         },
-        BLD: (instruction) => {
+
+        BLD: (instruction) => {//Loar value from binding
             const [bindLayerIndex, bindVariableIndex] = instruction.args;
             this.stack.push(this.getCurrentLayer(bindLayerIndex)[bindVariableIndex]);
-        },
-
-        LIN: () => {
-            const listValues = "[" + this.stack.join(", ") + "]";
-            this.stack = [listValues];
         },
 
         BST: (instruction) => {
@@ -109,35 +143,36 @@ class VM {
             this.logger.debug(chalk.red(`Stored value: ${value}`));
         },
 
-        // Operaciones aritméticas--------------------------------------------------------------------------------
-        ADD: () => this.performArithmeticOperation((a, b) => a + b),
-        SUB: () => this.performArithmeticOperation((a, b) => a - b),
-        MUL: () => this.performArithmeticOperation((a, b) => a * b),
-        DIV: () => {
+
+        //Aritmetica--------------------------------------------------------------------------------------------------------
+        // Operaciones aritméticas-------------------------------------------------------------
+        ADD: () => this.performArithmeticOperation((a, b) => a + b),//Suma
+        SUB: () => this.performArithmeticOperation((a, b) => a - b),//Resta
+        MUL: () => this.performArithmeticOperation((a, b) => a * b),//Multiplicacion
+        DIV: () => {//Divicion
             const [b, a] = [this.stack.pop(), this.stack.pop()];
             if (b === 0) throw new Error('Error: Division by zero');
             this.stack.push(a / b);
         },
 
-        NEG: () => {
+
+        NEG: () => {//Negacion
             this.stack.push(-this.stack.pop());
         },
 
-        // Lógica Binaria-----------------------------------------------------------------------------------------
-
-        // Operaciones lógicas
-        AND: () => this.performLogicOperation((a, b) => a && b),
-        OR: () => this.performLogicOperation((a, b) => a || b),
-        XOR: () => this.performLogicOperation((a, b) => a !== b),
-        NOT: () => this.stack.push(!this.stack.pop()),
-
-
-        // Lógica Unaria-----------------------------------------------------------------------------------------
-        NOT: () => {
-            this.stack.push(!this.stack.pop());
+        SGN: () => {//Signo (No proboado)
+            const value = this.stack.pop();
+            if (!isNaN(Number(value))) {
+                const sign = Number(value) > 0 ? 1 : 0;
+                this.stack.push(sign);
+            } else {
+                throw new Error('Error: Non-numeric value');
+            }
         },
 
-        // Comparaciones------------------------------------------------------------------------------------------
+
+        //Aritmetica Relacional --------------------------------------------------------------------------------------------
+        // Comparaciones---------------------------------------------------------------------
         EQ: () => { // Igualdad
             this.stack.push(this.stack.pop() === this.stack.pop());
         },
@@ -147,32 +182,36 @@ class VM {
         GTE: () => this.performComparison((a, b) => a >= b), // Mayor o igual que
         LT: () => this.performComparison((a, b) => a < b),   // Menor que
         LTE: () => this.performComparison((a, b) => a <= b), // Menor o igual que
-        //Casting------------------------------------------------------------------------------------------
 
-        // Type Of
-        INO: (instruction) => {
-            const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
 
-            if (!['number', 'list', 'string'].includes(argumento)) {
-                throw new Error('Argumento en instrucción INO no válido');
-            }
+        // Lógica Basica----------------------------------------------------------------------------------------------------
 
-            const checkType = (arg, val) => {
-                const typeChecks = {
-                    number: () => !isNaN(Number(val)),  // Modificado para convertir a número
-                    list: () => Array.isArray(val),
-                    string: () => typeof val === 'string',
-                };
-                return typeChecks[arg] ? typeChecks[arg]() : false;
-            };
+        // Logica binaria--------------------------------------------------------
+        AND: () => this.performLogicOperation((a, b) => a && b), //And
+        OR: () => this.performLogicOperation((a, b) => a || b),  //or
+        XOR: () => this.performLogicOperation((a, b) => a !== b), //xor
+        NOT: () => this.stack.push(!this.stack.pop()),             //not
 
-            const value = this.stack.pop();
-
-            // Manejo de cadenas vacías
-            const result = (value === '' && argumento === 'string') ? false : checkType(argumento, value);
-            this.stack.push(result);
+        // Lógica Unaria---------------------------------------------------------
+        NOT: () => {
+            this.stack.push(!this.stack.pop());
         },
 
+        //String Operations-------------------------------------------------------------------------------------------------
+        SNT: () => { // String Null test
+            const str = this.stack.pop();
+            this.stack.push(str === "" ? 1 : 0);
+        },
+        
+        CAT: () => { //Concatenacion
+            const b = this.stack.pop();
+            const a = this.stack.pop();
+            this.stack.push(a + b);
+        },
+        TOS: () => {//To string
+            const value = this.stack.pop();
+            this.stack.push(String(value));
+        },
 
         // Operaciones de listas e hileras-----------------------------------------------------------------------
 
@@ -197,27 +236,40 @@ class VM {
             this.logger.debug("Pila tras SRK:", this.stack);
         },
 
-        //String Operations-----------------------------------------------------------------------------------------
-        SNT: () => { // String Null test
-            const str = this.stack.pop();
-            this.stack.push(str === "" ? 1 : 0);
+
+
+        //Listas (Valores entre corchetes estilo JS)------------------------------------------------------------------------
+        //LNT List null test
+        LIN: () => {// List insert
+            const listValues = "[" + this.stack.join(", ") + "]";
+            this.stack = [listValues];
         },
-        
-        CAT: () => {
-            const b = this.stack.pop();
-            const a = this.stack.pop();
-            this.stack.push(a + b);
-        },
-        TOS: () => {//To string
-            const value = this.stack.pop();
-            this.stack.push(String(value));
+        //LTK list take k-esimo
+        //LRK lis rest post k-esimo
+        //TOL convercion universal a lista de valor
+
+        // Saltos/bifurcaciones---------------------------------------------------------------------------------------------
+        BR: (instruction) => { //Bifurcacion absoluta
+            const branchOffset = Number(instruction.args[0]) - 1;
+            this.programCounter += branchOffset;
         },
 
-        // Control de flujo----------------------------------------------------------------------------------------
-        
+        BT: (instruction) => { //Bifurcacion true 
+            if (this.stack.pop()) { // Verifica si el valor es verdadero
+                const branchOffset = Number(instruction.args[0]) - 1;
+                this.programCounter += branchOffset;
+            }
+        },
 
-        // Funciones-------------------------------------------------
-        LDF: (instruction) => {
+        BF: (instruction) => { //Bifurcacion false
+            if (!this.stack.pop()) { // Verifica si el valor es falso
+                const branchOffset = Number(instruction.args[0]) -1;
+                this.programCounter += branchOffset;
+            }
+        },
+
+        //Carga, llamado y retorno a/de funcion-----------------------------------------------------------------------------
+        LDF: (instruction) => { //oad function
             const [functionName, paramCount] = instruction.args;
             const functionBody = this.functions[functionName];
             if (!functionBody) {
@@ -231,7 +283,7 @@ class VM {
             };
             this.stack.push(closure);
         },
-        APP: (instruction) => {
+        APP: (instruction) => { //Llamado (beta-reducción, apply)
             this.logger.debug("Pila tras APP:", this.stack);
             let closure = this.stack.pop();
             const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
@@ -261,49 +313,7 @@ class VM {
                 throw new Error('Closure or closure body is undefined');
             }
         },
-
-
-        // Saltos/bifurcaciones---------------------------------------------------------------------------------------------
-        BR: (instruction) => {
-            const branchOffset = Number(instruction.args[0]) - 1;
-            this.programCounter += branchOffset;
-        },
-
-        BT: (instruction) => {
-            if (this.stack.pop()) { // Verifica si el valor es verdadero
-                const branchOffset = Number(instruction.args[0]) - 1;
-                this.programCounter += branchOffset;
-            }
-        },
-
-        BF: (instruction) => {
-            if (!this.stack.pop()) { // Verifica si el valor es falso
-                const branchOffset = Number(instruction.args[0]) -1;
-                this.programCounter += branchOffset;
-            }
-        },
-
-        // Salida, Entrada y finalización-------------------------------------------------------------------------------------
-        PRN: () => {
-            const print = this.stack.pop();
-                print===undefined? "": console.log(chalk.yellow(print));
-            //console.log(chalk.yellow(${this.stack.pop()}));
-        },
-        
-        INP: async function() {
-            const rl = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout,
-            });
-            
-            const userInput = await new Promise((resolve) => rl.question('', resolve));
-            rl.close();
-            
-            // Almacenar el valor en la pila
-            this.stack.push(userInput);
-        },
-        
-        RET: () => {
+        RET: () => { //Return
             let returnValue = this.stack.pop();
             let previousContext = this.contextStack.pop();
             if (previousContext) {
@@ -319,41 +329,60 @@ class VM {
             this.logger.debug("Pila tras RET:", this.stack);
         },
 
-        INI: (instruction) => {
-            const mainFunctionName = instruction.args[0];
-            const mainFunctionBody = this.functions[mainFunctionName];
+        
+        //Casting------------------------------------------------------------------------------------------
+        //CST casting
+        // Type Of
+        INO: (instruction) => { //instance off
+            const argumento = instruction.args[0].replace(/^"(.*)"$/, '$1');
 
-            if (!mainFunctionBody) {
-                this.logger.log(`Error: Main function ${mainFunctionName} not defined`);
-                throw new Error(`Main function ${mainFunctionName} not defined`);
+            if (!['number', 'list', 'string'].includes(argumento)) {
+                throw new Error('Argumento en instrucción INO no válido');
             }
 
-            this.code = mainFunctionBody;   // Cargar el cuerpo de la función principal
+            const checkType = (arg, val) => {
+                const typeChecks = {
+                    number: () => !isNaN(Number(val)),  // Modificado para convertir a número
+                    list: () => Array.isArray(val),
+                    string: () => typeof val === 'string',
+                };
+                return typeChecks[arg] ? typeChecks[arg]() : false;
+            };
 
-            // Inicializar la pila (S), los bindings (B) y el contexto (D)
-            this.stack = [];
-            this.bindings = [{}];
-            this.contextStack = [];     // Contexto actual D.current = C
-            this.programCounter = 0;    // Inicializar el contador de programa
+            const value = this.stack.pop();
+
+            // Manejo de cadenas vacías
+            const result = (value === '' && argumento === 'string') ? false : checkType(argumento, value);
+            this.stack.push(result);
         },
 
-        //Amiente y stack
-        SWP: () => {
-            const a = this.stack.pop();
-            const b = this.stack.pop();
-            this.stack.push(a);
-            this.stack.push(b);
-        },
-        POP:() => {
-            this.stack.pop();
-        },
 
-        HLT: () => {
-            this.code = [];
-            this.stack = [];
-            this.bindings = [];
-            this.contextStack = [];
-        }
+
+        // Salida, Entrada y finalización-------------------------------------------------------------------------------------
+        PRN: () => { //print
+            const print = this.stack.pop();
+                print===undefined? "": console.log(chalk.yellow(print));
+            //console.log(chalk.yellow(${this.stack.pop()}));
+        },
+        
+        INP: async function() { //Ingresar elemento
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout,
+            });
+            
+            const userInput = await new Promise((resolve) => rl.question('', resolve));
+            rl.close();
+            
+            // Almacenar el valor en la pila
+            this.stack.push(userInput);
+        },
+        
+        
+
+        
+
+        
     };
 
     

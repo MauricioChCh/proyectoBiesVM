@@ -125,6 +125,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_program; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterProgram(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitProgram(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -199,6 +207,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterFunctionDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitFunctionDef(this);
+		}
 	}
 
 	public final FunctionDefContext functionDef() throws RecognitionException {
@@ -289,6 +305,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitStatement(this);
+		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -398,6 +422,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_instruction; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterInstruction(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitInstruction(this);
+		}
 	}
 
 	public final InstructionContext instruction() throws RecognitionException {
@@ -539,6 +571,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_loadInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterLoadInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitLoadInstr(this);
+		}
 	}
 
 	public final LoadInstrContext loadInstr() throws RecognitionException {
@@ -772,6 +812,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arithInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterArithInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitArithInstr(this);
+		}
 	}
 
 	public final ArithInstrContext arithInstr() throws RecognitionException {
@@ -893,6 +941,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_logicalInst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterLogicalInst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitLogicalInst(this);
+		}
 	}
 
 	public final LogicalInstContext logicalInst() throws RecognitionException {
@@ -996,6 +1052,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_controlInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterControlInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitControlInstr(this);
+		}
 	}
 
 	public final ControlInstrContext controlInstr() throws RecognitionException {
@@ -1106,6 +1170,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stackInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterStackInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitStackInstr(this);
+		}
 	}
 
 	public final StackInstrContext stackInstr() throws RecognitionException {
@@ -1139,6 +1211,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_funcInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterFuncInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitFuncInstr(this);
+		}
 	}
 
 	public final FuncInstrContext funcInstr() throws RecognitionException {
@@ -1215,6 +1295,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_comparisonInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterComparisonInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitComparisonInstr(this);
+		}
 	}
 
 	public final ComparisonInstrContext comparisonInstr() throws RecognitionException {
@@ -1255,6 +1343,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stringInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterStringInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitStringInstr(this);
+		}
 	}
 
 	public final StringInstrContext stringInstr() throws RecognitionException {
@@ -1306,6 +1402,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_listInstr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterListInstr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitListInstr(this);
+		}
 	}
 
 	public final ListInstrContext listInstr() throws RecognitionException {
@@ -1379,6 +1483,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_array; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterArray(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitArray(this);
+		}
 	}
 
 	public final ArrayContext array() throws RecognitionException {
@@ -1459,6 +1571,14 @@ public class biesLanguageParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inputString; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).enterInputString(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof biesLanguageListener ) ((biesLanguageListener)listener).exitInputString(this);
+		}
 	}
 
 	public final InputStringContext inputString() throws RecognitionException {

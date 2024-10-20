@@ -112,6 +112,18 @@ public class biesLanguageBaseListener implements biesLanguageListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStackInstr(biesLanguageParser.StackInstrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStackInstr(biesLanguageParser.StackInstrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFuncInstr(biesLanguageParser.FuncInstrContext ctx) { }
 	/**
 	 * {@inheritDoc}

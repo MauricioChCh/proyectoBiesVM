@@ -87,6 +87,16 @@ public interface biesLanguageListener extends ParseTreeListener {
 	 */
 	void exitControlInstr(biesLanguageParser.ControlInstrContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link biesLanguageParser#stackInstr}.
+	 * @param ctx the parse tree
+	 */
+	void enterStackInstr(biesLanguageParser.StackInstrContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link biesLanguageParser#stackInstr}.
+	 * @param ctx the parse tree
+	 */
+	void exitStackInstr(biesLanguageParser.StackInstrContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link biesLanguageParser#funcInstr}.
 	 * @param ctx the parse tree
 	 */
