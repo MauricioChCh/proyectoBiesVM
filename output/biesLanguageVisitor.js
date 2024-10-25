@@ -1,4 +1,4 @@
-// Generated from grammar/biesLanguage.g4 by ANTLR 4.13.1
+// Generated from ./grammar/biesLanguage.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -80,6 +80,18 @@ export default class biesLanguageVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesLanguageParser#listInstr.
 	visitListInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#signInstr.
+	visitSignInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesLanguageParser#castInstr.
+	visitCastInstr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

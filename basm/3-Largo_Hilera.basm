@@ -1,0 +1,65 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz principal
+
+;elaboración propia
+;let largoHilera = hilera => {
+;    let count = 0;
+;
+;    while (hilera[count] !== undefined) {
+;        count++;
+;    }
+;    return count;
+;}
+;
+;let hilera = "Hola Mundo! ";
+;console.log(largoHilera(hilera));
+
+
+;elaboración propia
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
+
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
+
+    ; Inicio del while
+
+        BLD 0 0             ; Carga 'hilera'
+        BLD 0 1             ; Carga 'count'
+        STK                 ; Extraer posición count de hilera
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+
+        BLD 0 2             ; Cargar el valor de la hilera obtenido
+        LDV ""              ; undefined
+        EQ                  ; ===
+        NOT                 ; !==
+        BF 6                ; Si !(hilera[count] !== undefined), ir inicio de while
+
+        ; Inicio body del while
+
+            BLD 0 1             ; Cargar 'count'
+            LDV 1               ; Cargar 1
+            ADD                 ; Sumar 1 a 'count'
+            BST 0 1             ; count = count + 1
+            BR -13              ; Volver al inicio del while
+
+        ; Fin body del while
+
+    ; Fin del while
+
+    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
+
+    RET                     ; Retornar el valor de la pila
+$END $1                     ; Fin de la definición de la función '$1'
+
+$FUN $0                     ; Definir la función 'main'
+    LDV " Hola   Mundo! "   ; Cargar el valor de la variable 'hilera'
+    LDF $1                  ; Cargar la función '$1'
+    APP 1                   ; Llamar a la función '$1' con 0 argumentos
+    PRN                     ; Imprimir el valor retornado por la función '$1'
+    HLT                     ; Parar la ejecución (nunca alcanzará esta instrucción)
+$END $0                     ; Fin de la definición de la función 'main'
+INI $0                      ; Inicializar la función 'main'

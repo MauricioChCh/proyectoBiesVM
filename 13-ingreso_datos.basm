@@ -5,20 +5,20 @@
 ;Eddy Villarreal Muñoz 
 
 ;elaboración propia
-$FUN $1         ; Definir la función '$1'
-    BLD 0 0         ; Cargar el argumento 'saludo' del entorno
-    PRN             ; Imprimir el valor
-    RET            ; Retornar de la función
-$END $1         ; Fin de la definición de la función '$1'
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Cargar el argumento
+    PRN                     ; Imprimir el valor
+    RET                     ; Retornar de la función
+$END $1                     ; Fin de la definición de la función '$1'
 
-$FUN $0      ; Definir la función 'main'
+$FUN $0                     ; Definir la función 'main'
     LDV "Ingrese un valor:"
     PRN
     INP
 
-    LDF $1          ; Cargar la función 'salude'
-    APP 1           ; Llamar a la función 'salude'
+    LDF $1                  ; Cargar la función '$1'
+    APP 1                   ; Llamar a la función '$1'
 
-    HLT             ; Detener la ejecución
-$END $0      ; Fin de la definición de la función 'main'
-INI $0       ; Inicializar la función 'main'
+    HLT                     ; Detener la ejecución
+$END $0                     ; Fin de la definición de la función 'main'
+INI $0                      ; Inicializar la función 'main'

@@ -1,0 +1,149 @@
+;let largoHilera = hilera => {
+;    let count = 0;
+;
+;    while (hilera[count] !== undefined) {
+;        count++;
+;    }
+;    return count;
+;}
+
+
+;function esPalindromoRecursivo(lista, izquierda = 0, derecha = largoHilera(lista) - 1) {
+;    
+;    if (izquierda >= derecha) {
+;        return true;
+;    }
+;    
+;    if (lista[izquierda] !== lista[derecha]) {
+;        return false;  // Si no coinciden, no es un palíndromo
+;    }
+;    
+;    return esPalindromoRecursivo(lista, izquierda + 1, derecha - 1);
+;}
+;
+;
+;console.log(esPalindromoRecursivo([1, 2, 3, 2, 1]));  // true
+;console.log(esPalindromoRecursivo([1, 2, 3, 4, 5]));  // false
+
+;elaboración propia
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Guardar la dirección de la variable 'lista' en la pila
+
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
+
+    ; Inicio del while
+
+        BLD 0 0             ; Carga 'hilera'
+        BLD 0 1             ; Carga 'count'
+        LTK                 ; Extraer posición count de hilera
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+
+        BLD 0 2             ; Cargar el valor de la hilera obtenido
+        LDV ""              ; undefined
+        EQ                  ; ===
+        NOT                 ; !==
+        BF 6                ; Si !(hilera[count] !== undefined), ir inicio de while
+
+        ; Inicio body del while
+
+            BLD 0 1             ; Cargar 'count'
+            LDV 1               ; Cargar 1
+            ADD                 ; Sumar 1 a 'count'
+            BST 0 1             ; count = count + 1
+            BR -13              ; Volver al inicio del while
+
+        ; Fin body del while
+
+    ; Fin del while
+
+    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
+
+    RET                     ; Retornar el valor de la pila
+$END $1                     ; Fin de la definición de la función '$1'
+
+$FUN $2                     ; Definir la función '$2' (esPalindromoRecursivo)
+    BLD 0 0                 ; Parámetro list
+    BLD 0 1                 ; Parámetro	izquierda = 0
+    BLD 0 2                 ; Parámetro derecha = largoHilera(lista) - 1
+
+    BLD 0 0                 ; list
+    INO list                ; instace of list
+    BT 3                    ; en caso de ser así, seguir con la ejecución
+
+    LDV "false"             ; en caso contrario,
+    RET                     ; retornar false
+
+    ; inicio if (izquierda >= derecha)
+
+        BLD 0 1                 ;izquierda
+        BLD 0 2                 ;derecha
+        GTE                     ;izquierda >= derecha
+        BF 3                    ;!(izquierda >= derecha) seguir a siguiente if
+
+        LDV "true"              ;true
+        RET                     ;return true
+
+    ; fin if (izquierda >= derecha)
+
+
+    ; inicio if (lista[izquierda] !== lista[derecha])
+
+        BLD 0 0                 ;list
+        BLD 0 1                 ;izquierda
+        LTK                     ;lista[izquierda]
+
+        BLD 0 0                 ;list
+        BLD 0 2                 ;derecha
+        LTK                     ;lista[derecha]
+        EQ                      ;lista[izquierda] === lista[derecha]
+        BT 3                    ;lista[izquierda] !== lista[derecha]
+
+        LDV "false"             ;false
+        RET                     ;return false
+
+    ; fin if (lista[izquierda] !== lista[derecha])
+
+    ; Inicio Recursión
+        
+    BLD 0 0                     ; list
+
+    BLD 0 1                     ; izquierda
+    LDV 1                       ; 1
+    ADD                         ; izquierda + 1
+
+    BLD 0 2                     ; derecha
+    LDV 1                       ; 1
+    SUB                         ; derecha - 1
+
+    LDF $2                      ; Carga función $2
+    APP 3                       ; invoca $2 con 3 parámetros
+
+    RET                         ; return esPalindromoRecursivo(lista, izquierda + 1, derecha - 1);
+
+    ; Fin Recursión
+$END $2                     ; Fin de la definición de la función '$2'
+;-----------------------------------------------------------------------------------------------------------------------
+$FUN $0
+    LDV [1,2,3,4,5,6,7,8,7,6,5,4,3,2,1]             ; Cargar el valor de la variable 'list'
+    BST 0 0                                         ; Guardar la dirección de la variable 'list' en la pila
+    BLD 0 0                                         ; Cargar el valor de la variable 'list'
+
+    LDF $1                                          ; Cargar la función '$1'
+    APP 1                                           ; Llamar a la función '$1' con 0 argumentos
+
+    LDV 1                                           ; Cargar el valor retornado por la función '$1'
+    SUB 1                                           ; restar 1 al valor retornado por la función '$1'
+    BST 0 2                                         ; Guardar la dirección de la variable 'right' en la pila
+
+    BLD 0 0                                         ; Cargar el valor de la variable 'list'
+    LDV 0                                           ; Cargar el valor de la variable 'left'
+    BLD 0 2                                         ; Cargar el valor de la variable 'right'
+
+    LDF $2                                          ; Cargar la función '$2'
+    APP 3                                           ; Llamar a la función '$2' con 3 argumentos
+
+    PRN                                             ; Imprimir el valor retornado por la función '$1'
+    HLT                                             ; Parar la ejecución (nunca alcanzará esta instrucción)
+$END $0
+INI $0

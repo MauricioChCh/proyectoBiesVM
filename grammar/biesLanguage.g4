@@ -18,19 +18,21 @@ statement
 
 instruction
     : loadInstr // Una instrucción puede ser una instrucción de carga
-    | arithInstr // O una instrucción aritmética
-    | controlInstr // O una instrucción de control
-    | funcInstr // O una instrucción de función
-    | stringInstr // O instrucciones de manipulación de hileras
-    | comparisonInstr // O instrucciones de comparación
-    | logicalInst // O instrucciones lógicas
-    | listInstr // **Nueva regla** para manejar la instrucción LIN
-    | inputString // **Nueva regla** para manejar la instrucción INO
-    | stackInstr // **Nueva regla** para manejar la instrucción SWP
+    | arithInstr // Instrucción aritmética
+    | controlInstr // Instrucción de control
+    | funcInstr // Instrucción de función
+    | stringInstr // Instrucción de manipulación de hileras
+    | comparisonInstr // Instrucción de comparación
+    | logicalInst // Instrucción lógicas
+    | listInstr // Instrucción para manejar la instrucción LIN
+    | signInstr // Instrucción para manejar la instrucción SGN**
+    | inputString // Instrucción para manejar la instrucción INO
+    | stackInstr // Instrucción para manejar la instrucción SWP
+    | castInstr // Instrucción para manejar la instrucción CST
     ;
 
 loadInstr
-    : 'LDV' ES* (NUMBER | STRING)? ES* // Permite espacios en blanco opcionales antes y después del argumento
+    : 'LDV' ES* (NUMBER | STRING | array)? ES* // Permite cargar números, cadenas y listas
     | 'BLD' ES? NUMBER ES? NUMBER ES? // Instrucción de carga de bloque con dos números
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
@@ -46,8 +48,8 @@ arithInstr
     ;
 
 logicalInst
-    :  'AND' ES? // Instrucción de negación lógica
-    |  'NOT' ES? // Instrucción de conjunción lógica
+    :  'AND' ES? // Instrucción de conjunción lógica
+    |  'NOT' ES? // Instrucción de negación lógica
     |  'OR' ES? // Instrucción de disyunción lógica
     |  'XOR' ES? // Instrucción de disyunción exclusiva lógica
     ;
@@ -60,7 +62,6 @@ controlInstr
     | 'BF' ES? NUMBER // Bifurcación condicional sobre falso con desplazamiento relativo
     | 'NOP'       // No operación
     ;
-
 
 stackInstr
     : 'SWP' // Instrucción para intercambiar los dos elementos superiores de la pila
@@ -85,19 +86,37 @@ stringInstr
     | 'SRK' // Instrucción para seleccionar el resto de la pila a partir de un índice
     | 'CAT' // Instrucción para concatenar dos cadenas
     | 'SNT' // Instrucción para verificar si una cadena está vacía
-    | 'TOS' // Instruccion para convertir el valor en la cima de la pila a cadena
+    | 'TOS' // Instrucción para convertir el valor en la cima de la pila a cadena
     ;
 
 listInstr
-    : 'LIN' (ES? (NUMBER | STRING))*? // Los parámetros son opcionales
+    : 'LIN' (ES? (NUMBER | STRING | array))*? // SE DEBE DE REVISAR ESTA INSTRUCCIÓN.
+    | 'LTK'
+    | 'LNT'
+    | 'LRK'
+    | 'TOL'
+    ;
+
+signInstr
+    : 'SGN' // Instrucción de signo
+    ;
+
+TYPE
+    : 'number'
+    | 'list'
+    | 'string'
+    ;
+
+castInstr
+    : 'CST' ES TYPE ES* // Instrucción de casting
     ;
 
 array
-    : '[' ( (NUMBER | STRING) (',' (NUMBER | STRING))* )? ']' // Acepta números o cadenas dentro de corchetes
+    : '[' ( (NUMBER | STRING | array) (',' (NUMBER | STRING | array))* )? ']' // Permitir números, cadenas y arreglos dentro de corchetes
     ;
 
 inputString
-    : 'INO' ES* (STRING)? ES*  // Permitir TYPE o STRING
+    : 'INO' ES TYPE ES*  // Instrucción de entrada de cadena
     ;
 
 // Instrucciones principales
@@ -123,6 +142,7 @@ INI : 'INI'; // Token para la instrucción INI
 STK : 'STK'; // Token para la instrucción STK
 SRK : 'SRK'; // Token para la instrucción SRK
 LIN : 'LIN'; // Token para la instrucción LIN
+LTK : 'LTK'; // Token para la instrucción LTK
 CST : 'CST'; // Token para la instrucción CST
 INO : 'INO'; // Token para la instrucción INO
 AND : 'AND'; // Token para la instrucción AND
@@ -130,6 +150,7 @@ OR : 'OR'; // Token para la instrucción OR
 XOR : 'XOR'; // Token para la instrucción XOR
 NOT : 'NOT'; // Token para la instrucción NOT
 SWP : 'SWP'; // Token para la instrucción SWP
+LNT : 'LNT'; // Token para la instrucción LNT
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función
@@ -146,12 +167,6 @@ ID : [a-zA-Z_][a-zA-Z_0-9]*; // Identificadores que comienzan con una letra o gu
 
 // Literales de hileras
 STRING : '"' (~["\r\n])* '"' ; // Captura correctamente las cadenas entre comillas manteniendo los espacios
-
-TYPE
-    : '"number"'
-    | '"list"'
-    | '"string"'
-    ;
 
 VALUE
     : NUMBER | STRING // Valores que se pueden usar en el casting // NUMBER | LIST | STRING
