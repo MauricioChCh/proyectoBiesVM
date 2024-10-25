@@ -1,12 +1,25 @@
 import Command from './Command.js';
 import chalk from 'chalk';
 
+/**
+ * Clase que representa comandos de funciones.
+ * @extends Command
+ */
 class FunctionCommands extends Command {
+    /**
+     * Crea una instancia de FunctionCommands.
+     * @param {Object} vm - La instancia de la máquina virtual.
+     */
     constructor(vm) {
         super(vm);
         this.bindMethods(['LDF', 'APP', 'RET']);
     }
 
+    /**
+     * Define una función y la coloca en la pila.
+     * @param {Object} instruction - La instrucción que contiene el nombre de la función y el número de parámetros.
+     * @throws {Error} Si la función no está definida.
+     */
     LDF(instruction) {
         const [functionName, paramCount] = instruction.args;
         const functionBody = this.vm.functions[functionName];
@@ -22,6 +35,11 @@ class FunctionCommands extends Command {
         this.vm.stack.push(closure);
     }
 
+    /**
+     * Aplica una función con los argumentos proporcionados.
+     * @param {Object} instruction - La instrucción que contiene el número de argumentos.
+     * @throws {Error} Si el closure o el cuerpo del closure no están definidos.
+     */
     APP(instruction) {
         this.vm.logger.debug("Pila tras APP:", this.vm.stack);
         let closure = this.vm.stack.pop();
@@ -53,6 +71,9 @@ class FunctionCommands extends Command {
         }
     }
 
+    /**
+     * Retorna de una función, restaurando el contexto anterior.
+     */
     RET() {
         let returnValue = this.vm.stack.pop();
         let previousContext = this.vm.contextStack.pop();

@@ -21,7 +21,14 @@ import FunctionCommands from '../command/FunctionCommands.js';
 import TypeCommands from '../command/TypeCommands.js';
 import IOCommands from '../command/IOCommands.js';
 
+/**
+ * Clase que representa una máquina virtual (VM).
+ */
 class VM {
+    /**
+     * Crea una instancia de VM.
+     * @param {Object} [logger={ log: () => { } }] - El objeto logger para registrar mensajes.
+     */
     constructor(logger = { log: () => { } }) {
         this.stack = [];
         this.bindings = [{}];
@@ -51,6 +58,9 @@ class VM {
         this.bindCommandMethods();
     }
 
+    /**
+     * Vincula los métodos de comando a la instancia de VM.
+     */
     bindCommandMethods() {
         const commandCategories = [
             this.initCommands,
@@ -80,6 +90,10 @@ class VM {
         });
     }
 
+    /**
+     * Ejecuta el código proporcionado en la máquina virtual.
+     * @param {Array} code - El código a ejecutar.
+     */
     async run(code) {
         this.code = code;
         while (this.programCounter < this.code.length) {
@@ -89,6 +103,10 @@ class VM {
         }
     }
 
+    /**
+     * Ejecuta una instrucción en la máquina virtual.
+     * @param {Object} instruction - La instrucción a ejecutar.
+     */
     async executeInstruction(instruction) {
         this.logger.log(`Visitando instrucción: ${instruction.type} ${instruction.args ? instruction.args.join(' ') : ''}`);
 
@@ -101,6 +119,10 @@ class VM {
         }
     }
 
+    /**
+     * Ejecuta el análisis sintáctico de ANTLR en el cuerpo de una función.
+     * @param {string} functionBody - El cuerpo de la función a analizar.
+     */
     executeAntlrParsing(functionBody) {
         const chars = new antlr4.InputStream(functionBody);
         const lexer = new biesVMLexer(chars);
@@ -113,6 +135,11 @@ class VM {
         visitor.visit(tree);
     }
 
+    /**
+     * Obtiene el manejador de una instrucción según su tipo.
+     * @param {string} instructionType - El tipo de la instrucción.
+     * @returns {Function} El manejador de la instrucción.
+     */
     getHandler(instructionType) {
         const commandMap = {
             'INI': this.initCommands.INI,
@@ -162,6 +189,11 @@ class VM {
         return commandMap[instructionType];
     }
 
+    /**
+     * Obtiene la capa actual de bindings.
+     * @param {number} layerIndex - El índice de la capa.
+     * @returns {Object} La capa de bindings.
+     */
     getCurrentLayer(layerIndex) {
         return this.bindings[layerIndex] || {};
     }
