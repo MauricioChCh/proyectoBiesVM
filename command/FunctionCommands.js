@@ -1,0 +1,72 @@
+import Command from './Command.js';
+import chalk from 'chalk';
+
+class FunctionCommands extends Command {
+    constructor(vm) {
+        super(vm);
+        this.bindMethods(['LDF', 'APP', 'RET']);
+    }
+
+    LDF(instruction) {
+        const [functionName, paramCount] = instruction.args;
+        const functionBody = this.vm.functions[functionName];
+        if (!functionBody) {
+            throw new Error(`Function ${functionName} not defined`);
+        }
+        const paramCountValue = paramCount !== undefined ? paramCount : this.vm.functions[functionName].paramCount || 1;
+        const closure = {
+            functionName: functionName,
+            body: functionBody,
+            paramCount: paramCountValue,
+        };
+        this.vm.stack.push(closure);
+    }
+
+    APP(instruction) {
+        this.vm.logger.debug("Pila tras APP:", this.vm.stack);
+        let closure = this.vm.stack.pop();
+        const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
+        if (closure && closure.body) {
+            this.vm.contextStack.push({
+                code: this.vm.code,
+                programCounter: this.vm.programCounter,
+                stack: this.vm.stack.slice(),
+                bindings: this.vm.bindings.slice()
+            });
+            let newBinding = {};
+            for (let i = argCount - 1; i >= 0; i--) {
+                if (this.vm.stack.length > 0) {
+                    newBinding[i] = this.vm.stack.pop();
+                } else {
+                    console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closure.functionName}`);
+                    break;
+                }
+            }
+            this.vm.bindings.unshift(newBinding);
+            this.vm.code = closure.body;
+            this.vm.programCounter = 0;
+            const functionBody = this.vm.code.join('\n');
+            this.vm.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:\n${functionBody}`));
+            this.vm.executeAntlrParsing(functionBody);
+        } else {
+            throw new Error('Closure or closure body is undefined');
+        }
+    }
+
+    RET() {
+        let returnValue = this.vm.stack.pop();
+        let previousContext = this.vm.contextStack.pop();
+        if (previousContext) {
+            this.vm.code = previousContext.code;
+            this.vm.stack = previousContext.stack;
+            this.vm.bindings = previousContext.bindings;
+            this.vm.programCounter = previousContext.programCounter;
+            if (typeof returnValue !== 'undefined') {
+                this.vm.stack.push(returnValue);
+            }
+        }
+        this.vm.logger.debug("Pila tras RET:", this.vm.stack);
+    }
+}
+
+export default FunctionCommands;
