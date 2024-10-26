@@ -1,0 +1,32 @@
+{
+    "name": "biesc",
+    "version": "1.0.0",
+    "description": "A compiler for executing .bies files",
+    "author": "Joshua Yarit Amador Lara, Fabiola Rojas Alvarado, Mauricio Chaves Chaves, Eddy Villarreal Muñoz",
+    "license": "ISC",
+    "type": "module",
+    "main": "src/biesC.js",
+    "bin": {
+        "biesC": "./src/biesC.js"
+    },
+    "scripts": {
+        "prebuild": "java -jar lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesLanguage.g4 -no-listener -visitor -o output",
+        "build": "npm run prebuild",
+        "prestart": "npm run build",
+        "start": "node src/biesC.js",
+        "test": "node test/runTest.js",
+        "link": "npm link",
+        "docs": "jsdoc -c jsdoc.json",
+        "run:linux": "chmod +x ./build.sh && ./build.sh",
+        "run:windows": "build.bat"
+    },
+    "keywords": [],
+    "dependencies": {
+        "antlr4": "^4.13.2",
+        "jsdoc": "^4.0.3"
+    },
+    "devDependencies": {
+        "chalk": "^5.3.0",
+        "commander": "^12.1.0"
+    }
+}
