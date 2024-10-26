@@ -1,1 +1,0 @@
-//Este archivo es únicamente para probar algoritmos de JavaScript
