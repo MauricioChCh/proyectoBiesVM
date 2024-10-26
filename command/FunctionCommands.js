@@ -41,7 +41,6 @@ class FunctionCommands extends Command {
      * @throws {Error} Si el closure o el cuerpo del closure no están definidos.
      */
     APP(instruction) {
-        this.vm.logger.debug("Pila tras APP:", this.vm.stack);
         let closure = this.vm.stack.pop();
         const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
         if (closure && closure.body) {
@@ -86,7 +85,6 @@ class FunctionCommands extends Command {
                 this.vm.stack.push(returnValue);
             }
         }
-        this.vm.logger.debug("Pila tras RET:", this.vm.stack);
     }
 }
 

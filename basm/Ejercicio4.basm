@@ -8,13 +8,12 @@
 ;let salude = saludo => print(saludo)
 ;let a = 1
 ;let b = 656
-;salude( a*10 + b )
+;salude( a * 10 + b )
 
 
 ;elaboración propia
 $FUN $1         ; Definir la función '$1'
     BLD 0 0         ; Cargar el argumento 'saludo' del entorno
-    PRN             ; Imprimir el valor
     RET            ; Retornar de la función
 $END $1         ; Fin de la definición de la función '$1'
 
@@ -27,7 +26,7 @@ $FUN $main      ; Definir la función 'main'
     BST 0 1         ; Guardar 'b' en el nivel 0 argumento 1
 
     BLD 0 0         ; Cargar el argumento 'a' del entorno
-    LDV 10.4        ; Cargar el valor de 10
+    LDV 10          ; Cargar el valor de 10
 
     MUL             ; Multiplicar 'a' por 10
 
@@ -36,6 +35,7 @@ $FUN $main      ; Definir la función 'main'
 
     LDF $1          ; Cargar la función 'salude'
     APP 1           ; Llamar a la función 'salude'
+    PRN             ; Imprime el resultado
 
     HLT             ; Detener la ejecución
 $END $main      ; Fin de la definición de la función 'main'

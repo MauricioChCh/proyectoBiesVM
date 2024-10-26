@@ -10,10 +10,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Directorio de pruebas
-const testDirectory = path.join(__dirname, '../battery');
+const testDirectory = path.join(__dirname, '../basm');
 
 fs.readdir(testDirectory, (err, files) => {
-  if (err) 
+  if (err)
     throw err;
 
   // Filtra solo archivos .basm
@@ -27,7 +27,7 @@ fs.readdir(testDirectory, (err, files) => {
     const filePath = path.join(testDirectory, file);
     console.log(chalk.yellow(`Ejecutando test para: ${filePath}`));
 
-    exec(`node src/biesVM.js battery/${file}`, (err, stdout, stderr) => {
+    exec(`node src/biesVM.js basm/${file}`, (err, stdout, stderr) => {
       if (err) {
         console.error(chalk.red(`Error en ${file}:`), stderr);
       } else {

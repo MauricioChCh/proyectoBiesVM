@@ -193,7 +193,7 @@ $FUN $2                ; Definir la función '$1'
 
 $END $2                ; Fin de la definición de la función '$1'
 
-$FUN $0             ; Definir la función 'main'
+$FUN $0                ; Definir la función 'main'
     LDV 2              ; Cargar el valor de 'a' (1)
     BST 0 0            ; Guardar 'a' en el nivel 0 argumento 0
 
