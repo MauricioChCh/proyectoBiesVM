@@ -61,21 +61,12 @@ program
         logger.log(chalk.blueBright('Modo detallado activado...'));
         console.log(`Verificando el archivo: ${fileName}`);
 
-
         try {
             analizarArchivoBies(fileName, logger);
 
-            // if (esValido) {
-            //     console.log(chalk.green(`El archivo ${fileName} es válido.`));
-            //     // Aquí puedes invocar cualquier otra lógica, como ejecutar la C
-            // } else {
-            //     console.error(chalk.red(`El archivo ${fileName} tiene errores.`));
-            // }
         } catch (error) {
             console.error(chalk.red(`Error al analizar el archivo ${fileName}:`), error);
         }
-
-        // Llamar a la integración del lexer y parser
 
     });
 
