@@ -16,7 +16,7 @@ public class biesCParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, PRINT=3, STRING=4, NL=5, WS=6;
+		T__0=1, T__1=2, PRINT=3, STRING=4, NUMBER=5, NL=6, WS=7;
 	public static final int
 		RULE_program = 0, RULE_statement = 1, RULE_printInstr = 2;
 	private static String[] makeRuleNames() {
@@ -34,7 +34,7 @@ public class biesCParser extends Parser {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, "PRINT", "STRING", "NL", "WS"
+			null, null, null, "PRINT", "STRING", "NUMBER", "NL", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -189,6 +189,7 @@ public class biesCParser extends Parser {
 	public static class PrintInstrContext extends ParserRuleContext {
 		public TerminalNode PRINT() { return getToken(biesCParser.PRINT, 0); }
 		public TerminalNode STRING() { return getToken(biesCParser.STRING, 0); }
+		public TerminalNode NUMBER() { return getToken(biesCParser.NUMBER, 0); }
 		public PrintInstrContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -198,6 +199,7 @@ public class biesCParser extends Parser {
 	public final PrintInstrContext printInstr() throws RecognitionException {
 		PrintInstrContext _localctx = new PrintInstrContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_printInstr);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -206,7 +208,15 @@ public class biesCParser extends Parser {
 			setState(20);
 			match(T__0);
 			setState(21);
-			match(STRING);
+			_la = _input.LA(1);
+			if ( !(_la==STRING || _la==NUMBER) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			setState(22);
 			match(T__1);
 			}
@@ -223,22 +233,23 @@ public class biesCParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0006\u0019\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
+		"\u0004\u0001\u0007\u0019\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
 		"\u0002\u0002\u0007\u0002\u0001\u0000\u0001\u0000\u0003\u0000\t\b\u0000"+
 		"\u0005\u0000\u000b\b\u0000\n\u0000\f\u0000\u000e\t\u0000\u0001\u0000\u0001"+
 		"\u0000\u0001\u0001\u0001\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0001"+
 		"\u0002\u0001\u0002\u0001\u0002\u0000\u0000\u0003\u0000\u0002\u0004\u0000"+
-		"\u0000\u0017\u0000\f\u0001\u0000\u0000\u0000\u0002\u0011\u0001\u0000\u0000"+
-		"\u0000\u0004\u0013\u0001\u0000\u0000\u0000\u0006\b\u0003\u0002\u0001\u0000"+
-		"\u0007\t\u0005\u0005\u0000\u0000\b\u0007\u0001\u0000\u0000\u0000\b\t\u0001"+
-		"\u0000\u0000\u0000\t\u000b\u0001\u0000\u0000\u0000\n\u0006\u0001\u0000"+
-		"\u0000\u0000\u000b\u000e\u0001\u0000\u0000\u0000\f\n\u0001\u0000\u0000"+
-		"\u0000\f\r\u0001\u0000\u0000\u0000\r\u000f\u0001\u0000\u0000\u0000\u000e"+
-		"\f\u0001\u0000\u0000\u0000\u000f\u0010\u0005\u0000\u0000\u0001\u0010\u0001"+
-		"\u0001\u0000\u0000\u0000\u0011\u0012\u0003\u0004\u0002\u0000\u0012\u0003"+
-		"\u0001\u0000\u0000\u0000\u0013\u0014\u0005\u0003\u0000\u0000\u0014\u0015"+
-		"\u0005\u0001\u0000\u0000\u0015\u0016\u0005\u0004\u0000\u0000\u0016\u0017"+
-		"\u0005\u0002\u0000\u0000\u0017\u0005\u0001\u0000\u0000\u0000\u0002\b\f";
+		"\u0001\u0001\u0000\u0004\u0005\u0017\u0000\f\u0001\u0000\u0000\u0000\u0002"+
+		"\u0011\u0001\u0000\u0000\u0000\u0004\u0013\u0001\u0000\u0000\u0000\u0006"+
+		"\b\u0003\u0002\u0001\u0000\u0007\t\u0005\u0006\u0000\u0000\b\u0007\u0001"+
+		"\u0000\u0000\u0000\b\t\u0001\u0000\u0000\u0000\t\u000b\u0001\u0000\u0000"+
+		"\u0000\n\u0006\u0001\u0000\u0000\u0000\u000b\u000e\u0001\u0000\u0000\u0000"+
+		"\f\n\u0001\u0000\u0000\u0000\f\r\u0001\u0000\u0000\u0000\r\u000f\u0001"+
+		"\u0000\u0000\u0000\u000e\f\u0001\u0000\u0000\u0000\u000f\u0010\u0005\u0000"+
+		"\u0000\u0001\u0010\u0001\u0001\u0000\u0000\u0000\u0011\u0012\u0003\u0004"+
+		"\u0002\u0000\u0012\u0003\u0001\u0000\u0000\u0000\u0013\u0014\u0005\u0003"+
+		"\u0000\u0000\u0014\u0015\u0005\u0001\u0000\u0000\u0015\u0016\u0007\u0000"+
+		"\u0000\u0000\u0016\u0017\u0005\u0002\u0000\u0000\u0017\u0005\u0001\u0000"+
+		"\u0000\u0000\u0002\b\f";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

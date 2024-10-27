@@ -3,13 +3,13 @@
 import antlr4 from 'antlr4';
 import biesCVisitor from './biesCVisitor.js';
 
-const serializedATN = [4,1,6,25,2,0,7,0,2,1,7,1,2,2,7,2,1,0,1,0,3,0,9,8,
+const serializedATN = [4,1,7,25,2,0,7,0,2,1,7,1,2,2,7,2,1,0,1,0,3,0,9,8,
 0,5,0,11,8,0,10,0,12,0,14,9,0,1,0,1,0,1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,0,
-0,3,0,2,4,0,0,23,0,12,1,0,0,0,2,17,1,0,0,0,4,19,1,0,0,0,6,8,3,2,1,0,7,9,
-5,5,0,0,8,7,1,0,0,0,8,9,1,0,0,0,9,11,1,0,0,0,10,6,1,0,0,0,11,14,1,0,0,0,
-12,10,1,0,0,0,12,13,1,0,0,0,13,15,1,0,0,0,14,12,1,0,0,0,15,16,5,0,0,1,16,
-1,1,0,0,0,17,18,3,4,2,0,18,3,1,0,0,0,19,20,5,3,0,0,20,21,5,1,0,0,21,22,5,
-4,0,0,22,23,5,2,0,0,23,5,1,0,0,0,2,8,12];
+0,3,0,2,4,0,1,1,0,4,5,23,0,12,1,0,0,0,2,17,1,0,0,0,4,19,1,0,0,0,6,8,3,2,
+1,0,7,9,5,6,0,0,8,7,1,0,0,0,8,9,1,0,0,0,9,11,1,0,0,0,10,6,1,0,0,0,11,14,
+1,0,0,0,12,10,1,0,0,0,12,13,1,0,0,0,13,15,1,0,0,0,14,12,1,0,0,0,15,16,5,
+0,0,1,16,1,1,0,0,0,17,18,3,4,2,0,18,3,1,0,0,0,19,20,5,3,0,0,20,21,5,1,0,
+0,21,22,7,0,0,0,22,23,5,2,0,0,23,5,1,0,0,0,2,8,12];
 
 
 const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -22,8 +22,8 @@ export default class biesCParser extends antlr4.Parser {
 
     static grammarFileName = "biesC.g4";
     static literalNames = [ null, "'('", "')'", "'print'" ];
-    static symbolicNames = [ null, null, null, "PRINT", "STRING", "NL", 
-                             "WS" ];
+    static symbolicNames = [ null, null, null, "PRINT", "STRING", "NUMBER", 
+                             "NL", "WS" ];
     static ruleNames = [ "program", "statement", "printInstr" ];
 
     constructor(input) {
@@ -51,7 +51,7 @@ export default class biesCParser extends antlr4.Parser {
 	            this.state = 8;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===5) {
+	            if(_la===6) {
 	                this.state = 7;
 	                this.match(biesCParser.NL);
 	            }
@@ -104,6 +104,7 @@ export default class biesCParser extends antlr4.Parser {
 	printInstr() {
 	    let localctx = new PrintInstrContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 4, biesCParser.RULE_printInstr);
+	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 19;
@@ -111,7 +112,14 @@ export default class biesCParser extends antlr4.Parser {
 	        this.state = 20;
 	        this.match(biesCParser.T__0);
 	        this.state = 21;
-	        this.match(biesCParser.STRING);
+	        _la = this._input.LA(1);
+	        if(!(_la===4 || _la===5)) {
+	        this._errHandler.recoverInline(this);
+	        }
+	        else {
+	        	this._errHandler.reportMatch(this);
+	            this.consume();
+	        }
 	        this.state = 22;
 	        this.match(biesCParser.T__1);
 	    } catch (re) {
@@ -136,8 +144,9 @@ biesCParser.T__0 = 1;
 biesCParser.T__1 = 2;
 biesCParser.PRINT = 3;
 biesCParser.STRING = 4;
-biesCParser.NL = 5;
-biesCParser.WS = 6;
+biesCParser.NUMBER = 5;
+biesCParser.NL = 6;
+biesCParser.WS = 7;
 
 biesCParser.RULE_program = 0;
 biesCParser.RULE_statement = 1;
@@ -248,6 +257,10 @@ class PrintInstrContext extends antlr4.ParserRuleContext {
 
 	STRING() {
 	    return this.getToken(biesCParser.STRING, 0);
+	};
+
+	NUMBER() {
+	    return this.getToken(biesCParser.NUMBER, 0);
 	};
 
 	accept(visitor) {

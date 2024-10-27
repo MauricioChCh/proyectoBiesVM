@@ -63,10 +63,6 @@ class C {
         console.log(chalk.yellow(`Convirtiendo `) + chalk.green(`${instruction}`) + chalk.yellow(` a bytecode...`));
 
         switch (instruction) {
-            case 'statement':
-                // No hacer nada por el momento
-                return;
-
             case 'print':
                 this.bydeCode.push('PRN');
                 break;
@@ -75,11 +71,18 @@ class C {
                 this.bydeCode.push('HLT');
                 break;
 
-            default:
-                if (instruction.startsWith('"') && instruction.endsWith('"')) {
-                    this.bydeCode.push(`LDV ${instruction}`);
-                }
+            case (instruction.startsWith('"') && instruction.endsWith('"')) ? instruction : null:
+                this.bydeCode.push(`LDV ${instruction}`);
                 break;
+
+            case ((Number(instruction)) ? instruction : null):;
+                this.bydeCode.push(`LDV ${instruction}`);
+                break;
+
+            // Agregar más casos aquí para futuras instrucciones
+
+            default:
+                return;
         }
     }
 }
