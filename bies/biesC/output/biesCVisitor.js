@@ -24,5 +24,11 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesCParser#array.
+	visitArray(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 
 }

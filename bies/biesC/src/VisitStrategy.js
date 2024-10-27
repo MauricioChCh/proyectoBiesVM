@@ -20,7 +20,10 @@ class VisitStrategy {
         printInstr: {
             rightFirst: true,
             getVisitOrder: (ctx) => ({
-                right: () => ctx.STRING() ? ctx.STRING().getText() : ctx.NUMBER().getText(),
+                right: () => {
+                    const value = ctx.STRING() || ctx.NUMBER() || ctx.array();
+                    return value ? value.getText() : null;
+                },
                 left: () => 'print',
                 root: () => 'printInstr'
             })

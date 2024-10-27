@@ -75,7 +75,11 @@ class C {
                 this.bydeCode.push(`LDV ${instruction}`);
                 break;
 
-            case ((Number(instruction)) ? instruction : null):;
+            case (!isNaN(Number(instruction))) ? instruction : null:
+                this.bydeCode.push(`LDV ${instruction}`);
+                break;
+
+            case (instruction.startsWith('[') && instruction.endsWith(']')) ? instruction : null:
                 this.bydeCode.push(`LDV ${instruction}`);
                 break;
 

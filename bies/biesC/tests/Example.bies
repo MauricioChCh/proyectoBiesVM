@@ -1,3 +1,1 @@
-print("Testing helloworld Version 0 ***")
-print("Hello World!")
-print(5.358359254991E+24)
+print([[43],    282.32,    "hOLA  "])

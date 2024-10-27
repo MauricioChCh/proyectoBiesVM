@@ -28,11 +28,12 @@ export class Visitor extends biesCVisitor {
      * @returns {void}
      */
     visitNode(ctx, nodeType) {
-        const strategy = VisitStrategy.strategies[nodeType];
-        if (strategy && strategy.rightFirst) {
-            return this.visitRightFirst(strategy.getVisitOrder(ctx));
+        const strategy = VisitStrategy.getStrategy(nodeType);
+        if (strategy.rightFirst) {
+            this.visitRightFirst(strategy.getVisitOrder(ctx));
+        } else {
+            this.visitPostOrder(ctx);
         }
-        return this.visitPostOrder(ctx);
     }
 
     /**
@@ -41,9 +42,7 @@ export class Visitor extends biesCVisitor {
      * @returns {void}
      */
     visitRightFirst(orderFns) {
-        this.visitAndPush(orderFns.right());
-        this.visitAndPush(orderFns.left());
-        this.visitAndPush(orderFns.root());
+        ['right', 'left', 'root'].forEach(order => this.visitAndPush(orderFns[order]()));
     }
 
     /**
@@ -62,11 +61,7 @@ export class Visitor extends biesCVisitor {
      */
     visitPostOrder(ctx) {
         if (ctx.children) {
-            ctx.children.forEach(child => {
-                if (child.accept) {
-                    child.accept(this);
-                }
-            });
+            ctx.children.forEach(child => child.accept && child.accept(this));
         }
     }
 
