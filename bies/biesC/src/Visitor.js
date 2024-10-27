@@ -1,35 +1,9 @@
+// Visitor.js
 import chalk from 'chalk';
 import biesCVisitor from '../output/biesCVisitor.js';
 import biesCParser from '../output/biesCParser.js';
 import C from './Compiler/C.js';
-
-// Estrategia de visita para diferentes tipos de instrucciones
-class VisitStrategy {
-    static strategies = {
-        // Estrategia por defecto (post-order: izquierdo -> derecho -> raíz)
-        default: {
-            rightFirst: false,
-            getVisitOrder: (ctx) => ({
-                left: () => null,
-                right: () => null,
-                root: () => ctx.constructor.name
-            })
-        },
-        // Estrategia especial para printInstr (derecho -> izquierdo -> raíz)
-        printInstr: {
-            rightFirst: true,
-            getVisitOrder: (ctx) => ({
-                right: () => ctx.STRING().getText(),
-                left: () => 'print',
-                root: () => 'printInstr'
-            })
-        }
-    };
-
-    static getStrategy(nodeType) {
-        return VisitStrategy.strategies[nodeType] || VisitStrategy.strategies.default;
-    }
-}
+import VisitStrategy from './VisitStrategy.js';
 
 export class Visitor extends biesCVisitor {
     constructor(logger = { log: () => { } }) {
@@ -40,7 +14,6 @@ export class Visitor extends biesCVisitor {
         this.compiler = new C(logger);
     }
 
-    // Método genérico para visitar nodos según la estrategia
     visitNode(ctx, nodeType) {
         const strategy = VisitStrategy.strategies[nodeType];
         if (strategy && strategy.rightFirst) {
@@ -49,19 +22,16 @@ export class Visitor extends biesCVisitor {
         return this.visitPostOrder(ctx);
     }
 
-    // Visita específica para nodos que requieren visitar primero el hijo derecho
     visitRightFirst(ctx, orderFns) {
-        const rightValue = orderFns.right();
-        if (rightValue) this.code.push(rightValue);
-
-        const leftValue = orderFns.left();
-        if (leftValue) this.code.push(leftValue);
-
-        const rootValue = orderFns.root();
-        if (rootValue) this.code.push(rootValue);
+        this.visitAndPush(orderFns.right());
+        this.visitAndPush(orderFns.left());
+        this.visitAndPush(orderFns.root());
     }
 
-    // Visita post-order estándar
+    visitAndPush(value) {
+        if (value) this.code.push(value);
+    }
+
     visitPostOrder(ctx) {
         if (ctx.children) {
             ctx.children.forEach(child => {
@@ -73,8 +43,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitProgram(ctx) {
-        this.logger.log(chalk.cyanBright('Visitando el programa'));
-        this.code.push('program');
+        this.logAndPush('Visitando el programa', 'program');
         this.printAST(ctx);
         this.visitPostOrder(ctx);
         this.code.push('EOF');
@@ -83,8 +52,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitStatement(ctx) {
-        this.logger.log(chalk.cyanBright('Visitando una declaración'));
-        this.code.push('statement');
+        this.logAndPush('Visitando una declaración', 'statement');
         this.visitPostOrder(ctx);
     }
 
@@ -94,8 +62,12 @@ export class Visitor extends biesCVisitor {
     }
 
     visitNL() {
-        this.logger.log(chalk.cyanBright('Visitando nueva línea'));
-        this.code.push('\\n');
+        this.logAndPush('Visitando nueva línea', '\\n');
+    }
+
+    logAndPush(logMessage, codeValue) {
+        this.logger.log(chalk.cyanBright(logMessage));
+        this.code.push(codeValue);
     }
 
     printAST(ast) {
