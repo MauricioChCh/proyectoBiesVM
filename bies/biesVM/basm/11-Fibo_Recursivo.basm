@@ -1,0 +1,76 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz principal
+
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
+;function fibonacci2(n, a = 0, b = 1) {
+;    if (typeof n !== "number") return null;
+;    if (n === 0) return a;
+;    if (n === 1) return b;
+;    return fibonacci2(n - 1, b, a + b);
+;}
+
+
+;elaboración propia
+$FUN $1
+    BLD 0 0         ; Cargar n
+    INO number      ; Verificar que n sea un número
+    BT 3            ; Si es un número, continua
+
+    LDV "null"      ; Cargar 0
+    RET             ; return 0
+
+    BLD 0 0        ; Cargar el parámetro 'n'
+    BLD 0 1        ; Cargar el parámetro 'a'
+    BLD 0 2        ; Cargar el parámetro 'b'
+
+    BLD 0 0        ; Cargar el parámetro 'n'
+    LDV 0          ; Cargar 0
+    EQ             ; n === 0
+    BF 3           ; Si n !== 0, saltar al siguiente if
+
+    BLD 0 1        ; Cargar el parámetro 'a'
+    RET            ; Retornar el valor de 'a'
+
+    BLD 0 0        ; Cargar el parámetro 'n'
+    LDV 1          ; Cargar 1
+    EQ             ; n === 1
+    BF 3           ; Si n !== 1, saltar al siguiente if
+
+    BLD 0 2        ; Cargar el parámetro 'b'
+    RET            ; Retornar el valor de 'b'
+
+
+    BLD 0 0        ; n
+    LDV 1          ; 1
+    SUB            ; n - 1
+    BST 0 3        ; Guardar n - 1
+
+    BLD 0 1        ; a
+    BLD 0 2        ; b
+    ADD            ; a + b
+    BST 0 4        ; Guardar a + b
+
+    BLD 0 3        ; n - 1
+    BLD 0 2        ; b
+    BLD 0 4        ; a + b
+
+    LDF $1         ; Cargar la función 'fibonacci2'
+    APP 3          ; Llamar a la función 'fibonacci2' con 3 argumentos
+
+    RET
+
+$END $1
+
+$FUN $0
+    LDV 20         ; Cargar el valor de 'n' (10)
+    LDV 0          ; Cargar 0
+    LDV 1          ; Cargar 1
+    LDF $1         ; Cargar la función 'fibonacci2'
+    APP 3          ; Llamar a la función 'fibonacci2' con 3 argumentos
+    PRN
+    HLT
+$END $0
+INI $0

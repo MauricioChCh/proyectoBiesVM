@@ -1,0 +1,182 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz principal
+
+
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
+;let largoHilera = hilera => {
+;    let count = 0;
+;
+;    while (hilera[count] !== undefined) {
+;        count++;
+;    }
+;    return count;
+;}
+;
+;const indiceSubhilera = (hilera, subhilera) => {
+;    const maxIndex = hilera.length - subhilera.length;
+;
+;    for (let i = 0; i <= maxIndex; i++) {
+;        let j = 0;
+;
+;        while (j < subhilera.length && hilera[i + j] === subhilera[j]) {
+;            j++;
+;        }
+;
+;        // Si el índice j recorrió toda la subhilera, significa que la encontramos.
+;        if (j === subhilera.length) return i;
+;    }
+;
+;    return -1; // Si no se encontró la subhilera
+;};
+;
+;
+;const hileraPrincipal = "Hola Mundo!";
+;const subhileraBuscar = "Mundo";
+;console.log(indiceSubhilera(hileraPrincipal, subhileraBuscar));
+
+
+
+;elaboración propia
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
+
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
+
+    ; Inicio del while
+
+        BLD 0 0             ; Carga 'hilera'
+        BLD 0 1             ; Carga 'count'
+        STK                 ; Extraer posición count de hilera
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+
+        BLD 0 2             ; Cargar el valor de la hilera obtenido
+        INO string        ; Cargar el valor de la variable 'hilera'
+        BF 6                ; Si EQ === false, saltar a BLD 0 0
+
+        ; Inicio body del while
+
+            BLD 0 1             ; Cargar 'count'
+            LDV 1               ; Cargar 1
+            ADD                 ; Sumar 1 a 'count'
+            BST 0 1             ; count = count + 1
+            BR -11              ; Volver al inicio del while
+
+        ; Fin body del while
+
+    ; Fin del while
+
+    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
+
+    RET                     ; Retornar el valor de la pila
+$END $1                     ; Fin de la definición de la función '$1'
+;---------------------------------------------------------------------------------
+$FUN $2
+    BLD 0 0         ; parámetro hilera
+    BLD 0 1         ; parámetro subhilera
+
+    BLD 0 0         ; hilera
+    LDF $1          ; .
+    APP 1           ; length
+    BST 0 2         ; dirección hilera.length
+
+    BLD 0 1         ; subhilera
+    LDF $1          ; .
+    APP 1           ; length
+    BST 0 3         ; dirección subhilera.length
+
+    BLD 0 2         ; hilera.length
+    BLD 0 3         ; subhilera.length
+    SUB             ; hilera.length - subhilera.length
+    BST 0 4         ; dirección maxIndex
+
+    ; Inicio bucle for
+
+        LDV 0           ; Cargar 0
+        BST 0 5         ; i = 0
+
+        BLD 0 5         ; Cargar 'i'
+        BLD 0 4         ; Cargar 'maxIndex'
+        LTE             ; i <= maxIndex
+        BF 37           ; Si ! i <= maxIndex Return -1
+
+        ; Inicio body bucle for
+            LDV 0           ; Cargar 0
+            BST 0 6         ; j = 0
+
+            ; Inicio bucle while
+
+            BLD 0 6         ; Cargar 'j'
+            BLD 0 3         ; Cargar 'subhilera.length'
+            LT              ; j < subhilera.length
+            BF 20           ; Si ! j < subhilera.length, saltar al final del bucle while
+
+            BLD 0 0         ; Cargar 'hilera'
+            BLD 0 5         ; Cargar 'i'
+            BLD 0 6         ; Cargar 'j'
+            ADD             ; i + j
+            STK             ; hilera[i + j]
+            BST 0 7         ; Guardar el valor de hilera[i + j]
+
+            BLD 0 1         ; Cargar 'subhilera'
+            BLD 0 6         ; Cargar 'j'
+            STK             ; subhilera[j]
+            BST 0 8         ; Guardar el valor de subhilera[j]
+
+            BLD 0 7         ; Cargar 'hilera[i + j]'
+            BLD 0 8         ; Cargar 'subhilera[j]'
+            EQ              ; hilera[i + j] === subhilera[j]
+            BF 6            ; Si ! hilera[i + j] === subhilera[j], final del bucle while
+
+                ; Inicio body bucle while
+
+                    BLD 0 6         ; Cargar 'j'
+                    LDV 1           ; Cargar 1
+                    ADD             ; j + 1
+                    BST 0 6         ; j++
+                    BR -22          ; Volver al inicio del bucle while
+
+                ; Fin body bucle while
+
+            ; Fin bucle while
+
+            BLD 0 6         ; Cargar 'j'
+            BLD 0 3         ; Cargar 'subhilera.length'
+            EQ              ; j === subhilera.length
+            BF 3            ; Si ! j === subhilera.length, i++ e inicio del bucle for
+
+            BLD 0 5         ; Cargar 'i'
+            RET             ; Return i
+
+        ; Fin body bucle for
+
+        BLD 0 5         ; Cargar 'i'
+        LDV 1           ; Cargar 1
+        ADD             ; i + 1
+        BST 0 5         ; Guardar la dirección de la variable 'i' en la pila
+        BR -39          ; Volver al inicio del bucle for con i++
+
+    ; Fin bucle for
+
+    LDV -1          ; -1
+    RET             ; Return -1
+$END $2
+
+$FUN $0
+    LDV "Hola  Mundo"   ; Cargar el valor de la variable 'hilera'
+    BST 0 0             ; Guardar la dirección de la variable 'hilera' en la pila
+
+    LDV "Mundo"         ; Cargar el valor de la variable 'subhilera'
+    BST 0 1             ; Guardar la dirección de la variable 'subhilera' en la pila
+
+    BLD 0 0             ; Cargar el valor de la variable 'hilera'
+    BLD 0 1             ; Cargar el valor de la variable 'subhilera'
+    LDF $2              ; Cargar la función '$2'
+    APP 2               ; Llamar a la función '$2' con 2 argumentos
+    PRN                 ; Imprimir el valor retornado por la función '$2'
+    HLT
+$END $0
+INI $0

@@ -1,0 +1,23 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves  principal 
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz 
+
+;elaboración propia
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Cargar el argumento
+    RET                     ; Retornar de la función
+$END $1                     ; Fin de la definición de la función '$1'
+
+$FUN $0                     ; Definir la función 'main'
+    LDV "Ingrese un valor:"
+    PRN
+    INP
+
+    LDF $1                  ; Cargar la función '$1'
+    APP 1                   ; Llamar a la función '$1'
+    PRN                     ; Imprimir el valor
+    HLT                     ; Detener la ejecución
+$END $0                     ; Fin de la definición de la función 'main'
+INI $0                      ; Inicializar la función 'main'

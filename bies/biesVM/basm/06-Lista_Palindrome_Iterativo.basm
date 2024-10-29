@@ -1,0 +1,132 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz principal
+
+
+;elaboración propuesta por IA(chatgpt) y revisada y levemente modificada por el grupo
+;let largoHilera = hilera => {
+;    let count = 0;
+;
+;    while (hilera[count] !== undefined) {
+;        count++;
+;    }
+;    return count;
+;}
+
+;function isPalindrome(list) {
+;    const len = largoHilera(list);
+;
+;    for (let i = 0; i < len / 2; i++) {
+;        if (list[i] !== list[len - 1 - i]) {
+;            return false;  // Si hay un desajuste, no es un palíndromo
+;        }
+;    }
+;
+;    return true;  // Si no se encontró ningún desajuste, es un palíndromo
+;}
+;
+;console.log(isPalindrome([1,2,3,4,5,6,7,8,7,6,5,4,3,2,1]));  // Output: true
+;console.log(isPalindrome([1,2,3,4,5,6,7,8,7,666,5,4,3,2,1]));  // Output: false
+
+;elaboración propia
+$FUN $1                     ; Definir la función '$1'
+    BLD 0 0                 ; Guardar la dirección de la variable 'lista' en la pila
+
+    LDV 0                   ; Cargar el valor de la variable 'hilera'
+    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
+
+    ; Inicio del while
+
+        BLD 0 0             ; Carga 'hilera'
+        BLD 0 1             ; Carga 'count'
+        LTK                 ; Extraer posición count de hilera
+        BST 0 2             ; Guardar el valor de la hilera obtenido
+
+        BLD 0 2             ; Cargar el valor de la hilera obtenido
+        LDV ""              ; undefined
+        EQ                  ; ===
+        NOT                 ; !==
+        BF 6                ; Si !(hilera[count] !== undefined), ir inicio de while
+
+        ; Inicio body del while
+
+            BLD 0 1             ; Cargar 'count'
+            LDV 1               ; Cargar 1
+            ADD                 ; Sumar 1 a 'count'
+            BST 0 1             ; count = count + 1
+            BR -13              ; Volver al inicio del while
+
+        ; Fin body del while
+
+    ; Fin del while
+
+    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
+
+    RET                     ; Retornar el valor de la pila
+$END $1                     ; Fin de la definición de la función '$1'
+;-----------------------------------------------------------------------------------------------------------------------
+$FUN $2                     ; Definir la función '$2' (isPalindrome)
+    BLD 0 0                 ; Parámetro list
+    LDF $1                  ; Cargar la función $1
+    APP 1                   ; Llamar a la función $1 con el parámetro list
+    BST 0 1                 ; const len = largoHilera(list)
+
+    ; Inicio bucle for
+        LDV 0               ; Carga 0
+        BST 0 2             ; i = 0
+
+        BLD 0 2             ; i
+        BLD 0 1             ; len
+        LDV 2               ; 2
+        DIV                 ; len / 2
+        LT                  ; i < len / 2
+        BF 20               ; return true
+
+        ; Inicio body for
+
+            ; Inicio if condition
+
+                BLD 0 0     ; list
+                BLD 0 2     ; i
+                LTK         ; list[i]
+
+                BLD 0 0     ; list
+                BLD 0 1     ; len
+                LDV 1       ; 1
+                SUB         ; len - 1
+                BLD 0 2     ; i
+                SUB         ; len - 1 - i
+                LTK         ; list[len - 1 - i]
+
+                EQ          ; list[i] === list[len - 1 - i]
+                BT 3        ; list[i] !== list[len - 1 - i], return true
+
+                LDV "false"
+                RET         ; return false
+
+            ; Fin if condition
+
+        ; Fin body for
+
+        BLD 0 2
+        LDV 1
+        ADD
+        BST 0 2
+        BR -24               ; Inicio bucle for
+
+    ; Fin bucle for
+
+    LDV "true"
+    RET                     ; return true
+$END $2                     ; Fin de la definición de la función '$1'
+;-----------------------------------------------------------------------------------------------------------------------
+$FUN $0
+    LDV [1,2,3,4,5,6,7,8,7,6,5,4,3,2,1]            ; Cargar el valor de la lista
+    LDF $2                                          ; Cargar la función '$2'
+    APP 1                                           ; Llamar a la función '$2' con 1 argumento
+    PRN                                             ; Imprimir el valor retornado por la función '$2'
+    HLT
+$END $0
+INI $0

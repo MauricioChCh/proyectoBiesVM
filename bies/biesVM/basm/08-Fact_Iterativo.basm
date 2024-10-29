@@ -1,0 +1,66 @@
+;Autores
+;Joshua Yarit Amador Lara 
+;Mauricio Alberto Chaves Chaves
+;Fabiola Rojas Alvarado
+;Eddy Villarreal Muñoz principal
+
+;elaboración propia
+;function factorial(n) {
+;    let result = 1;
+;
+;    // Usa un loop que evita multiplicaciones innecesarias
+;    for (let i = 2; i <= n; i++) {
+;        result *= i;
+;    }
+;
+;    return result;
+;}
+;
+;console.log(factorial(120));  // Output: 6.689503e+198
+
+
+;elaboración propia
+$FUN $1
+    BLD 0 0         ; Cargar el parámetro 'n'
+    LDV 1           ; Cargar 1
+    BST 0 1         ; Guardar el valor de 'result'
+
+    ; Inicio bucle for
+
+        LDV 2       ; Cargar 2
+        BST 0 2     ; i = 2
+
+        BLD 0 2     ; Cargar el valor de 'i'
+        BLD 0 0     ; Cargar el valor de 'n'
+        LTE         ; i <= n
+        BF 10       ; Si i > n, saltar al final del bucle for
+
+        ; Inicio body bucle for
+
+            BLD 0 1         ; Cargar 'result'
+            BLD 0 2         ; Cargar 'i'
+            MUL             ; result * i
+            BST 0 1         ; result = result * i
+
+        ; Fin body bucle for
+
+        BLD 0 2         ; Cargar el valor de 'i'
+        LDV 1           ; Cargar 1
+        ADD             ; i + 1
+        BST 0 2         ; 'i' = 'i' + 1
+        BR -12          ; Saltar al inicio del bucle for
+
+    ; Final bucle for
+
+    BLD 0 1         ; Cargar el valor de 'result'
+    RET             ; Retornar el valor de 'n'
+$END $1
+
+$FUN $0
+    LDV 120           ; Cargar 5
+    LDF $1          ; Cargar la función $1
+    APP 1           ; factorial(5)
+    PRN             ; Imprimir el resultado
+    HLT             ; Parar la ejecución
+$END $0
+INI $0
