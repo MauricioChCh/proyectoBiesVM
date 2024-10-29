@@ -18,22 +18,22 @@
 ;const hileraOriginal = "Hola Mundo!";
 ;console.log(invertirHilera(hileraOriginal));
 
-$FUN $1                     ; Definir la función '$1' (largoHilera)
-    BLD 0 0                 ; Guardar la dirección de la variable 'hilera' en la pila
+$FUN $1 ARGS:1 PARENT:$2        ; Definir la función '$1' (largoHilera)
+    BLD 0 0                     ; Guardar la dirección de la variable 'hilera' en la pila
 
-    LDV 0                   ; Cargar el valor de la variable 'hilera'
-    BST 0 1                 ; Guardar la dirección de la variable 'count' en la pila
+    LDV 0                       ; Cargar el valor de la variable 'hilera'
+    BST 0 1                     ; Guardar la dirección de la variable 'count' en la pila
 
     ; Inicio del while
 
-        BLD 0 0             ; Carga 'hilera'
-        BLD 0 1             ; Carga 'count'
-        STK                 ; Extraer posición count de hilera
-        BST 0 2             ; Guardar el valor de la hilera obtenido
+        BLD 0 0                 ; Carga 'hilera'
+        BLD 0 1                 ; Carga 'count'
+        STK                     ; Extraer posición count de hilera
+        BST 0 2                 ; Guardar el valor de la hilera obtenido
 
-        BLD 0 2             ; Cargar el valor de la hilera obtenido
-        INO string        ; Cargar el valor de la variable 'hilera'
-        BF 6                ; Si EQ === false, saltar a BLD 0 0
+        BLD 0 2                 ; Cargar el valor de la hilera obtenido
+        INO string              ; Cargar el valor de la variable 'hilera'
+        BF 6                    ; Si EQ === false, saltar a BLD 0 0
 
         ; Inicio body del while
 
@@ -47,61 +47,61 @@ $FUN $1                     ; Definir la función '$1' (largoHilera)
 
     ; Fin del while
 
-    BLD 0 1                 ; Cargar el valor del argumento 0 0 en la pila
+    BLD 0 1                     ; Cargar el valor del argumento 0 0 en la pila
 
-    RET                     ; Retornar el valor de la pila
-$END $1                     ; Fin de la definición de la función '$1'
+    RET                         ; Retornar el valor de la pila
+$END $1                         ; Fin de la definición de la función '$1'
 ;---------------------------------------------------------------------------------
-$FUN $2                     ; Definir la función '$1' (invertirHilera)
-    BLD 0 0                 ; Parámetro hilera
+$FUN $2 ARGS:1 PARENT:$0        ; Definir la función '$1' (invertirHilera)
+    BLD 0 0                     ; Parámetro hilera
 
-    LDV " "                  ; ''
-    BST 0 1                 ; result
+    LDV " "                     ; ''
+    BST 0 1                     ; result
     
     ; Inicio bucle for
 
-        BLD 0 0             ; hilera
-        LDF $1              ; carga función $1
-        APP 1               ; invoca función $1 con parámetro hilera
-        LDV 1               ; 1
-        SUB                 ; largoHilera(hilera) - 1
-        BST 0 2             ; i = largoHilera(hilera) - 1
+        BLD 0 0                 ; hilera
+        LDF $1                  ; carga función $1
+        APP 1                   ; invoca función $1 con parámetro hilera
+        LDV 1                   ; 1
+        SUB                     ; largoHilera(hilera) - 1
+        BST 0 2                 ; i = largoHilera(hilera) - 1
 
-        BLD 0 2             ; i
-        LDV 0               ; 0
-        GTE                 ; >=
+        BLD 0 2                 ; i
+        LDV 0                   ; 0
+        GTE                     ; >=
         BF 12
 
         ; Inicio body for
 
-            BLD 0 1         ; result
-            BLD 0 0         ; hilera
-            BLD 0 2         ; i
-            STK             ; hilera[i];
-            CAT             ; concatena hilera[i] en result
-            BST 0 1         ; result += hilera[i]
+            BLD 0 1             ; result
+            BLD 0 0             ; hilera
+            BLD 0 2             ; i
+            STK                 ; hilera[i];
+            CAT                 ; concatena hilera[i] en result
+            BST 0 1             ; result += hilera[i]
 
         ; Fin body for
 
-        BLD 0 2             ; i
-        LDV 1               ; 1
-        SUB                 ; i - 1
-        BST 0 2             ; i --
-        BR -14              ; salta a inicio bucle for
+        BLD 0 2                 ; i
+        LDV 1                   ; 1
+        SUB                     ; i - 1
+        BST 0 2                 ; i --
+        BR -14                  ; salta a inicio bucle for
 
     ; Fin bucle for
 
-    BLD 0 1                 ; result
-    RET                     ; return result
+    BLD 0 1                     ; result
+    RET                         ; return result
 
 $END $2
 ;---------------------------------------------------------------------------------
-$FUN $0                     ; Definir función '$0' (main)
-    LDV "Invertir"          ; Cargar el valor de la variable 'hilera'
-    LDF $2                  ; Cargar la función '$2'
-    APP 1                   ; Llamar a la función '$2' con 3 argumentos
+$FUN $0 ARGS:0 PARENT:$0        ; Definir función '$0' (main)
+    LDV "Invertir"              ; Cargar el valor de la variable 'hilera'
+    LDF $2                      ; Cargar la función '$2'
+    APP 1                       ; Llamar a la función '$2' con 3 argumentos
 
-    PRN                     ; Imprimir el valor retornado por la función '$1'
-    HLT                     ; Parar la ejecución (nunca alcanzará esta instrucción)
-$END $0                     ; Finaliza función '$0'
-INI $0                      ; Inicializa función '$0'
+    PRN                         ; Imprimir el valor retornado por la función '$1'
+    HLT                         ; Parar la ejecución (nunca alcanzará esta instrucción)
+$END $0                         ; Finaliza función '$0'
+INI $0                          ; Inicializa función '$0'

@@ -1,4 +1,4 @@
-grammar biesLanguage;
+grammar biesVM;
 
 // Reglas principales del parser
 program
@@ -6,7 +6,7 @@ program
     ;
 
 functionDef // Define la estructura de una función para poder usar FUN y END
-    : FUN ES LABEL_IDENTIFIER NL? // Inicio de la definición de la función con un identificador de etiqueta
+    : FUN ES LABEL_IDENTIFIER (ES 'ARGS:' NUMBER)? (ES 'PARENT:' LABEL_IDENTIFIER)? NL? // Inicio de la definición de la función con un identificador de etiqueta
       (statement NL?)* // Cuerpo de la función compuesto por múltiples declaraciones opcionales
       END ES LABEL_IDENTIFIER NL? // Fin de la definición de la función con un identificador de etiqueta
     ;
@@ -112,7 +112,7 @@ castInstr
     ;
 
 array
-    : '[' ( (NUMBER | STRING | array) (',' (NUMBER | STRING | array))* )? ']' // Permitir números, cadenas y arreglos dentro de corchetes
+    : '[' ES* ( (NUMBER | STRING | array) ES* (',' ES* (NUMBER | STRING | array) ES* )* )? ']' // Permitir números, cadenas y arreglos dentro de corchetes con espacios opcionales
     ;
 
 inputString

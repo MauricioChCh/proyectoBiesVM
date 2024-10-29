@@ -20,20 +20,20 @@
 
 
 ;elaboración propia
-$FUN $1
-    BLD 0 0         ; Cargar el parámetro 'n'
-    LDV 1           ; Cargar 1
-    BST 0 1         ; Guardar el valor de 'result'
+$FUN $1 ARGS:1 PARENT:$0
+    BLD 0 0                 ; Cargar el parámetro 'n'
+    LDV 1                   ; Cargar 1
+    BST 0 1                 ; Guardar el valor de 'result'
 
     ; Inicio bucle for
 
-        LDV 2       ; Cargar 2
-        BST 0 2     ; i = 2
+        LDV 2               ; Cargar 2
+        BST 0 2             ; i = 2
 
-        BLD 0 2     ; Cargar el valor de 'i'
-        BLD 0 0     ; Cargar el valor de 'n'
-        LTE         ; i <= n
-        BF 10       ; Si i > n, saltar al final del bucle for
+        BLD 0 2             ; Cargar el valor de 'i'
+        BLD 0 0             ; Cargar el valor de 'n'
+        LTE                 ; i <= n
+        BF 10               ; Si i > n, saltar al final del bucle for
 
         ; Inicio body bucle for
 
@@ -44,23 +44,23 @@ $FUN $1
 
         ; Fin body bucle for
 
-        BLD 0 2         ; Cargar el valor de 'i'
-        LDV 1           ; Cargar 1
-        ADD             ; i + 1
-        BST 0 2         ; 'i' = 'i' + 1
-        BR -12          ; Saltar al inicio del bucle for
+        BLD 0 2             ; Cargar el valor de 'i'
+        LDV 1               ; Cargar 1
+        ADD                 ; i + 1
+        BST 0 2             ; 'i' = 'i' + 1
+        BR -12              ; Saltar al inicio del bucle for
 
     ; Final bucle for
 
-    BLD 0 1         ; Cargar el valor de 'result'
-    RET             ; Retornar el valor de 'n'
+    BLD 0 1                 ; Cargar el valor de 'result'
+    RET                     ; Retornar el valor de 'n'
 $END $1
 
-$FUN $0
-    LDV 120           ; Cargar 5
-    LDF $1          ; Cargar la función $1
-    APP 1           ; factorial(5)
-    PRN             ; Imprimir el resultado
-    HLT             ; Parar la ejecución
+$FUN $0 ARGS:0 PARENT:$0
+    LDV 120                 ; Cargar 5
+    LDF $1                  ; Cargar la función $1
+    APP 1                   ; factorial(5)
+    PRN                     ; Imprimir el resultado
+    HLT                     ; Parar la ejecución
 $END $0
 INI $0

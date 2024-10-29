@@ -1,4 +1,4 @@
-// Generated from c:/Users/Eddy/Desktop/proyectoBiesVM/grammar/biesLanguage.g4 by ANTLR 4.13.1
+// Generated from c:/Users/Eddy/Desktop/Proyecto Paradigmas de la Programación/bies/biesVM/grammar/biesLanguage.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

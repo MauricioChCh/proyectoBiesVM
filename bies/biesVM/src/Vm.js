@@ -1,5 +1,5 @@
-import biesVMLexer from '../output/biesLanguageLexer.js';
-import biesVMParser from '../output/biesLanguageParser.js';
+import biesVMLexer from '../output/biesVMLexer.js';
+import biesVMParser from '../output/biesVMParser.js';
 import Visitor from './Visitor.js';
 import antlr4 from 'antlr4';
 

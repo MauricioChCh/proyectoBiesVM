@@ -17,22 +17,35 @@ class FunctionCommands extends Command {
 
     /**
      * Define una función y la coloca en la pila.
-     * @param {Object} instruction - La instrucción que contiene el nombre de la función y el número de parámetros.
+     * @param {Object} instruction - La instrucción que contiene el nombre de la función, el número de parámetros y el contexto padre.
      * @throws {Error} Si la función no está definida.
      */
     LDF(instruction) {
-        const [functionName, paramCount] = instruction.args;
-        const functionBody = this.vm.functions[functionName];
-        if (!functionBody) {
+        const [functionName, paramCount, parentContext] = instruction.args;
+        const functionData = this.vm.functions[functionName];
+        if (!functionData) {
             throw new Error(`Function ${functionName} not defined`);
         }
-        const paramCountValue = paramCount !== undefined ? paramCount : this.vm.functions[functionName].paramCount || 1;
+        const paramCountValue = paramCount !== undefined ? parseInt(paramCount) : functionData.args || 0;
+        const parentContextValue = parentContext !== undefined ? parentContext : functionData.parent || '$0';
         const closure = {
             functionName: functionName,
-            body: functionBody,
+            body: functionData.body,
             paramCount: paramCountValue,
+            parentContext: parentContextValue,
         };
         this.vm.stack.push(closure);
+    }
+
+    /**
+     * Verifica si el cuerpo de la función es un array.
+     * @param {Array} code - El código a verificar.
+     * @throws {Error} Si el código no es un array.
+     */
+    verifyFunctionBody(code) {
+        if (!Array.isArray(code)) {
+            throw new Error('El cuerpo de la función no es un array');
+        }
     }
 
     /**
@@ -42,13 +55,14 @@ class FunctionCommands extends Command {
      */
     APP(instruction) {
         let closure = this.vm.stack.pop();
-        const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : 1;
+        const argCount = instruction.args && instruction.args.length > 0 ? parseInt(instruction.args[0]) : closure.paramCount;
         if (closure && closure.body) {
             this.vm.contextStack.push({
                 code: this.vm.code,
                 programCounter: this.vm.programCounter,
                 stack: this.vm.stack.slice(),
-                bindings: this.vm.bindings.slice()
+                bindings: this.vm.bindings.slice(),
+                parentContext: closure.parentContext
             });
             let newBinding = {};
             for (let i = argCount - 1; i >= 0; i--) {
@@ -62,8 +76,9 @@ class FunctionCommands extends Command {
             this.vm.bindings.unshift(newBinding);
             this.vm.code = closure.body;
             this.vm.programCounter = 0;
+            this.verifyFunctionBody(this.vm.code);
             const functionBody = this.vm.code.join('\n');
-            this.vm.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} con cuerpo:\n${functionBody}`));
+            this.vm.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} args: ${closure.paramCount} parent: ${closure.parentContext} con cuerpo:\n${functionBody}`));
             this.vm.executeAntlrParsing(functionBody);
         } else {
             throw new Error('Closure or closure body is undefined');

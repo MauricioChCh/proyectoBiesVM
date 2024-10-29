@@ -34,7 +34,7 @@
 
 
 ;elaboración propia
-$FUN $1
+$FUN $1 ARGS:1 PARENT:$2
     ;BLD 0 0                     ;Cargar el parámetro 'a' del entorno
     ;INO "number"                ;typeOf a
     ;BST 0 1                     ;Guardar el resultado en el nivel 0 argumento 1
@@ -140,7 +140,7 @@ $FUN $1
 
 $END $1
 
-$FUN $2                ; Definir la función '$1'
+$FUN $2 ARGS:2 PARENT:$0               ; Definir la función '$1'
     BLD 0 1            ; Cargar el primer b (-5)
     BLD 0 1            ; Cargar el segundo b (-5)
     MUL                ; Multiplicar b * b
@@ -193,25 +193,25 @@ $FUN $2                ; Definir la función '$1'
 
 $END $2                ; Fin de la definición de la función '$1'
 
-$FUN $0                ; Definir la función 'main'
-    LDV 2              ; Cargar el valor de 'a' (1)
-    BST 0 0            ; Guardar 'a' en el nivel 0 argumento 0
+$FUN $0 ARGS:0 PARENT:$0                ; Definir la función 'main'
+    LDV 2                               ; Cargar el valor de 'a' (1)
+    BST 0 0                             ; Guardar 'a' en el nivel 0 argumento 0
 
-    LDV -4             ; Cargar el valor de 'b' (-5)
-    BST 0 1            ; Guardar 'b' en el nivel 0 argumento 1
+    LDV -4                              ; Cargar el valor de 'b' (-5)
+    BST 0 1                             ; Guardar 'b' en el nivel 0 argumento 1
 
-    LDV 1              ; Cargar el valor de 'c' (6)
-    BST 0 2            ; Guardar 'c' en el nivel 0 argumento 2
+    LDV 1                               ; Cargar el valor de 'c' (6)
+    BST 0 2                             ; Guardar 'c' en el nivel 0 argumento 2
 
-    BLD 0 0            ; Cargar el argumento 'a' del entorno
-    BLD 0 1            ; Cargar el argumento 'b' del entorno
-    BLD 0 2            ; Cargar el argumento 'c' del entorno
+    BLD 0 0                             ; Cargar el argumento 'a' del entorno
+    BLD 0 1                             ; Cargar el argumento 'b' del entorno
+    BLD 0 2                             ; Cargar el argumento 'c' del entorno
 
-    LDF $2             ; Cargar la función 'cuadrática'
-    APP 3              ; Llamar a la función 'cuadrática' con 1 argumento
-    PRN                ; Imprimir el valor retornado
+    LDF $2                              ; Cargar la función 'cuadrática'
+    APP 3                               ; Llamar a la función 'cuadrática' con 1 argumento
+    PRN                                 ; Imprimir el valor retornado
 
-    HLT                ; Detener la ejecución
-$END $0             ; Fin de la definición de la función 'main'
+    HLT                                 ; Detener la ejecución
+$END $0                                 ; Fin de la definición de la función 'main'
 
-INI $0              ; Inicializar la función 'main'
+INI $0                                  ; Inicializar la función 'main'

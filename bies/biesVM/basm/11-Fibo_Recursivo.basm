@@ -14,7 +14,7 @@
 
 
 ;elaboración propia
-$FUN $1
+$FUN $1 ARGS:1 PARENT:$0
     BLD 0 0         ; Cargar n
     INO number      ; Verificar que n sea un número
     BT 3            ; Si es un número, continua
@@ -60,17 +60,17 @@ $FUN $1
     LDF $1         ; Cargar la función 'fibonacci2'
     APP 3          ; Llamar a la función 'fibonacci2' con 3 argumentos
 
-    RET
+    RET            ; Retorna fibonacci2(n - 1, b, a + b);
 
 $END $1
 
-$FUN $0
+$FUN $0 ARGS:0 PARENT:$0
     LDV 20         ; Cargar el valor de 'n' (10)
     LDV 0          ; Cargar 0
     LDV 1          ; Cargar 1
     LDF $1         ; Cargar la función 'fibonacci2'
     APP 3          ; Llamar a la función 'fibonacci2' con 3 argumentos
-    PRN
-    HLT
-$END $0
-INI $0
+    PRN            ; Imprime el resultado de $1
+    HLT            ; Detiene la ejecución
+$END $0            ; Finaliza $0
+INI $0             ; Inicializa $0

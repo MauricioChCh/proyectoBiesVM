@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import biesLanguageVisitor from '../output/biesLanguageVisitor.js';
+import biesVMVisitor from '../output/biesVMVisitor.js';
 import VM from './Vm.js';
 
 /**
@@ -7,12 +7,12 @@ import VM from './Vm.js';
  * Extiende la funcionalidad de `biesLanguageVisitor` para recorrer un árbol de sintaxis y
  * generar las instrucciones correspondientes que se ejecutarán en la máquina virtual (VM).
  */
-export class Visitor extends biesLanguageVisitor {
+export class Visitor extends biesVMVisitor {
     /**
      * Crea una instancia de la clase Visitor.
      * @param {Object} [logger={ log: () => {} }] - Objeto que define el comportamiento del logger. Por defecto, usa un logger vacío.
      */
-    constructor(logger = { log: () => {} }) {
+    constructor(logger = { log: () => { } }) {
         super();
         /**
          * Máquina virtual utilizada para ejecutar las instrucciones generadas.
@@ -55,12 +55,24 @@ export class Visitor extends biesLanguageVisitor {
     visitFunctionDef(ctx) {
         const functionName = ctx.LABEL_IDENTIFIER(0).getText();
         const functionBody = ctx.statement().map(stmt => stmt.getText());
+        const args = ctx.NUMBER(0).getText(); // Extrae el número de argumentos
+        const parent = ctx.LABEL_IDENTIFIER(1).getText(); // Extrae el contexto padre
+
+        // La información extraída de la función, incluyendo args y parent es la siguiente
+        //this.logger.log(chalk.blue(`Definida función ${functionName} con argumentos: ${args} en el contexto ${parent}`));
 
         if (!this.vm.functions) {
             this.vm.functions = {};
         }
 
-        this.vm.functions[functionName] = functionBody;
+        //this.vm.functions[functionName] = functionBody;
+        
+        this.vm.functions[functionName] = {
+            body: functionBody,
+            args: parseInt(args),
+            parent: parent
+        };
+        
         this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
 
         return super.visitFunctionDef(ctx);

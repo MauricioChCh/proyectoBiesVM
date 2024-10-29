@@ -12,7 +12,7 @@ BST 0 0     ; lo guardo en a
 LDV 665     ; lo guardo en b
 BST 0 1 
 
-BLD 0 0
+BLD 0 0     
 BLD 0 1
 ADD
 PRN

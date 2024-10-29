@@ -17,12 +17,22 @@ class IOCommands extends Command {
     }
 
     /**
+     * Convierte un array a una cadena con formato adecuado.
+     * @param {Array} array - El array a convertir.
+     * @returns {string} - La representación en cadena del array.
+     */
+    formatArray(array) {
+        return '[' + array.map(item => Array.isArray(item) ? this.formatArray(item) : item).join(', ') + ']';
+    }
+
+    /**
      * Imprime un valor desde la pila en la consola.
      * Si el valor es un arreglo, lo convierte a una cadena JSON antes de imprimirlo.
+     * Los elementos del arreglo se imprimen con un espacio en blanco entre ellos.
      */
     PRN() {
         const value = this.vm.stack.pop();
-        const output = Array.isArray(value) ? JSON.stringify(value) : value;
+        const output = Array.isArray(value) ? this.formatArray(value) : value;
         console.log(chalk.cyan(output));
     }
 

@@ -1,0 +1,7 @@
+LDV "Hola Mundo!"
+PRN
+LDV [[43],282.32,"  HOLA   "]
+PRN
+LDV 3.14159e-10
+PRN
+HLT
