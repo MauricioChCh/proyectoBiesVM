@@ -3,25 +3,25 @@
 import antlr4 from 'antlr4';
 import biesCVisitor from './biesCVisitor.js';
 
-const serializedATN = [4,1,11,76,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,1,0,1,0,
+const serializedATN = [4,1,12,76,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,1,0,1,0,
 3,0,11,8,0,5,0,13,8,0,10,0,12,0,16,9,0,1,0,1,0,1,1,1,1,1,2,1,2,1,2,1,2,1,
 2,3,2,27,8,2,1,2,1,2,1,3,1,3,5,3,33,8,3,10,3,12,3,36,9,3,1,3,1,3,1,3,3,3,
 41,8,3,1,3,5,3,44,8,3,10,3,12,3,47,9,3,1,3,1,3,5,3,51,8,3,10,3,12,3,54,9,
 3,1,3,1,3,1,3,3,3,59,8,3,1,3,5,3,62,8,3,10,3,12,3,65,9,3,5,3,67,8,3,10,3,
 12,3,70,9,3,3,3,72,8,3,1,3,1,3,1,3,0,0,4,0,2,4,6,0,0,85,0,14,1,0,0,0,2,19,
-1,0,0,0,4,21,1,0,0,0,6,30,1,0,0,0,8,10,3,2,1,0,9,11,5,9,0,0,10,9,1,0,0,0,
-10,11,1,0,0,0,11,13,1,0,0,0,12,8,1,0,0,0,13,16,1,0,0,0,14,12,1,0,0,0,14,
+1,0,0,0,4,21,1,0,0,0,6,30,1,0,0,0,8,10,3,2,1,0,9,11,5,10,0,0,10,9,1,0,0,
+0,10,11,1,0,0,0,11,13,1,0,0,0,12,8,1,0,0,0,13,16,1,0,0,0,14,12,1,0,0,0,14,
 15,1,0,0,0,15,17,1,0,0,0,16,14,1,0,0,0,17,18,5,0,0,1,18,1,1,0,0,0,19,20,
 3,4,2,0,20,3,1,0,0,0,21,22,5,6,0,0,22,26,5,1,0,0,23,27,5,7,0,0,24,27,5,8,
 0,0,25,27,3,6,3,0,26,23,1,0,0,0,26,24,1,0,0,0,26,25,1,0,0,0,27,28,1,0,0,
-0,28,29,5,2,0,0,29,5,1,0,0,0,30,34,5,3,0,0,31,33,5,10,0,0,32,31,1,0,0,0,
+0,28,29,5,2,0,0,29,5,1,0,0,0,30,34,5,3,0,0,31,33,5,11,0,0,32,31,1,0,0,0,
 33,36,1,0,0,0,34,32,1,0,0,0,34,35,1,0,0,0,35,71,1,0,0,0,36,34,1,0,0,0,37,
 41,5,8,0,0,38,41,5,7,0,0,39,41,3,6,3,0,40,37,1,0,0,0,40,38,1,0,0,0,40,39,
-1,0,0,0,41,45,1,0,0,0,42,44,5,10,0,0,43,42,1,0,0,0,44,47,1,0,0,0,45,43,1,
-0,0,0,45,46,1,0,0,0,46,68,1,0,0,0,47,45,1,0,0,0,48,52,5,4,0,0,49,51,5,10,
+1,0,0,0,41,45,1,0,0,0,42,44,5,11,0,0,43,42,1,0,0,0,44,47,1,0,0,0,45,43,1,
+0,0,0,45,46,1,0,0,0,46,68,1,0,0,0,47,45,1,0,0,0,48,52,5,4,0,0,49,51,5,11,
 0,0,50,49,1,0,0,0,51,54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,58,1,0,0,
 0,54,52,1,0,0,0,55,59,5,8,0,0,56,59,5,7,0,0,57,59,3,6,3,0,58,55,1,0,0,0,
-58,56,1,0,0,0,58,57,1,0,0,0,59,63,1,0,0,0,60,62,5,10,0,0,61,60,1,0,0,0,62,
+58,56,1,0,0,0,58,57,1,0,0,0,59,63,1,0,0,0,60,62,5,11,0,0,61,60,1,0,0,0,62,
 65,1,0,0,0,63,61,1,0,0,0,63,64,1,0,0,0,64,67,1,0,0,0,65,63,1,0,0,0,66,48,
 1,0,0,0,67,70,1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,72,1,0,0,0,70,68,1,
 0,0,0,71,40,1,0,0,0,71,72,1,0,0,0,72,73,1,0,0,0,73,74,5,5,0,0,74,7,1,0,0,
@@ -39,7 +39,8 @@ export default class biesCParser extends antlr4.Parser {
     static grammarFileName = "biesC.g4";
     static literalNames = [ null, "'('", "')'", "'['", "','", "']'", "'print'" ];
     static symbolicNames = [ null, null, null, null, null, null, "PRINT", 
-                             "STRING", "NUMBER", "NL", "ES", "WS" ];
+                             "STRING", "NUMBER", "COMMENT", "NL", "ES", 
+                             "WS" ];
     static ruleNames = [ "program", "statement", "printInstr", "array" ];
 
     constructor(input) {
@@ -67,7 +68,7 @@ export default class biesCParser extends antlr4.Parser {
 	            this.state = 10;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            if(_la===9) {
+	            if(_la===10) {
 	                this.state = 9;
 	                this.match(biesCParser.NL);
 	            }
@@ -173,7 +174,7 @@ export default class biesCParser extends antlr4.Parser {
 	        this.state = 34;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===10) {
+	        while(_la===11) {
 	            this.state = 31;
 	            this.match(biesCParser.ES);
 	            this.state = 36;
@@ -205,7 +206,7 @@ export default class biesCParser extends antlr4.Parser {
 	            this.state = 45;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	            while(_la===10) {
+	            while(_la===11) {
 	                this.state = 42;
 	                this.match(biesCParser.ES);
 	                this.state = 47;
@@ -221,7 +222,7 @@ export default class biesCParser extends antlr4.Parser {
 	                this.state = 52;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
-	                while(_la===10) {
+	                while(_la===11) {
 	                    this.state = 49;
 	                    this.match(biesCParser.ES);
 	                    this.state = 54;
@@ -249,7 +250,7 @@ export default class biesCParser extends antlr4.Parser {
 	                this.state = 63;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
-	                while(_la===10) {
+	                while(_la===11) {
 	                    this.state = 60;
 	                    this.match(biesCParser.ES);
 	                    this.state = 65;
@@ -290,9 +291,10 @@ biesCParser.T__4 = 5;
 biesCParser.PRINT = 6;
 biesCParser.STRING = 7;
 biesCParser.NUMBER = 8;
-biesCParser.NL = 9;
-biesCParser.ES = 10;
-biesCParser.WS = 11;
+biesCParser.COMMENT = 9;
+biesCParser.NL = 10;
+biesCParser.ES = 11;
+biesCParser.WS = 12;
 
 biesCParser.RULE_program = 0;
 biesCParser.RULE_statement = 1;

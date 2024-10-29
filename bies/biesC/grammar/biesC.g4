@@ -17,12 +17,13 @@ array
     : '[' ES* ( (NUMBER | STRING | array) ES* (',' ES* (NUMBER | STRING | array) ES* )* )? ']' // Permitir números, cadenas y arreglos dentro de corchetes con espacios opcionales
     ;
 
-// Tokens
+// Definición de tokens
 PRINT: 'print';
 STRING: '"' (~["\r\n])* '"'; // Definición de cadena de texto
 NUMBER: [+-]? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)?; // Definición de números enteros, flotantes y en notación científica, con un signo opcional al inicio
+COMMENT : '//' ~[\r\n]* -> skip; // Todo lo que sigue a '//' se considera un comentario y se ignora
 NL: '\r'? '\n' ;
+
 // Ignorar espacios en blanco
 ES : [ \t]; // Espacios en blanco y tabulaciones que se omiten
-
 WS : [ \t\r\n]+ -> skip; // Para manejar los espacios en blanco
