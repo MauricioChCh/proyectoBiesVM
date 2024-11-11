@@ -1,7 +1,10 @@
-LDV "Hola Mundo!"
+LDV 12
+LDV 654
+LDV "Esto es un String"
+LDV ["Array"]
+LDV [[21],["Array Anidado"],[3,4,5,6,7,8,9,10]]
 PRN
-LDV [[43],282.32,"  HOLA   "]
 PRN
-LDV 3.14159e-10
 PRN
-HLT
+PRN
+PRN

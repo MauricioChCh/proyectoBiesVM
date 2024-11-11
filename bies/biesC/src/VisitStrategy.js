@@ -27,6 +27,29 @@ class VisitStrategy {
                 left: () => 'print',
                 root: () => 'printInstr'
             })
+        },
+
+        // Estrategia especial para simpleLetInstr (derecho -> izquierdo -> raíz)
+        simpleLetInstr: {
+            rightFirst: true,
+            getVisitOrder: (ctx) => ({
+                right: () => {
+                    const value = ctx.expr();
+                    return value ? value.getText() : null;
+                },
+                left: () => `let ${ctx.ID().getText()} =`,
+                root: () => 'simpleLetInstr'
+            })
+        },
+
+        // Estrategia especial para expr (izquierdo -> derecho -> raíz)
+        expr: {
+            rightFirst: false,
+            getVisitOrder: (ctx) => ({
+                left: () => ctx.children[0] ? ctx.children[0] : null,
+                right: () => ctx.children[2] ? ctx.children[2] : null,
+                root: () => ctx.children[1] ? ctx.children[1].getText() : ctx.getText()
+            })
         }
     };
 

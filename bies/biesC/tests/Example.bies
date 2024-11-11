@@ -1,4 +1,0 @@
-print("Hola Mundo!")
-print([[43],    282.32,    "  HOLA   "])
-//Esto es un comentario que será ignorado
-print(3.14159e-10)

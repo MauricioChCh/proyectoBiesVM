@@ -2,28 +2,102 @@ grammar biesC;
 
 // Reglas principales del parser
 program
-    : (statement NL?)* EOF // Un programa consiste en múltiples declaraciones opcionales seguidas de un fin de archivo
+    : (statement NL?)* EOF
     ;
 
 statement
-    : printInstr // declaración de una instrucción de impresión
+    : printInstr
+    | simpleLetInstr
+    | anonymousLetFunction // Permitir funciones anónimas como statement
     ;
 
 printInstr
-    : 'print' '(' (STRING | NUMBER | array) ')' // Instrucción de impresión con una cadena de texto, un número o un array
+    : 'print' '(' (primarydata | expr) ')'
+    ;
+
+simpleLetInstr
+    : 'let' WS? id WS? '=' WS? expr
+    ;
+
+anonymousLetFunction
+    : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
+    | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    ;
+
+primarydata                                 
+    : number                                # Number_Label
+    | string                                # String_Label
+    | array                                 # Array_Label
+    | id                                    # Id_Label
+    ;
+
+expr                                        
+    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    | primarydata                           # PrimaryData_Label
+    | functionCall                          # FunctionCallExpr_Label
+    | expr MULT expr                        # Mul_Label
+    | expr DIV expr                         # Div_Label
+    | expr ADD expr                         # Add_Label
+    | expr SUB expr                         # Sub_Label
+    | expr AND expr                         # And_Label
+    | expr OR expr                          # Or_Label
+    | expr EQ expr                          # Eq_Label
+    | expr NEQ expr                         # Neq_Label
+    | expr LT expr                          # Lt_Label
+    | expr GT expr                          # Gt_Label
+    | expr LE expr                          # Le_Label
+    | expr GE expr                          # Ge_Label
+    | '(' expr ')'                          # Parens_Label
+    ;
+
+functionCall
+    : ID '(' (expr (',' expr)*)? ')'
+    ;
+
+number
+    : NUMBER
+    ;
+
+string
+    : STRING
     ;
 
 array
-    : '[' ES* ( (NUMBER | STRING | array) ES* (',' ES* (NUMBER | STRING | array) ES* )* )? ']' // Permitir números, cadenas y arreglos dentro de corchetes con espacios opcionales
+    : '[' WS? ( (primarydata | expr) WS? (',' WS? (primarydata | expr) WS? )* )? ']'
+    ;
+
+id
+    : ID
     ;
 
 // Definición de tokens
-PRINT: 'print';
-STRING: '"' (~["\r\n])* '"'; // Definición de cadena de texto
-NUMBER: [+-]? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)?; // Definición de números enteros, flotantes y en notación científica, con un signo opcional al inicio
-COMMENT : '//' ~[\r\n]* -> skip; // Todo lo que sigue a '//' se considera un comentario y se ignora
-NL: '\r'? '\n' ;
 
-// Ignorar espacios en blanco
-ES : [ \t]; // Espacios en blanco y tabulaciones que se omiten
-WS : [ \t\r\n]+ -> skip; // Para manejar los espacios en blanco
+// Datos Primarios
+STRING: '"' (~["\r\n])* '"';
+NUMBER: [+-]? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)?;
+PRINT: 'print';
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
+
+// Operadores
+MULT: '*';
+DIV: '/';
+ADD: '+';
+SUB: '-';
+
+// Operadores Lógicos
+AND: '&&';
+OR: '||';
+EQ: '==';
+NEQ: '!=';
+LT: '<';
+GT: '>';
+LE: '<=';
+GE: '>=';
+
+// Espacios
+NL: '\r'? '\n' -> skip;
+WS: [ \t\r\n]+ -> skip;
+
+// Comentarios
+COMMENT: '//' ~[\r\n]* -> skip;
+MULTILINE_COMMENT: '/*' .*? '*/' -> skip;

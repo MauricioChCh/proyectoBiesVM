@@ -11,35 +11,15 @@ class C {
      * @param {Object} [logger={ log: () => {} }] - Objeto Logger para registrar mensajes.
      */
     constructor(logger = { log: () => { } }) {
-        /**
-         * Logger para registrar mensajes.
-         * @type {Object}
-         */
         this.logger = logger;
-
-        /**
-         * Código a ser compilado.
-         * @type {Array}
-         */
         this.code = [];
-
-        /**
-         * Bytecode generado.
-         * @type {Array}
-         */
         this.bydeCode = [];
-
-        /**
-         * Instancia de FileWriter para escribir el bytecode.
-         * @type {FileWriter}
-         */
         this.fileWriter = new FileWriter();
-
-        /**
-         * Instancia de CommandExecutor para ejecutar comandos del sistema.
-         * @type {CommandExecutor}
-         */
         this.commandExecutor = new CommandExecutor();
+        this.variableCounter = 0; // Contador de variables
+        this.variables = {}; // Mapa de variables
+        this.functionCounter = 1; // Contador de funciones
+        this.currentParent = '$0'; // Contexto padre actual
     }
 
     /**
@@ -62,25 +42,96 @@ class C {
     convertCodeToByteCode(instruction) {
         console.log(chalk.yellow(`Convirtiendo `) + chalk.green(`${instruction}`) + chalk.yellow(` a bytecode...`));
 
-        switch (instruction) {
-            case 'print':
+        const matchAndProcess = (regex, process) => {
+            const match = instruction.match(regex);
+            if (match) {
+                process(match);
+                return true;
+            }
+            return false;
+        };
+
+        switch (true) {
+            case instruction === 'print':
                 this.bydeCode.push('PRN');
                 break;
 
-            case 'EOF':
+            case instruction === 'EOF':
                 this.bydeCode.push('HLT');
                 break;
 
-            case (instruction.startsWith('"') && instruction.endsWith('"')) ? instruction : null:
+            case (instruction.startsWith('"') && instruction.endsWith('"')):
                 this.bydeCode.push(`LDV ${instruction}`);
                 break;
 
-            case (!isNaN(Number(instruction))) ? instruction : null:
+            case (!isNaN(Number(instruction))):
                 this.bydeCode.push(`LDV ${instruction}`);
                 break;
 
-            case (instruction.startsWith('[') && instruction.endsWith(']')) ? instruction : null:
+            case (instruction.startsWith('[') && instruction.endsWith(']')):
                 this.bydeCode.push(`LDV ${instruction}`);
+                break;
+
+            case instruction === '*':
+                this.bydeCode.push('MUL');
+                break;
+
+            case instruction === '/':
+                this.bydeCode.push('DIV');
+                break;
+
+            case instruction === '+':
+                this.bydeCode.push('ADD');
+                break;
+
+            case instruction === '-':
+                this.bydeCode.push('SUB');
+                break;
+
+            case matchAndProcess(/^let\s+([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*/, (match) => {
+                const variableName = match[1];
+                if (!(variableName in this.variables)) {
+                    this.variables[variableName] = this.variableCounter++;
+                }
+                this.bydeCode.push(`BST 0 ${this.variables[variableName]}`);
+            }):
+                break;
+
+            case matchAndProcess(/^\([a-zA-Z_][a-zA-Z_0-9]*(,\s*[a-zA-Z_][a-zA-Z_0-9]*)*\)\s*=>/, (match) => {
+                const functionSignature = match[0];
+                const args = functionSignature.slice(1, -3).split(',').map(arg => arg.trim());
+                const argCount = args.length;
+                const functionId = `$${this.functionCounter++}`;
+                const parentContext = this.currentParent;
+
+                // Generar la etiqueta de inicio de la función
+                let functionStart = `$FUN ${functionId}`;
+                if (argCount > 0) {
+                    functionStart += ` ARGS:${argCount}`;
+                }
+                functionStart += ` PARENT:${parentContext}`;
+                this.bydeCode.push(functionStart);
+
+                // Actualizar el contexto padre actual
+                this.currentParent = functionId;
+
+                // Aquí se debe agregar la lógica del cuerpo de la función
+
+                // Generar la etiqueta de fin de la función
+                const functionEnd = `$END ${functionId}`;
+                this.bydeCode.push(functionEnd);
+
+                // Restaurar el contexto padre
+                this.currentParent = parentContext;
+            }):
+                break;
+
+            case matchAndProcess(/^[a-zA-Z_][a-zA-Z_0-9]*$/, (match) => {
+                const variableName = match[0];
+                if (variableName in this.variables) {
+                    this.bydeCode.push(`BLD 0 ${this.variables[variableName]}`);
+                }
+            }):
                 break;
 
             // Agregar más casos aquí para futuras instrucciones

@@ -28,6 +28,7 @@ export function analizarArchivoBies(filePath, logger) {
 
         parser.buildParseTrees = true; // Habilita la construcción de árboles de análisis
         const tree = parser.program(); // Inicia el análisis sintáctico
+        console.log(chalk.cyan(tree.toStringTree(parser.ruleNames))); // Imprime el árbol de análisis
 
         const visitor = new Visitor(logger); // Crea una instancia del visitor
         visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones

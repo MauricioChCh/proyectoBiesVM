@@ -1,68 +1,13 @@
-// Visitor.js
 import chalk from 'chalk';
 import biesCVisitor from '../output/biesCVisitor.js';
-import biesCParser from '../output/biesCParser.js';
 import C from './Compiler/C.js';
-import VisitStrategy from './VisitStrategy.js';
 
-/**
- * Clase que representa el visitante del AST.
- */
 export class Visitor extends biesCVisitor {
-    /**
-     * Crea una instancia de Visitor.
-     * @param {Object} [logger={ log: () => {} }] - Objeto Logger para registrar mensajes.
-     */
     constructor(logger = { log: () => { } }) {
         super();
         this.logger = logger;
-        this.ruleNames = biesCParser.ruleNames;
         this.code = [];
         this.compiler = new C(logger);
-    }
-
-    /**
-     * Visita un nodo del AST utilizando la estrategia adecuada.
-     * @param {Object} ctx - El contexto del nodo.
-     * @param {string} nodeType - El tipo de nodo.
-     * @returns {void}
-     */
-    visitNode(ctx, nodeType) {
-        const strategy = VisitStrategy.getStrategy(nodeType);
-        if (strategy.rightFirst) {
-            this.visitRightFirst(strategy.getVisitOrder(ctx));
-        } else {
-            this.visitPostOrder(ctx);
-        }
-    }
-
-    /**
-     * Visita los nodos en el orden derecho -> izquierdo -> raíz.
-     * @param {Object} orderFns - Funciones que definen el orden de visita.
-     * @returns {void}
-     */
-    visitRightFirst(orderFns) {
-        ['right', 'left', 'root'].forEach(order => this.visitAndPush(orderFns[order]()));
-    }
-
-    /**
-     * Visita y agrega el valor al código si no es nulo.
-     * @param {string} value - El valor a agregar.
-     * @returns {void}
-     */
-    visitAndPush(value) {
-        if (value) this.code.push(value);
-    }
-
-    /**
-     * Visita los nodos en post-order (izquierdo -> derecho -> raíz).
-     * @param {Object} ctx - El contexto del nodo.
-     * @returns {void}
-     */
-    visitPostOrder(ctx) {
-        if (ctx.children) {
-            ctx.children.forEach(child => child.accept && child.accept(this));
-        }
     }
 
     /**
@@ -71,78 +16,160 @@ export class Visitor extends biesCVisitor {
      * @returns {C} - El compilador.
      */
     visitProgram(ctx) {
-        this.logAndPush('Visitando el programa', 'program');
-        this.printAST(ctx);
-        this.visitPostOrder(ctx);
-        this.code.push('EOF');
-        this.sendCode();
+        console.log(chalk.red('Nodo visitado: program'));
+        this.visitChildren(ctx);
+        this.sendCodeToCompiler();
         return this.compiler;
     }
 
-    /**
-     * Visita el nodo de una declaración.
-     * @param {Object} ctx - El contexto del nodo.
-     * @returns {void}
-     */
     visitStatement(ctx) {
-        this.logAndPush('Visitando una declaración', 'statement');
-        this.visitPostOrder(ctx);
+        console.log(chalk.red('Nodo visitado: statement'));
+        this.visitChildren(ctx);
+        return null;
     }
 
-    /**
-     * Visita el nodo de una instrucción de impresión.
-     * @param {Object} ctx - El contexto del nodo.
-     * @returns {void}
-     */
-    visitPrintInstr(ctx) {
-        this.logger.log(chalk.cyanBright('Visitando printInstr'));
-        this.visitNode(ctx, 'printInstr');
-    }
-
-    /**
-     * Visita el nodo de una nueva línea.
-     * @returns {void}
-     */
-    visitNL() {
-        this.logAndPush('Visitando nueva línea', '\\n');
-    }
-
-    /**
-     * Registra un mensaje y agrega un valor al código.
-     * @param {string} logMessage - El mensaje a registrar.
-     * @param {string} codeValue - El valor a agregar al código.
-     * @returns {void}
-     */
-    logAndPush(logMessage, codeValue) {
-        this.logger.log(chalk.cyanBright(logMessage));
-        this.code.push(codeValue);
-    }
-
-    /**
-     * Imprime el AST.
-     * @param {Object} ast - El AST a imprimir.
-     * @returns {void}
-     */
-    printAST(ast) {
-        console.log(chalk.cyan('\t\t\tAST generado:'));
-        console.log(chalk.cyan(this.getTreeString(ast)));
-    }
-
-    /**
-     * Obtiene la representación en cadena del AST.
-     * @param {Object} ast - El AST.
-     * @returns {string} - La representación en cadena del AST.
-     */
-    getTreeString(ast) {
-        return ast.toStringTree(this.ruleNames, this);
+    visitExpr(ctx) {
+        console.log(chalk.red('Nodo visitado: expr'));
+        this.visitChildren(ctx);
+        return null;
     }
 
     /**
      * Envía el código al compilador.
-     * @returns {void}
      */
-    sendCode() {
+    sendCodeToCompiler() {
         this.compiler.run(this.code);
+    }
+
+    //--------------------------------------------- Funciones de visitas a los nodos ---------------------------------------------
+
+    /**
+     * Procesa un nodo de operación aritmética.
+     * @param {Object} ctx - El contexto del nodo.
+     * @param {string} operator - El operador aritmético.
+     */
+
+    // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
+
+    processArithmeticOperation(ctx, operator) {
+        this.visitChildren(ctx);
+        console.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
+        this.code.push(operator);
+    }
+
+    // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
+
+    visitMulLabel(ctx) {
+        this.processArithmeticOperation(ctx, '*');
+        return null;
+    }
+
+    visitDivLabel(ctx) {
+        this.processArithmeticOperation(ctx, '/');
+        return null;
+    }
+
+    visitAddLabel(ctx) {
+        this.processArithmeticOperation(ctx, '+');
+        return null;
+    }
+
+    visitSubLabel(ctx) {
+        this.processArithmeticOperation(ctx, '-');
+        return null;
+    }
+
+    //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
+
+    visitPrimaryData_Label(ctx) {
+        const primaryData = ctx.getText();
+        console.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
+        this.code.push(primaryData);
+        return null;
+    }
+
+    visitNumber_Label(ctx) {
+        const number = ctx.getText();
+        console.log(chalk.green('Nodo visitado: number ->'), number);
+        this.code.push(number);
+        return null;
+    }
+
+    visitString(ctx) {
+        const string = ctx.getText();
+        console.log(chalk.green('Nodo visitado: string ->'), string);
+        this.code.push(string);
+        return null;
+    }
+
+    visitArray(ctx) {
+        const array = ctx.getText();
+        console.log(chalk.green('Nodo visitado: array ->'), array);
+        this.code.push(array);
+        return null;
+    }
+
+    visitIdentifierData_Label(ctx) {
+        const id = ctx.getText();
+        console.log(chalk.green('Nodo visitado: id ->'), id);
+        this.code.push(id);
+        return null;
+    }
+
+    // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
+
+    // --------------------------------------------- Visitas a nodos de 'simple let' ---------------------------------------------
+
+    visitsimpleLetInstr(ctx) {
+        const id = ctx.id().getText();
+        const instruction = `let ${id} =`;  // Corregido: Template literal debe estar entre comillas invertidas
+
+        // Verificar si la expresión no es nula antes de visitarla
+        const expr = ctx.expr();
+        if (expr) {
+            this.visit(expr);
+        }
+
+        if (!this.code.includes(instruction)) {
+            console.log(chalk.green('Nodo visitado: simpleLetInstr'), instruction);
+            this.code.push(instruction);
+        }
+        return null;
+    }
+
+    // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
+
+    visitAnonymousLetFunction(ctx) {
+        console.log(chalk.red('Nodo visitado: anonymousLetFunction'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitLambdaWithParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: LambdaWithParams'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitPrintInstr(ctx) {
+        let printArgument = '';
+
+        if (ctx.primarydata()) {
+            const primaryData = ctx.primarydata();
+            printArgument = primaryData.getText();
+        } else if (ctx.expr()) {
+            printArgument = ctx.expr().getText();
+            this.visit(ctx.expr());
+        }
+
+        console.log(chalk.green('Nodo visitado: printInstr'), `print(${printArgument})`);
+
+        if (!ctx.expr()) {
+            this.code.push(printArgument);
+        }
+
+        this.code.push('print');
+        return null;
     }
 }
 

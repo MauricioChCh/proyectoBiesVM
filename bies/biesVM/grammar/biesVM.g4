@@ -56,7 +56,7 @@ logicalInst
 
 controlInstr
     : 'RET'        // Retorno
-    | 'HLT'        // Parada
+    | 'HLT' ES?       // Parada
     | 'BR' ES? NUMBER // Bifurcación incondicional con desplazamiento relativo
     | 'BT' ES? NUMBER // Bifurcación condicional sobre verdadero con desplazamiento relativo
     | 'BF' ES? NUMBER // Bifurcación condicional sobre falso con desplazamiento relativo
