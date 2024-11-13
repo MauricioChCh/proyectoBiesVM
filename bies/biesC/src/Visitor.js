@@ -8,6 +8,8 @@ export class Visitor extends biesCVisitor {
         this.logger = logger;
         this.code = [];
         this.compiler = new C(logger);
+        this.functionCounter = 1; // Contador de funciones
+        this.functionMap = {}; // Mapa de funciones
     }
 
     /**
@@ -18,7 +20,7 @@ export class Visitor extends biesCVisitor {
     visitProgram(ctx) {
         console.log(chalk.red('Nodo visitado: program'));
         this.visitChildren(ctx);
-        this.sendCodeToCompiler();
+        //this.sendCodeToCompiler();
         return this.compiler;
     }
 
@@ -59,22 +61,22 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
-    visitMulLabel(ctx) {
+    visitMul_Label(ctx) {
         this.processArithmeticOperation(ctx, '*');
         return null;
     }
 
-    visitDivLabel(ctx) {
+    visitDiv_Label(ctx) {
         this.processArithmeticOperation(ctx, '/');
         return null;
     }
 
-    visitAddLabel(ctx) {
+    visitAdd_Label(ctx) {
         this.processArithmeticOperation(ctx, '+');
         return null;
     }
 
-    visitSubLabel(ctx) {
+    visitSub_Label(ctx) {
         this.processArithmeticOperation(ctx, '-');
         return null;
     }
@@ -145,8 +147,66 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    visitIdentifier(ctx) {
+        const id = ctx.getText();
+        console.log(chalk.green('Nodo visitado: id'), id);
+
+        // Verificar si el identificador es una función y asignar el contexto de invocación
+        if (this.functionMap[id]) {
+            const functionData = this.functionMap[id];
+            const parentContext = this.compiler.currentParent;
+
+            // Registrar el contexto en el que ocurre
+            functionData.invokedIn = parentContext;
+
+            console.log(chalk.green('Invocación de función:'), functionData.id);
+            console.log(chalk.green('Contexto de invocación:'), parentContext);
+        }
+
+        this.code.push(id);
+        return null;
+    }
+
     visitLambdaWithParams_Label(ctx) {
         console.log(chalk.red('Nodo visitado: LambdaWithParams'));
+
+        const functionName = ctx.id(0).getText(); // Detectar el nombre de la función
+        const paramCount = ctx.id().length - 1; // Calcular la cantidad de parámetros que tiene la función lambda
+        const parentContext = this.compiler.currentParent || '$0'; // Obtener el contexto padre actual o asignar $0 si no hay ninguno
+        const functionId = `$${this.functionCounter++}`; // Asignar un nuevo identificador para la función
+
+        let functionCallName = null; // Inicializar la variable functionCallName
+
+        // Verificar si hay una llamada a función dentro del cuerpo de la lambda
+        if (ctx.expr()) {
+            const exprText = ctx.expr().getText();
+            functionCallName = exprText.includes('(') ? exprText.split('(')[0].trim() : null;
+        }
+
+        // Guardar la función en el mapa de funciones con su contexto padre y nombre original
+        this.functionMap[functionName] = { originalName: functionName, newId: functionId, args: paramCount, parent: parentContext, invoking: functionCallName || null };
+
+        // Imprimir el contenido de functionMap
+        console.log(this.functionMap);
+
+        // Imprimir la información en el formato solicitado
+        console.log(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+
+        // Actualizar el contexto padre del compilador para la nueva función
+        this.compiler.currentParent = functionId;
+
+        // Visitar el cuerpo de la función
+        this.visitChildren(ctx);
+
+        // Restaurar el contexto padre del compilador después de visitar la función
+        this.compiler.currentParent = parentContext;
+
+        return null;
+    }
+
+    visitFunctionCallExpr_Label(ctx) {
+        const funcName = ctx.getText();
+        console.log(chalk.red('Nodo visitado: FunctionCall -> '), funcName);
         this.visitChildren(ctx);
         return null;
     }

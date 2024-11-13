@@ -51,7 +51,7 @@ expr
     ;
 
 functionCall
-    : ID '(' (expr (',' expr)*)? ')'
+    : id '(' (expr (',' expr)*)? ')'
     ;
 
 number
@@ -67,7 +67,7 @@ array
     ;
 
 id
-    : ID
+    : ID                                    
     ;
 
 // Definición de tokens

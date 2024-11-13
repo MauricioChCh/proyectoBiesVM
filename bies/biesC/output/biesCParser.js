@@ -59,7 +59,7 @@ const serializedATN = [4,1,29,220,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,
 0,163,133,1,0,0,0,163,136,1,0,0,0,163,139,1,0,0,0,163,142,1,0,0,0,163,145,
 1,0,0,0,163,148,1,0,0,0,163,151,1,0,0,0,163,154,1,0,0,0,163,157,1,0,0,0,
 163,160,1,0,0,0,164,167,1,0,0,0,165,163,1,0,0,0,165,166,1,0,0,0,166,13,1,
-0,0,0,167,165,1,0,0,0,168,169,5,13,0,0,169,178,5,1,0,0,170,175,3,12,6,0,
+0,0,0,167,165,1,0,0,0,168,169,3,22,11,0,169,178,5,1,0,0,170,175,3,12,6,0,
 171,172,5,7,0,0,172,174,3,12,6,0,173,171,1,0,0,0,174,177,1,0,0,0,175,173,
 1,0,0,0,175,176,1,0,0,0,176,179,1,0,0,0,177,175,1,0,0,0,178,170,1,0,0,0,
 178,179,1,0,0,0,179,180,1,0,0,0,180,181,5,2,0,0,181,15,1,0,0,0,182,183,5,
@@ -790,7 +790,7 @@ export default class biesCParser extends antlr4.Parser {
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 168;
-	        this.match(biesCParser.ID);
+	        this.id();
 	        this.state = 169;
 	        this.match(biesCParser.T__0);
 	        this.state = 178;
@@ -2018,8 +2018,8 @@ class FunctionCallContext extends antlr4.ParserRuleContext {
         this.ruleIndex = biesCParser.RULE_functionCall;
     }
 
-	ID() {
-	    return this.getToken(biesCParser.ID, 0);
+	id() {
+	    return this.getTypedRuleContext(IdContext,0);
 	};
 
 	expr = function(i) {
