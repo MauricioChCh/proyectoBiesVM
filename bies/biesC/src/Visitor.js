@@ -170,29 +170,43 @@ export class Visitor extends biesCVisitor {
     visitLambdaWithParams_Label(ctx) {
         console.log(chalk.red('Nodo visitado: LambdaWithParams'));
 
-        const functionName = ctx.id(0).getText(); // Detectar el nombre de la función
-        const paramCount = ctx.id().length - 1; // Calcular la cantidad de parámetros que tiene la función lambda
-        const parentContext = this.compiler.currentParent || '$0'; // Obtener el contexto padre actual o asignar $0 si no hay ninguno
-        const functionId = `$${this.functionCounter++}`; // Asignar un nuevo identificador para la función
+        const functionName = ctx.id(0).getText(); // Nombre de la función
+        const paramCount = ctx.id().length - 1; // Cantidad de parámetros
+        let parentContext = '$0'; // Contexto padre por defecto
+        const functionId = `$${this.functionCounter++}`; // Identificador único de la función
 
-        let functionCallName = null; // Inicializar la variable functionCallName
+        let functionCallName = null; // Variable para la llamada a función
 
-        // Verificar si hay una llamada a función dentro del cuerpo de la lambda
+        // Detectar si hay una llamada a función dentro del cuerpo de la lambda
         if (ctx.expr()) {
             const exprText = ctx.expr().getText();
             functionCallName = exprText.includes('(') ? exprText.split('(')[0].trim() : null;
         }
 
-        // Guardar la función en el mapa de funciones con su contexto padre y nombre original
-        this.functionMap[functionName] = { originalName: functionName, newId: functionId, args: paramCount, parent: parentContext, invoking: functionCallName || null };
+        // Buscar si `functionName` es invocado en otra función
+        for (const key in this.functionMap) {
+            if (this.functionMap[key].invoking === functionName) {
+                parentContext = this.functionMap[key].newId;
+                break;
+            }
+        }
+
+        // Guardar la función en el mapa de funciones con el contexto padre correcto
+        this.functionMap[functionName] = {
+            originalName: functionName,
+            newId: functionId,
+            args: paramCount,
+            parent: parentContext,
+            invoking: functionCallName || null
+        };
 
         // Imprimir el contenido de functionMap
-        console.log(this.functionMap);
+        //console.log(this.functionMap);
 
-        // Imprimir la información en el formato solicitado
+        // Imprimir la información de la función en el formato deseado
         console.log(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
 
-        // Actualizar el contexto padre del compilador para la nueva función
+        // Actualizar el contexto padre actual
         this.compiler.currentParent = functionId;
 
         // Visitar el cuerpo de la función
@@ -203,6 +217,9 @@ export class Visitor extends biesCVisitor {
 
         return null;
     }
+
+
+
 
     visitFunctionCallExpr_Label(ctx) {
         const funcName = ctx.getText();
