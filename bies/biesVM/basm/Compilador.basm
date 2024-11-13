@@ -1,10 +1,14 @@
-LDV 12
 LDV 654
-LDV "Esto es un String"
-LDV ["Array"]
-LDV [[21],["Array Anidado"],[3,4,5,6,7,8,9,10]]
-PRN
-PRN
-PRN
-PRN
+LDV 1
+ADD
+LDV 11
+LDV 2
+MUL
+LDV 9
+DIV
+ADD
+LDV 2
+LDV 5
+ADD
+SUB
 PRN
