@@ -1,3 +1,5 @@
+import chalk from "chalk";
+
 /**
  * Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.
  * Permite activar diferentes niveles de detalle en los logs a través de las propiedades `isVerbose`, `isDebug`, `isOutfile` e `isErrfile`.
@@ -43,6 +45,14 @@ export class Logger {
         this.isDebug = isDebug;
         this.isOutfile = isOutfile;
         this.isErrfile = isErrfile;
+        
+        if(isOutfile){
+            console.log(chalk.red("isOutfile"));
+        }
+        if(isErrfile){
+            console.log(chalk.red("isErrfile"));
+        }
+
     }
 
     /**
@@ -54,10 +64,9 @@ export class Logger {
         if (this.isVerbose || this.isDebug) {
             console.log(...args);
         }
-        // Aquí puedes añadir lógica para registrar en un archivo si `isOutfile` está activado
+        
         if (this.isOutfile) {
-            // Lógica para escribir en un archivo de salida
-            // Ejemplo: fs.appendFileSync('output.log', args.join(' ') + '\n');
+            
         }
     }
 
@@ -70,10 +79,27 @@ export class Logger {
         if (this.isDebug) {
             console.debug(...args); // Usamos `console.debug` para mensajes más detallados
         }
-        // Aquí puedes añadir lógica para registrar en un archivo de errores si `isErrfile` está activado
+       
         if (this.isErrfile) {
-            // Lógica para escribir en un archivo de errores
-            // Ejemplo: fs.appendFileSync('error.log', args.join(' ') + '\n');
+            
         }
     }
+
+    getVerbose() {
+        return this.isVerbose;
+    }
+
+    getDebug() {
+        return this.isDebug;
+    }
+
+    getOutfile() {
+        return this.isOutfile;
+    }
+
+    getErrfile() {
+        return this.isErrfile;
+    }
+
+    
 }
