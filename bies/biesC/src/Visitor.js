@@ -90,7 +90,11 @@ export class Visitor extends biesCVisitor {
     visitPrimaryData_Label(ctx) {
         const primaryData = ctx.getText();
         console.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
-        this.code.push('LDV ' + primaryData);
+
+        // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
+        const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
+        this.code.push(bytecode);
+
         return null;
     }
 
@@ -136,14 +140,10 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.red('Nodo visitado: simpleLetInstr'));
         const id = ctx.id().getText();
 
-        console.log(this.variables);
-
         // Verificar si la variable ya está en el mapa de variables
         if (!(id in this.variables)) {
-            this.variables[id] = {byteload: 'BLD 0 ' + this.variableCounter};
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
         }
-
-        console.log(this.variables);
 
         // Visitar los hijos del nodo para procesar la expresión
         this.visitChildren(ctx);
@@ -161,7 +161,7 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
         return null;
     }
-    
+
     visitLambda_Label(ctx, paramCount = 0) {
         const functionType = paramCount === 0 ? 'LambdaNoParams' : 'LambdaWithParams';
         console.log(chalk.red(`Nodo visitado: ${functionType}`));
@@ -232,13 +232,24 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
-    visitFunctionCallNoParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: functionCallNoParams'));
+    visitFunctionCallWithParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: functionCallWithParams'));
+
+        this.visitChildren(ctx);
 
         this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
         this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
-        //this.mainCode.push('PRN');
-        this.mainCode.push('HLT');
+
+        return null;
+    }
+
+    visitFunctionCallNoParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: functionCallNoParams'));
+
+        this.visitChildren(ctx);
+
+        this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
 
         return null;
     }
@@ -246,18 +257,9 @@ export class Visitor extends biesCVisitor {
     generateMain() {
         this.code.push('$FUN $0 ARGS:0 PARENT:$0');
         this.code.push(...this.mainCode);
+        this.code.push('HLT');
         this.code.push('$END $0');
         this.code.push('INI $0');
-    }
-
-    visitFunctionCallWithParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: functionCallWithParams'));
-
-        this.visitChildren(ctx);
-
-        //console.log(this.variables);
-
-        return null;
     }
 
     visitPrintInstr_Label(ctx) {
