@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import biesVMVisitor from '../output/biesVMVisitor.js';
 import VM from './Vm.js';
-
+import { Logger } from './Logger.js';
 /**
  * Clase que implementa un visitante para el lenguaje Bies.
  * Extiende la funcionalidad de `biesLanguageVisitor` para recorrer un árbol de sintaxis y
@@ -12,19 +12,20 @@ export class Visitor extends biesVMVisitor {
      * Crea una instancia de la clase Visitor.
      * @param {Object} [logger={ log: () => {} }] - Objeto que define el comportamiento del logger. Por defecto, usa un logger vacío.
      */
-    constructor(logger = { log: () => { } }) {
+    constructor() {
         super();
-        /**
-         * Máquina virtual utilizada para ejecutar las instrucciones generadas.
-         * @type {VM}
-         */
-        this.vm = new VM(logger);
-
         /**
          * Logger para registrar las operaciones del visitante.
          * @type {Object}
          */
-        this.logger = logger;
+        this.logger = new Logger();
+        /**
+         * Máquina virtual utilizada para ejecutar las instrucciones generadas.
+         * @type {VM}
+         */
+        this.vm = new VM();
+
+        
 
         /**
          * Código acumulado durante el recorrido del árbol de sintaxis.

@@ -1,13 +1,14 @@
 import chalk from 'chalk';
 import biesCVisitor from '../output/biesCVisitor.js';
 import C from './Compiler/C.js';
+import { Logger } from './Logger.js';
 
 export class Visitor extends biesCVisitor {
-    constructor(logger = { log: () => { } }) {
+    constructor() {
         super();
-        this.logger = logger;
+        this.logger = new Logger();
         this.code = [];
-        this.compiler = new C(logger);
+        this.compiler = new C();
         this.functionCounter = 1; // Contador de funciones
         this.functionMap = {}; // Mapa de funciones
     }
@@ -20,7 +21,7 @@ export class Visitor extends biesCVisitor {
     visitProgram(ctx) {
         console.log(chalk.red('Nodo visitado: program'));
         this.visitChildren(ctx);
-        //this.sendCodeToCompiler();
+        this.sendCodeToCompiler();
         return this.compiler;
     }
 

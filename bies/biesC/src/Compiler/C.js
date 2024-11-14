@@ -1,17 +1,13 @@
 import chalk from 'chalk';
 import FileWriter from './FileWriter.js';
 import CommandExecutor from './CommandExecutor.js';
-
+import { Logger } from '../Logger.js';
 /**
  * Clase que representa el compilador (C).
  */
 class C {
-    /**
-     * Crea una instancia de C.
-     * @param {Object} [logger={ log: () => {} }] - Objeto Logger para registrar mensajes.
-     */
-    constructor(logger = { log: () => { } }) {
-        this.logger = logger;
+  
+    constructor() {
         this.code = [];
         this.bydeCode = [];
         this.fileWriter = new FileWriter();
@@ -20,6 +16,8 @@ class C {
         this.variables = {}; // Mapa de variables
         this.functionCounter = 1; // Contador de funciones
         this.currentParent = '$0'; // Contexto padre actual
+        this.logger = new Logger();
+
     }
 
     /**

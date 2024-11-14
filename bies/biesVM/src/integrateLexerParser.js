@@ -2,6 +2,7 @@ import antlr4 from 'antlr4';
 import biesVMLexer from '../output/biesVMLexer.js';
 import biesVMParser from '../output/biesVMParser.js';
 import Visitor from './Visitor.js';
+import { Logger } from './Logger.js';
 import fs from 'fs';
 import chalk from 'chalk';
 
@@ -13,7 +14,8 @@ import chalk from 'chalk';
  * @param {Logger} logger - Un objeto Logger para registrar mensajes y errores.
  * @returns {boolean} Devuelve true si el análisis fue exitoso, false en caso contrario.
  */
-export function analizarArchivoBasm(filePath, logger) {
+export function analizarArchivoBasm(filePath) {
+    const logger = new Logger();
     try {
         // Lee el contenido del archivo especificado en `filePath`
         const input = fs.readFileSync(filePath, { encoding: 'utf-8' });
@@ -33,7 +35,7 @@ export function analizarArchivoBasm(filePath, logger) {
         logger.debug(chalk.cyanBright('Árbol de análisis sintáctico:'));
         logger.debug(tree.toStringTree(null, parser)); // Muestra el árbol de análisis
 
-        const visitor = new Visitor(logger); // Crea una instancia del visitor
+        const visitor = new Visitor(); // Crea una instancia del visitor
         visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones
         return true; // Indica que el análisis fue exitoso
     } catch (error) {

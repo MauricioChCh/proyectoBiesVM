@@ -1,4 +1,4 @@
-// Generated from c:/Users/Eddy/Desktop/Proyecto Paradigmas de la Programación/bies/biesC/grammar/biesC.g4 by ANTLR 4.13.1
+// Generated from /home/mauricio/Documents/Obsidian/2024/Ciclo2/Paradigmas/Evaluaciones/Proyectos/Proyecto 2/proyectoBiesVM/bies/biesC/grammar/biesC.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
