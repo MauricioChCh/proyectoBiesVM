@@ -119,7 +119,6 @@ export class Visitor extends biesCVisitor {
         const id = ctx.getText();
         console.log(chalk.green('Nodo visitado: id ->'), id);
 
-
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.code.push(`BLD 0 ${this.variables[id]}`); // Generar el bytecode BLD en lugar de BST
         } else {
@@ -137,16 +136,20 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.red('Nodo visitado: simpleLetInstr'));
         const id = ctx.id().getText();
 
+        console.log(this.variables);
+
         // Verificar si la variable ya está en el mapa de variables
         if (!(id in this.variables)) {
-            this.variables[id] = this.variableCounter++;
+            this.variables[id] = {byteload: 'BLD 0 ' + this.variableCounter};
         }
+
+        console.log(this.variables);
 
         // Visitar los hijos del nodo para procesar la expresión
         this.visitChildren(ctx);
 
         // Generar el bytecode para asignar el valor a la variable
-        this.code.push(`BST 0 ${this.variables[id]}`);
+        this.code.push(`BST 0 ${this.variableCounter++}`);
 
         return null;
     }
