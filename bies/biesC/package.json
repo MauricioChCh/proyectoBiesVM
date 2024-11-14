@@ -10,7 +10,7 @@
         "biesC": "./src/biesC.js"
     },
     "scripts": {
-        "prebuild": "java -jar lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesLanguage.g4 -no-listener -visitor -o output",
+        "prebuild": "java -jar lib/antlr-4.13.1-complete.jar -Dlanguage=JavaScript grammar/biesC.g4 -no-listener -visitor -o output",
         "build": "npm run prebuild",
         "prestart": "npm run build",
         "start": "node src/biesC.js",
