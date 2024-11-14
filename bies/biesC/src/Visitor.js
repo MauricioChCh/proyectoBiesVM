@@ -263,11 +263,7 @@ export class Visitor extends biesCVisitor {
     }
 
     generateMain() {
-        this.code.push('$FUN $0 ARGS:0 PARENT:$0');
         this.code.push(...this.mainCode);
-        this.code.push('HLT');
-        this.code.push('$END $0');
-        this.code.push('INI $0');
     }
 
     visitPrintInstr_Label(ctx) {
