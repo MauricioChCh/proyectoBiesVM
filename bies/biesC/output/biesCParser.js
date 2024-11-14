@@ -3,78 +3,79 @@
 import antlr4 from 'antlr4';
 import biesCVisitor from './biesCVisitor.js';
 
-const serializedATN = [4,1,29,220,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,
+const serializedATN = [4,1,29,224,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,
 4,2,5,7,5,2,6,7,6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,1,0,1,0,3,
-0,27,8,0,5,0,29,8,0,10,0,12,0,32,9,0,1,0,1,0,1,1,1,1,1,1,3,1,39,8,1,1,2,
-1,2,1,2,1,2,3,2,45,8,2,1,2,1,2,1,3,1,3,3,3,51,8,3,1,3,1,3,3,3,55,8,3,1,3,
-1,3,3,3,59,8,3,1,3,1,3,1,4,1,4,3,4,65,8,4,1,4,1,4,3,4,69,8,4,1,4,1,4,3,4,
-73,8,4,1,4,1,4,1,4,1,4,3,4,79,8,4,1,4,1,4,3,4,83,8,4,1,4,1,4,3,4,87,8,4,
-1,4,1,4,3,4,91,8,4,1,4,1,4,1,4,1,4,5,4,97,8,4,10,4,12,4,100,9,4,3,4,102,
-8,4,1,4,1,4,1,4,1,4,3,4,108,8,4,3,4,110,8,4,1,5,1,5,1,5,1,5,3,5,116,8,5,
-1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,3,6,126,8,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,
+0,27,8,0,5,0,29,8,0,10,0,12,0,32,9,0,1,0,1,0,1,1,1,1,1,1,1,1,3,1,40,8,1,
+1,2,1,2,1,2,1,2,3,2,46,8,2,1,2,1,2,1,3,1,3,3,3,52,8,3,1,3,1,3,3,3,56,8,3,
+1,3,1,3,3,3,60,8,3,1,3,1,3,1,4,1,4,3,4,66,8,4,1,4,1,4,3,4,70,8,4,1,4,1,4,
+3,4,74,8,4,1,4,1,4,1,4,1,4,3,4,80,8,4,1,4,1,4,3,4,84,8,4,1,4,1,4,3,4,88,
+8,4,1,4,1,4,3,4,92,8,4,1,4,1,4,1,4,1,4,5,4,98,8,4,10,4,12,4,101,9,4,3,4,
+103,8,4,1,4,1,4,1,4,1,4,3,4,109,8,4,3,4,111,8,4,1,5,1,5,1,5,1,5,3,5,117,
+8,5,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,3,6,127,8,6,1,6,1,6,1,6,1,6,1,6,1,6,
 1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,
-1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,5,6,164,8,6,10,6,12,6,167,9,
-6,1,7,1,7,1,7,1,7,1,7,5,7,174,8,7,10,7,12,7,177,9,7,3,7,179,8,7,1,7,1,7,
-1,8,1,8,1,9,1,9,1,10,1,10,3,10,189,8,10,1,10,1,10,3,10,193,8,10,1,10,3,10,
-196,8,10,1,10,1,10,3,10,200,8,10,1,10,1,10,3,10,204,8,10,1,10,3,10,207,8,
-10,5,10,209,8,10,10,10,12,10,212,9,10,3,10,214,8,10,1,10,1,10,1,11,1,11,
-1,11,0,1,12,12,0,2,4,6,8,10,12,14,16,18,20,22,0,0,254,0,30,1,0,0,0,2,38,
-1,0,0,0,4,40,1,0,0,0,6,48,1,0,0,0,8,109,1,0,0,0,10,115,1,0,0,0,12,125,1,
-0,0,0,14,168,1,0,0,0,16,182,1,0,0,0,18,184,1,0,0,0,20,186,1,0,0,0,22,217,
-1,0,0,0,24,26,3,2,1,0,25,27,5,26,0,0,26,25,1,0,0,0,26,27,1,0,0,0,27,29,1,
-0,0,0,28,24,1,0,0,0,29,32,1,0,0,0,30,28,1,0,0,0,30,31,1,0,0,0,31,33,1,0,
-0,0,32,30,1,0,0,0,33,34,5,0,0,1,34,1,1,0,0,0,35,39,3,4,2,0,36,39,3,6,3,0,
-37,39,3,8,4,0,38,35,1,0,0,0,38,36,1,0,0,0,38,37,1,0,0,0,39,3,1,0,0,0,40,
-41,5,12,0,0,41,44,5,1,0,0,42,45,3,10,5,0,43,45,3,12,6,0,44,42,1,0,0,0,44,
-43,1,0,0,0,45,46,1,0,0,0,46,47,5,2,0,0,47,5,1,0,0,0,48,50,5,3,0,0,49,51,
-5,27,0,0,50,49,1,0,0,0,50,51,1,0,0,0,51,52,1,0,0,0,52,54,3,22,11,0,53,55,
-5,27,0,0,54,53,1,0,0,0,54,55,1,0,0,0,55,56,1,0,0,0,56,58,5,4,0,0,57,59,5,
-27,0,0,58,57,1,0,0,0,58,59,1,0,0,0,59,60,1,0,0,0,60,61,3,12,6,0,61,7,1,0,
-0,0,62,64,5,3,0,0,63,65,5,27,0,0,64,63,1,0,0,0,64,65,1,0,0,0,65,66,1,0,0,
-0,66,68,3,22,11,0,67,69,5,27,0,0,68,67,1,0,0,0,68,69,1,0,0,0,69,70,1,0,0,
-0,70,72,5,4,0,0,71,73,5,27,0,0,72,71,1,0,0,0,72,73,1,0,0,0,73,74,1,0,0,0,
-74,75,5,5,0,0,75,78,5,6,0,0,76,79,3,2,1,0,77,79,3,12,6,0,78,76,1,0,0,0,78,
-77,1,0,0,0,79,110,1,0,0,0,80,82,5,3,0,0,81,83,5,27,0,0,82,81,1,0,0,0,82,
-83,1,0,0,0,83,84,1,0,0,0,84,86,3,22,11,0,85,87,5,27,0,0,86,85,1,0,0,0,86,
-87,1,0,0,0,87,88,1,0,0,0,88,90,5,4,0,0,89,91,5,27,0,0,90,89,1,0,0,0,90,91,
-1,0,0,0,91,92,1,0,0,0,92,101,5,1,0,0,93,98,3,22,11,0,94,95,5,7,0,0,95,97,
-3,22,11,0,96,94,1,0,0,0,97,100,1,0,0,0,98,96,1,0,0,0,98,99,1,0,0,0,99,102,
-1,0,0,0,100,98,1,0,0,0,101,93,1,0,0,0,101,102,1,0,0,0,102,103,1,0,0,0,103,
-104,5,2,0,0,104,107,5,6,0,0,105,108,3,2,1,0,106,108,3,12,6,0,107,105,1,0,
-0,0,107,106,1,0,0,0,108,110,1,0,0,0,109,62,1,0,0,0,109,80,1,0,0,0,110,9,
-1,0,0,0,111,116,3,16,8,0,112,116,3,18,9,0,113,116,3,20,10,0,114,116,3,22,
-11,0,115,111,1,0,0,0,115,112,1,0,0,0,115,113,1,0,0,0,115,114,1,0,0,0,116,
-11,1,0,0,0,117,118,6,6,-1,0,118,126,3,8,4,0,119,126,3,10,5,0,120,126,3,14,
-7,0,121,122,5,1,0,0,122,123,3,12,6,0,123,124,5,2,0,0,124,126,1,0,0,0,125,
-117,1,0,0,0,125,119,1,0,0,0,125,120,1,0,0,0,125,121,1,0,0,0,126,165,1,0,
-0,0,127,128,10,13,0,0,128,129,5,14,0,0,129,164,3,12,6,14,130,131,10,12,0,
-0,131,132,5,15,0,0,132,164,3,12,6,13,133,134,10,11,0,0,134,135,5,16,0,0,
-135,164,3,12,6,12,136,137,10,10,0,0,137,138,5,17,0,0,138,164,3,12,6,11,139,
-140,10,9,0,0,140,141,5,18,0,0,141,164,3,12,6,10,142,143,10,8,0,0,143,144,
-5,19,0,0,144,164,3,12,6,9,145,146,10,7,0,0,146,147,5,20,0,0,147,164,3,12,
-6,8,148,149,10,6,0,0,149,150,5,21,0,0,150,164,3,12,6,7,151,152,10,5,0,0,
-152,153,5,22,0,0,153,164,3,12,6,6,154,155,10,4,0,0,155,156,5,23,0,0,156,
-164,3,12,6,5,157,158,10,3,0,0,158,159,5,24,0,0,159,164,3,12,6,4,160,161,
-10,2,0,0,161,162,5,25,0,0,162,164,3,12,6,3,163,127,1,0,0,0,163,130,1,0,0,
-0,163,133,1,0,0,0,163,136,1,0,0,0,163,139,1,0,0,0,163,142,1,0,0,0,163,145,
-1,0,0,0,163,148,1,0,0,0,163,151,1,0,0,0,163,154,1,0,0,0,163,157,1,0,0,0,
-163,160,1,0,0,0,164,167,1,0,0,0,165,163,1,0,0,0,165,166,1,0,0,0,166,13,1,
-0,0,0,167,165,1,0,0,0,168,169,3,22,11,0,169,178,5,1,0,0,170,175,3,12,6,0,
-171,172,5,7,0,0,172,174,3,12,6,0,173,171,1,0,0,0,174,177,1,0,0,0,175,173,
-1,0,0,0,175,176,1,0,0,0,176,179,1,0,0,0,177,175,1,0,0,0,178,170,1,0,0,0,
-178,179,1,0,0,0,179,180,1,0,0,0,180,181,5,2,0,0,181,15,1,0,0,0,182,183,5,
-11,0,0,183,17,1,0,0,0,184,185,5,10,0,0,185,19,1,0,0,0,186,188,5,8,0,0,187,
-189,5,27,0,0,188,187,1,0,0,0,188,189,1,0,0,0,189,213,1,0,0,0,190,193,3,10,
-5,0,191,193,3,12,6,0,192,190,1,0,0,0,192,191,1,0,0,0,193,195,1,0,0,0,194,
-196,5,27,0,0,195,194,1,0,0,0,195,196,1,0,0,0,196,210,1,0,0,0,197,199,5,7,
-0,0,198,200,5,27,0,0,199,198,1,0,0,0,199,200,1,0,0,0,200,203,1,0,0,0,201,
-204,3,10,5,0,202,204,3,12,6,0,203,201,1,0,0,0,203,202,1,0,0,0,204,206,1,
-0,0,0,205,207,5,27,0,0,206,205,1,0,0,0,206,207,1,0,0,0,207,209,1,0,0,0,208,
-197,1,0,0,0,209,212,1,0,0,0,210,208,1,0,0,0,210,211,1,0,0,0,211,214,1,0,
-0,0,212,210,1,0,0,0,213,192,1,0,0,0,213,214,1,0,0,0,214,215,1,0,0,0,215,
-216,5,9,0,0,216,21,1,0,0,0,217,218,5,13,0,0,218,23,1,0,0,0,32,26,30,38,44,
-50,54,58,64,68,72,78,82,86,90,98,101,107,109,115,125,163,165,175,178,188,
-192,195,199,203,206,210,213];
+1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,1,6,5,6,165,8,6,10,6,12,6,168,
+9,6,1,7,1,7,1,7,1,7,1,7,1,7,1,7,1,7,5,7,178,8,7,10,7,12,7,181,9,7,1,7,1,
+7,3,7,185,8,7,1,8,1,8,1,9,1,9,1,10,1,10,3,10,193,8,10,1,10,1,10,3,10,197,
+8,10,1,10,3,10,200,8,10,1,10,1,10,3,10,204,8,10,1,10,1,10,3,10,208,8,10,
+1,10,3,10,211,8,10,5,10,213,8,10,10,10,12,10,216,9,10,3,10,218,8,10,1,10,
+1,10,1,11,1,11,1,11,0,1,12,12,0,2,4,6,8,10,12,14,16,18,20,22,0,0,259,0,30,
+1,0,0,0,2,39,1,0,0,0,4,41,1,0,0,0,6,49,1,0,0,0,8,110,1,0,0,0,10,116,1,0,
+0,0,12,126,1,0,0,0,14,184,1,0,0,0,16,186,1,0,0,0,18,188,1,0,0,0,20,190,1,
+0,0,0,22,221,1,0,0,0,24,26,3,2,1,0,25,27,5,26,0,0,26,25,1,0,0,0,26,27,1,
+0,0,0,27,29,1,0,0,0,28,24,1,0,0,0,29,32,1,0,0,0,30,28,1,0,0,0,30,31,1,0,
+0,0,31,33,1,0,0,0,32,30,1,0,0,0,33,34,5,0,0,1,34,1,1,0,0,0,35,40,3,4,2,0,
+36,40,3,6,3,0,37,40,3,8,4,0,38,40,3,14,7,0,39,35,1,0,0,0,39,36,1,0,0,0,39,
+37,1,0,0,0,39,38,1,0,0,0,40,3,1,0,0,0,41,42,5,12,0,0,42,45,5,1,0,0,43,46,
+3,10,5,0,44,46,3,12,6,0,45,43,1,0,0,0,45,44,1,0,0,0,46,47,1,0,0,0,47,48,
+5,2,0,0,48,5,1,0,0,0,49,51,5,3,0,0,50,52,5,27,0,0,51,50,1,0,0,0,51,52,1,
+0,0,0,52,53,1,0,0,0,53,55,3,22,11,0,54,56,5,27,0,0,55,54,1,0,0,0,55,56,1,
+0,0,0,56,57,1,0,0,0,57,59,5,4,0,0,58,60,5,27,0,0,59,58,1,0,0,0,59,60,1,0,
+0,0,60,61,1,0,0,0,61,62,3,12,6,0,62,7,1,0,0,0,63,65,5,3,0,0,64,66,5,27,0,
+0,65,64,1,0,0,0,65,66,1,0,0,0,66,67,1,0,0,0,67,69,3,22,11,0,68,70,5,27,0,
+0,69,68,1,0,0,0,69,70,1,0,0,0,70,71,1,0,0,0,71,73,5,4,0,0,72,74,5,27,0,0,
+73,72,1,0,0,0,73,74,1,0,0,0,74,75,1,0,0,0,75,76,5,5,0,0,76,79,5,6,0,0,77,
+80,3,2,1,0,78,80,3,12,6,0,79,77,1,0,0,0,79,78,1,0,0,0,80,111,1,0,0,0,81,
+83,5,3,0,0,82,84,5,27,0,0,83,82,1,0,0,0,83,84,1,0,0,0,84,85,1,0,0,0,85,87,
+3,22,11,0,86,88,5,27,0,0,87,86,1,0,0,0,87,88,1,0,0,0,88,89,1,0,0,0,89,91,
+5,4,0,0,90,92,5,27,0,0,91,90,1,0,0,0,91,92,1,0,0,0,92,93,1,0,0,0,93,102,
+5,1,0,0,94,99,3,22,11,0,95,96,5,7,0,0,96,98,3,22,11,0,97,95,1,0,0,0,98,101,
+1,0,0,0,99,97,1,0,0,0,99,100,1,0,0,0,100,103,1,0,0,0,101,99,1,0,0,0,102,
+94,1,0,0,0,102,103,1,0,0,0,103,104,1,0,0,0,104,105,5,2,0,0,105,108,5,6,0,
+0,106,109,3,2,1,0,107,109,3,12,6,0,108,106,1,0,0,0,108,107,1,0,0,0,109,111,
+1,0,0,0,110,63,1,0,0,0,110,81,1,0,0,0,111,9,1,0,0,0,112,117,3,16,8,0,113,
+117,3,18,9,0,114,117,3,20,10,0,115,117,3,22,11,0,116,112,1,0,0,0,116,113,
+1,0,0,0,116,114,1,0,0,0,116,115,1,0,0,0,117,11,1,0,0,0,118,119,6,6,-1,0,
+119,127,3,8,4,0,120,127,3,10,5,0,121,127,3,14,7,0,122,123,5,1,0,0,123,124,
+3,12,6,0,124,125,5,2,0,0,125,127,1,0,0,0,126,118,1,0,0,0,126,120,1,0,0,0,
+126,121,1,0,0,0,126,122,1,0,0,0,127,166,1,0,0,0,128,129,10,13,0,0,129,130,
+5,14,0,0,130,165,3,12,6,14,131,132,10,12,0,0,132,133,5,15,0,0,133,165,3,
+12,6,13,134,135,10,11,0,0,135,136,5,16,0,0,136,165,3,12,6,12,137,138,10,
+10,0,0,138,139,5,17,0,0,139,165,3,12,6,11,140,141,10,9,0,0,141,142,5,18,
+0,0,142,165,3,12,6,10,143,144,10,8,0,0,144,145,5,19,0,0,145,165,3,12,6,9,
+146,147,10,7,0,0,147,148,5,20,0,0,148,165,3,12,6,8,149,150,10,6,0,0,150,
+151,5,21,0,0,151,165,3,12,6,7,152,153,10,5,0,0,153,154,5,22,0,0,154,165,
+3,12,6,6,155,156,10,4,0,0,156,157,5,23,0,0,157,165,3,12,6,5,158,159,10,3,
+0,0,159,160,5,24,0,0,160,165,3,12,6,4,161,162,10,2,0,0,162,163,5,25,0,0,
+163,165,3,12,6,3,164,128,1,0,0,0,164,131,1,0,0,0,164,134,1,0,0,0,164,137,
+1,0,0,0,164,140,1,0,0,0,164,143,1,0,0,0,164,146,1,0,0,0,164,149,1,0,0,0,
+164,152,1,0,0,0,164,155,1,0,0,0,164,158,1,0,0,0,164,161,1,0,0,0,165,168,
+1,0,0,0,166,164,1,0,0,0,166,167,1,0,0,0,167,13,1,0,0,0,168,166,1,0,0,0,169,
+170,3,22,11,0,170,171,5,5,0,0,171,185,1,0,0,0,172,173,3,22,11,0,173,174,
+5,1,0,0,174,179,3,12,6,0,175,176,5,7,0,0,176,178,3,12,6,0,177,175,1,0,0,
+0,178,181,1,0,0,0,179,177,1,0,0,0,179,180,1,0,0,0,180,182,1,0,0,0,181,179,
+1,0,0,0,182,183,5,2,0,0,183,185,1,0,0,0,184,169,1,0,0,0,184,172,1,0,0,0,
+185,15,1,0,0,0,186,187,5,11,0,0,187,17,1,0,0,0,188,189,5,10,0,0,189,19,1,
+0,0,0,190,192,5,8,0,0,191,193,5,27,0,0,192,191,1,0,0,0,192,193,1,0,0,0,193,
+217,1,0,0,0,194,197,3,10,5,0,195,197,3,12,6,0,196,194,1,0,0,0,196,195,1,
+0,0,0,197,199,1,0,0,0,198,200,5,27,0,0,199,198,1,0,0,0,199,200,1,0,0,0,200,
+214,1,0,0,0,201,203,5,7,0,0,202,204,5,27,0,0,203,202,1,0,0,0,203,204,1,0,
+0,0,204,207,1,0,0,0,205,208,3,10,5,0,206,208,3,12,6,0,207,205,1,0,0,0,207,
+206,1,0,0,0,208,210,1,0,0,0,209,211,5,27,0,0,210,209,1,0,0,0,210,211,1,0,
+0,0,211,213,1,0,0,0,212,201,1,0,0,0,213,216,1,0,0,0,214,212,1,0,0,0,214,
+215,1,0,0,0,215,218,1,0,0,0,216,214,1,0,0,0,217,196,1,0,0,0,217,218,1,0,
+0,0,218,219,1,0,0,0,219,220,5,9,0,0,220,21,1,0,0,0,221,222,5,13,0,0,222,
+23,1,0,0,0,32,26,30,39,45,51,55,59,65,69,73,79,83,87,91,99,102,108,110,116,
+126,164,166,179,184,192,196,199,203,207,210,214,217];
 
 
 const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -159,7 +160,7 @@ export default class biesCParser extends antlr4.Parser {
 	        this.state = 30;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        while(_la===3 || _la===12) {
+	        while((((_la) & ~0x1f) === 0 && ((1 << _la) & 12296) !== 0)) {
 	            this.state = 24;
 	            this.statement();
 	            this.state = 26;
@@ -196,7 +197,7 @@ export default class biesCParser extends antlr4.Parser {
 	    let localctx = new StatementContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 2, biesCParser.RULE_statement);
 	    try {
-	        this.state = 38;
+	        this.state = 39;
 	        this._errHandler.sync(this);
 	        var la_ = this._interp.adaptivePredict(this._input,2,this._ctx);
 	        switch(la_) {
@@ -216,6 +217,12 @@ export default class biesCParser extends antlr4.Parser {
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 37;
 	            this.anonymousLetFunction();
+	            break;
+
+	        case 4:
+	            this.enterOuterAlt(localctx, 4);
+	            this.state = 38;
+	            this.functionCall();
 	            break;
 
 	        }
@@ -239,27 +246,28 @@ export default class biesCParser extends antlr4.Parser {
 	    let localctx = new PrintInstrContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 4, biesCParser.RULE_printInstr);
 	    try {
+	        localctx = new PrintInstr_LabelContext(this, localctx);
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 40;
-	        this.match(biesCParser.PRINT);
 	        this.state = 41;
+	        this.match(biesCParser.PRINT);
+	        this.state = 42;
 	        this.match(biesCParser.T__0);
-	        this.state = 44;
+	        this.state = 45;
 	        this._errHandler.sync(this);
 	        var la_ = this._interp.adaptivePredict(this._input,3,this._ctx);
 	        switch(la_) {
 	        case 1:
-	            this.state = 42;
+	            this.state = 43;
 	            this.primarydata();
 	            break;
 
 	        case 2:
-	            this.state = 43;
+	            this.state = 44;
 	            this.expr(0);
 	            break;
 
 	        }
-	        this.state = 46;
+	        this.state = 47;
 	        this.match(biesCParser.T__1);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -282,38 +290,39 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 6, biesCParser.RULE_simpleLetInstr);
 	    var _la = 0;
 	    try {
+	        localctx = new SimpleLetInstr_LabelContext(this, localctx);
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 48;
+	        this.state = 49;
 	        this.match(biesCParser.T__2);
-	        this.state = 50;
+	        this.state = 51;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===27) {
-	            this.state = 49;
+	            this.state = 50;
 	            this.match(biesCParser.WS);
 	        }
 
-	        this.state = 52;
+	        this.state = 53;
 	        this.id();
-	        this.state = 54;
+	        this.state = 55;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===27) {
-	            this.state = 53;
+	            this.state = 54;
 	            this.match(biesCParser.WS);
 	        }
 
-	        this.state = 56;
+	        this.state = 57;
 	        this.match(biesCParser.T__3);
-	        this.state = 58;
+	        this.state = 59;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===27) {
-	            this.state = 57;
+	            this.state = 58;
 	            this.match(biesCParser.WS);
 	        }
 
-	        this.state = 60;
+	        this.state = 61;
 	        this.expr(0);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -336,58 +345,58 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 8, biesCParser.RULE_anonymousLetFunction);
 	    var _la = 0;
 	    try {
-	        this.state = 109;
+	        this.state = 110;
 	        this._errHandler.sync(this);
 	        var la_ = this._interp.adaptivePredict(this._input,17,this._ctx);
 	        switch(la_) {
 	        case 1:
 	            localctx = new LambdaNoParams_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 62;
+	            this.state = 63;
 	            this.match(biesCParser.T__2);
-	            this.state = 64;
+	            this.state = 65;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 63;
+	                this.state = 64;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 66;
+	            this.state = 67;
 	            this.id();
-	            this.state = 68;
+	            this.state = 69;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 67;
+	                this.state = 68;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 70;
+	            this.state = 71;
 	            this.match(biesCParser.T__3);
-	            this.state = 72;
+	            this.state = 73;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 71;
+	                this.state = 72;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 74;
-	            this.match(biesCParser.T__4);
 	            this.state = 75;
+	            this.match(biesCParser.T__4);
+	            this.state = 76;
 	            this.match(biesCParser.T__5);
-	            this.state = 78;
+	            this.state = 79;
 	            this._errHandler.sync(this);
 	            var la_ = this._interp.adaptivePredict(this._input,10,this._ctx);
 	            switch(la_) {
 	            case 1:
-	                this.state = 76;
+	                this.state = 77;
 	                this.statement();
 	                break;
 
 	            case 2:
-	                this.state = 77;
+	                this.state = 78;
 	                this.expr(0);
 	                break;
 
@@ -397,73 +406,73 @@ export default class biesCParser extends antlr4.Parser {
 	        case 2:
 	            localctx = new LambdaWithParams_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 80;
+	            this.state = 81;
 	            this.match(biesCParser.T__2);
-	            this.state = 82;
+	            this.state = 83;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 81;
+	                this.state = 82;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 84;
+	            this.state = 85;
 	            this.id();
-	            this.state = 86;
+	            this.state = 87;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 85;
+	                this.state = 86;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 88;
+	            this.state = 89;
 	            this.match(biesCParser.T__3);
-	            this.state = 90;
+	            this.state = 91;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 89;
+	                this.state = 90;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 92;
+	            this.state = 93;
 	            this.match(biesCParser.T__0);
-	            this.state = 101;
+	            this.state = 102;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===13) {
-	                this.state = 93;
+	                this.state = 94;
 	                this.id();
-	                this.state = 98;
+	                this.state = 99;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
 	                while(_la===7) {
-	                    this.state = 94;
-	                    this.match(biesCParser.T__6);
 	                    this.state = 95;
+	                    this.match(biesCParser.T__6);
+	                    this.state = 96;
 	                    this.id();
-	                    this.state = 100;
+	                    this.state = 101;
 	                    this._errHandler.sync(this);
 	                    _la = this._input.LA(1);
 	                }
 	            }
 
-	            this.state = 103;
-	            this.match(biesCParser.T__1);
 	            this.state = 104;
+	            this.match(biesCParser.T__1);
+	            this.state = 105;
 	            this.match(biesCParser.T__5);
-	            this.state = 107;
+	            this.state = 108;
 	            this._errHandler.sync(this);
 	            var la_ = this._interp.adaptivePredict(this._input,16,this._ctx);
 	            switch(la_) {
 	            case 1:
-	                this.state = 105;
+	                this.state = 106;
 	                this.statement();
 	                break;
 
 	            case 2:
-	                this.state = 106;
+	                this.state = 107;
 	                this.expr(0);
 	                break;
 
@@ -491,31 +500,31 @@ export default class biesCParser extends antlr4.Parser {
 	    let localctx = new PrimarydataContext(this, this._ctx, this.state);
 	    this.enterRule(localctx, 10, biesCParser.RULE_primarydata);
 	    try {
-	        this.state = 115;
+	        this.state = 116;
 	        this._errHandler.sync(this);
 	        switch(this._input.LA(1)) {
 	        case 11:
 	            localctx = new Number_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
-	            this.state = 111;
+	            this.state = 112;
 	            this.number();
 	            break;
 	        case 10:
 	            localctx = new String_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
-	            this.state = 112;
+	            this.state = 113;
 	            this.string();
 	            break;
 	        case 8:
 	            localctx = new Array_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 3);
-	            this.state = 113;
+	            this.state = 114;
 	            this.array();
 	            break;
 	        case 13:
 	            localctx = new Id_LabelContext(this, localctx);
 	            this.enterOuterAlt(localctx, 4);
-	            this.state = 114;
+	            this.state = 115;
 	            this.id();
 	            break;
 	        default:
@@ -548,7 +557,7 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRecursionRule(localctx, 12, biesCParser.RULE_expr, _p);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 125;
+	        this.state = 126;
 	        this._errHandler.sync(this);
 	        var la_ = this._interp.adaptivePredict(this._input,19,this._ctx);
 	        switch(la_) {
@@ -557,7 +566,7 @@ export default class biesCParser extends antlr4.Parser {
 	            this._ctx = localctx;
 	            _prevctx = localctx;
 
-	            this.state = 118;
+	            this.state = 119;
 	            this.anonymousLetFunction();
 	            break;
 
@@ -565,7 +574,7 @@ export default class biesCParser extends antlr4.Parser {
 	            localctx = new PrimaryData_LabelContext(this, localctx);
 	            this._ctx = localctx;
 	            _prevctx = localctx;
-	            this.state = 119;
+	            this.state = 120;
 	            this.primarydata();
 	            break;
 
@@ -573,7 +582,7 @@ export default class biesCParser extends antlr4.Parser {
 	            localctx = new FunctionCallExpr_LabelContext(this, localctx);
 	            this._ctx = localctx;
 	            _prevctx = localctx;
-	            this.state = 120;
+	            this.state = 121;
 	            this.functionCall();
 	            break;
 
@@ -581,17 +590,17 @@ export default class biesCParser extends antlr4.Parser {
 	            localctx = new Parens_LabelContext(this, localctx);
 	            this._ctx = localctx;
 	            _prevctx = localctx;
-	            this.state = 121;
-	            this.match(biesCParser.T__0);
 	            this.state = 122;
-	            this.expr(0);
+	            this.match(biesCParser.T__0);
 	            this.state = 123;
+	            this.expr(0);
+	            this.state = 124;
 	            this.match(biesCParser.T__1);
 	            break;
 
 	        }
 	        this._ctx.stop = this._input.LT(-1);
-	        this.state = 165;
+	        this.state = 166;
 	        this._errHandler.sync(this);
 	        var _alt = this._interp.adaptivePredict(this._input,21,this._ctx)
 	        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
@@ -600,169 +609,169 @@ export default class biesCParser extends antlr4.Parser {
 	                    this.triggerExitRuleEvent();
 	                }
 	                _prevctx = localctx;
-	                this.state = 163;
+	                this.state = 164;
 	                this._errHandler.sync(this);
 	                var la_ = this._interp.adaptivePredict(this._input,20,this._ctx);
 	                switch(la_) {
 	                case 1:
 	                    localctx = new Mul_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 127;
+	                    this.state = 128;
 	                    if (!( this.precpred(this._ctx, 13))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 13)");
 	                    }
-	                    this.state = 128;
-	                    this.match(biesCParser.MULT);
 	                    this.state = 129;
+	                    this.match(biesCParser.MULT);
+	                    this.state = 130;
 	                    this.expr(14);
 	                    break;
 
 	                case 2:
 	                    localctx = new Div_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 130;
+	                    this.state = 131;
 	                    if (!( this.precpred(this._ctx, 12))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 12)");
 	                    }
-	                    this.state = 131;
-	                    this.match(biesCParser.DIV);
 	                    this.state = 132;
+	                    this.match(biesCParser.DIV);
+	                    this.state = 133;
 	                    this.expr(13);
 	                    break;
 
 	                case 3:
 	                    localctx = new Add_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 133;
+	                    this.state = 134;
 	                    if (!( this.precpred(this._ctx, 11))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 11)");
 	                    }
-	                    this.state = 134;
-	                    this.match(biesCParser.ADD);
 	                    this.state = 135;
+	                    this.match(biesCParser.ADD);
+	                    this.state = 136;
 	                    this.expr(12);
 	                    break;
 
 	                case 4:
 	                    localctx = new Sub_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 136;
+	                    this.state = 137;
 	                    if (!( this.precpred(this._ctx, 10))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 10)");
 	                    }
-	                    this.state = 137;
-	                    this.match(biesCParser.SUB);
 	                    this.state = 138;
+	                    this.match(biesCParser.SUB);
+	                    this.state = 139;
 	                    this.expr(11);
 	                    break;
 
 	                case 5:
 	                    localctx = new And_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 139;
+	                    this.state = 140;
 	                    if (!( this.precpred(this._ctx, 9))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 9)");
 	                    }
-	                    this.state = 140;
-	                    this.match(biesCParser.AND);
 	                    this.state = 141;
+	                    this.match(biesCParser.AND);
+	                    this.state = 142;
 	                    this.expr(10);
 	                    break;
 
 	                case 6:
 	                    localctx = new Or_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 142;
+	                    this.state = 143;
 	                    if (!( this.precpred(this._ctx, 8))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 8)");
 	                    }
-	                    this.state = 143;
-	                    this.match(biesCParser.OR);
 	                    this.state = 144;
+	                    this.match(biesCParser.OR);
+	                    this.state = 145;
 	                    this.expr(9);
 	                    break;
 
 	                case 7:
 	                    localctx = new Eq_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 145;
+	                    this.state = 146;
 	                    if (!( this.precpred(this._ctx, 7))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 7)");
 	                    }
-	                    this.state = 146;
-	                    this.match(biesCParser.EQ);
 	                    this.state = 147;
+	                    this.match(biesCParser.EQ);
+	                    this.state = 148;
 	                    this.expr(8);
 	                    break;
 
 	                case 8:
 	                    localctx = new Neq_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 148;
+	                    this.state = 149;
 	                    if (!( this.precpred(this._ctx, 6))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 6)");
 	                    }
-	                    this.state = 149;
-	                    this.match(biesCParser.NEQ);
 	                    this.state = 150;
+	                    this.match(biesCParser.NEQ);
+	                    this.state = 151;
 	                    this.expr(7);
 	                    break;
 
 	                case 9:
 	                    localctx = new Lt_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 151;
+	                    this.state = 152;
 	                    if (!( this.precpred(this._ctx, 5))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 5)");
 	                    }
-	                    this.state = 152;
-	                    this.match(biesCParser.LT);
 	                    this.state = 153;
+	                    this.match(biesCParser.LT);
+	                    this.state = 154;
 	                    this.expr(6);
 	                    break;
 
 	                case 10:
 	                    localctx = new Gt_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 154;
+	                    this.state = 155;
 	                    if (!( this.precpred(this._ctx, 4))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 4)");
 	                    }
-	                    this.state = 155;
-	                    this.match(biesCParser.GT);
 	                    this.state = 156;
+	                    this.match(biesCParser.GT);
+	                    this.state = 157;
 	                    this.expr(5);
 	                    break;
 
 	                case 11:
 	                    localctx = new Le_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 157;
+	                    this.state = 158;
 	                    if (!( this.precpred(this._ctx, 3))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 3)");
 	                    }
-	                    this.state = 158;
-	                    this.match(biesCParser.LE);
 	                    this.state = 159;
+	                    this.match(biesCParser.LE);
+	                    this.state = 160;
 	                    this.expr(4);
 	                    break;
 
 	                case 12:
 	                    localctx = new Ge_LabelContext(this, new ExprContext(this, _parentctx, _parentState));
 	                    this.pushNewRecursionContext(localctx, _startState, biesCParser.RULE_expr);
-	                    this.state = 160;
+	                    this.state = 161;
 	                    if (!( this.precpred(this._ctx, 2))) {
 	                        throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
 	                    }
-	                    this.state = 161;
-	                    this.match(biesCParser.GE);
 	                    this.state = 162;
+	                    this.match(biesCParser.GE);
+	                    this.state = 163;
 	                    this.expr(3);
 	                    break;
 
 	                } 
 	            }
-	            this.state = 167;
+	            this.state = 168;
 	            this._errHandler.sync(this);
 	            _alt = this._interp.adaptivePredict(this._input,21,this._ctx);
 	        }
@@ -788,33 +797,45 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 14, biesCParser.RULE_functionCall);
 	    var _la = 0;
 	    try {
-	        this.enterOuterAlt(localctx, 1);
-	        this.state = 168;
-	        this.id();
-	        this.state = 169;
-	        this.match(biesCParser.T__0);
-	        this.state = 178;
+	        this.state = 184;
 	        this._errHandler.sync(this);
-	        _la = this._input.LA(1);
-	        if((((_la) & ~0x1f) === 0 && ((1 << _la) & 11530) !== 0)) {
+	        var la_ = this._interp.adaptivePredict(this._input,23,this._ctx);
+	        switch(la_) {
+	        case 1:
+	            localctx = new FunctionCallNoParams_LabelContext(this, localctx);
+	            this.enterOuterAlt(localctx, 1);
+	            this.state = 169;
+	            this.id();
 	            this.state = 170;
+	            this.match(biesCParser.T__4);
+	            break;
+
+	        case 2:
+	            localctx = new FunctionCallWithParams_LabelContext(this, localctx);
+	            this.enterOuterAlt(localctx, 2);
+	            this.state = 172;
+	            this.id();
+	            this.state = 173;
+	            this.match(biesCParser.T__0);
+	            this.state = 174;
 	            this.expr(0);
-	            this.state = 175;
+	            this.state = 179;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            while(_la===7) {
-	                this.state = 171;
+	                this.state = 175;
 	                this.match(biesCParser.T__6);
-	                this.state = 172;
+	                this.state = 176;
 	                this.expr(0);
-	                this.state = 177;
+	                this.state = 181;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
 	            }
-	        }
+	            this.state = 182;
+	            this.match(biesCParser.T__1);
+	            break;
 
-	        this.state = 180;
-	        this.match(biesCParser.T__1);
+	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -836,7 +857,7 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 16, biesCParser.RULE_number);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 182;
+	        this.state = 186;
 	        this.match(biesCParser.NUMBER);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -859,7 +880,7 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 18, biesCParser.RULE_string);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 184;
+	        this.state = 188;
 	        this.match(biesCParser.STRING);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -883,87 +904,87 @@ export default class biesCParser extends antlr4.Parser {
 	    var _la = 0;
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 186;
+	        this.state = 190;
 	        this.match(biesCParser.T__7);
-	        this.state = 188;
+	        this.state = 192;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if(_la===27) {
-	            this.state = 187;
+	            this.state = 191;
 	            this.match(biesCParser.WS);
 	        }
 
-	        this.state = 213;
+	        this.state = 217;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
 	        if((((_la) & ~0x1f) === 0 && ((1 << _la) & 11530) !== 0)) {
-	            this.state = 192;
+	            this.state = 196;
 	            this._errHandler.sync(this);
 	            var la_ = this._interp.adaptivePredict(this._input,25,this._ctx);
 	            switch(la_) {
 	            case 1:
-	                this.state = 190;
+	                this.state = 194;
 	                this.primarydata();
 	                break;
 
 	            case 2:
-	                this.state = 191;
+	                this.state = 195;
 	                this.expr(0);
 	                break;
 
 	            }
-	            this.state = 195;
+	            this.state = 199;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            if(_la===27) {
-	                this.state = 194;
+	                this.state = 198;
 	                this.match(biesCParser.WS);
 	            }
 
-	            this.state = 210;
+	            this.state = 214;
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
 	            while(_la===7) {
-	                this.state = 197;
+	                this.state = 201;
 	                this.match(biesCParser.T__6);
-	                this.state = 199;
+	                this.state = 203;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
 	                if(_la===27) {
-	                    this.state = 198;
+	                    this.state = 202;
 	                    this.match(biesCParser.WS);
 	                }
 
-	                this.state = 203;
+	                this.state = 207;
 	                this._errHandler.sync(this);
 	                var la_ = this._interp.adaptivePredict(this._input,28,this._ctx);
 	                switch(la_) {
 	                case 1:
-	                    this.state = 201;
+	                    this.state = 205;
 	                    this.primarydata();
 	                    break;
 
 	                case 2:
-	                    this.state = 202;
+	                    this.state = 206;
 	                    this.expr(0);
 	                    break;
 
 	                }
-	                this.state = 206;
+	                this.state = 210;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
 	                if(_la===27) {
-	                    this.state = 205;
+	                    this.state = 209;
 	                    this.match(biesCParser.WS);
 	                }
 
-	                this.state = 212;
+	                this.state = 216;
 	                this._errHandler.sync(this);
 	                _la = this._input.LA(1);
 	            }
 	        }
 
-	        this.state = 215;
+	        this.state = 219;
 	        this.match(biesCParser.T__8);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -986,7 +1007,7 @@ export default class biesCParser extends antlr4.Parser {
 	    this.enterRule(localctx, 22, biesCParser.RULE_id);
 	    try {
 	        this.enterOuterAlt(localctx, 1);
-	        this.state = 217;
+	        this.state = 221;
 	        this.match(biesCParser.ID);
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -1129,6 +1150,10 @@ class StatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(AnonymousLetFunctionContext,0);
 	};
 
+	functionCall() {
+	    return this.getTypedRuleContext(FunctionCallContext,0);
+	};
+
 	accept(visitor) {
 	    if ( visitor instanceof biesCVisitor ) {
 	        return visitor.visitStatement(this);
@@ -1156,6 +1181,22 @@ class PrintInstrContext extends antlr4.ParserRuleContext {
         this.ruleIndex = biesCParser.RULE_printInstr;
     }
 
+
+	 
+		copyFrom(ctx) {
+			super.copyFrom(ctx);
+		}
+
+}
+
+
+class PrintInstr_LabelContext extends PrintInstrContext {
+
+    constructor(parser, ctx) {
+        super(parser);
+        super.copyFrom(ctx);
+    }
+
 	PRINT() {
 	    return this.getToken(biesCParser.PRINT, 0);
 	};
@@ -1170,7 +1211,7 @@ class PrintInstrContext extends antlr4.ParserRuleContext {
 
 	accept(visitor) {
 	    if ( visitor instanceof biesCVisitor ) {
-	        return visitor.visitPrintInstr(this);
+	        return visitor.visitPrintInstr_Label(this);
 	    } else {
 	        return visitor.visitChildren(this);
 	    }
@@ -1179,7 +1220,7 @@ class PrintInstrContext extends antlr4.ParserRuleContext {
 
 }
 
-
+biesCParser.PrintInstr_LabelContext = PrintInstr_LabelContext;
 
 class SimpleLetInstrContext extends antlr4.ParserRuleContext {
 
@@ -1193,6 +1234,22 @@ class SimpleLetInstrContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = biesCParser.RULE_simpleLetInstr;
+    }
+
+
+	 
+		copyFrom(ctx) {
+			super.copyFrom(ctx);
+		}
+
+}
+
+
+class SimpleLetInstr_LabelContext extends SimpleLetInstrContext {
+
+    constructor(parser, ctx) {
+        super(parser);
+        super.copyFrom(ctx);
     }
 
 	id() {
@@ -1217,7 +1274,7 @@ class SimpleLetInstrContext extends antlr4.ParserRuleContext {
 
 	accept(visitor) {
 	    if ( visitor instanceof biesCVisitor ) {
-	        return visitor.visitSimpleLetInstr(this);
+	        return visitor.visitSimpleLetInstr_Label(this);
 	    } else {
 	        return visitor.visitChildren(this);
 	    }
@@ -1226,7 +1283,7 @@ class SimpleLetInstrContext extends antlr4.ParserRuleContext {
 
 }
 
-
+biesCParser.SimpleLetInstr_LabelContext = SimpleLetInstr_LabelContext;
 
 class AnonymousLetFunctionContext extends antlr4.ParserRuleContext {
 
@@ -2018,6 +2075,22 @@ class FunctionCallContext extends antlr4.ParserRuleContext {
         this.ruleIndex = biesCParser.RULE_functionCall;
     }
 
+
+	 
+		copyFrom(ctx) {
+			super.copyFrom(ctx);
+		}
+
+}
+
+
+class FunctionCallWithParams_LabelContext extends FunctionCallContext {
+
+    constructor(parser, ctx) {
+        super(parser);
+        super.copyFrom(ctx);
+    }
+
 	id() {
 	    return this.getTypedRuleContext(IdContext,0);
 	};
@@ -2035,7 +2108,7 @@ class FunctionCallContext extends antlr4.ParserRuleContext {
 
 	accept(visitor) {
 	    if ( visitor instanceof biesCVisitor ) {
-	        return visitor.visitFunctionCall(this);
+	        return visitor.visitFunctionCallWithParams_Label(this);
 	    } else {
 	        return visitor.visitChildren(this);
 	    }
@@ -2044,7 +2117,31 @@ class FunctionCallContext extends antlr4.ParserRuleContext {
 
 }
 
+biesCParser.FunctionCallWithParams_LabelContext = FunctionCallWithParams_LabelContext;
 
+class FunctionCallNoParams_LabelContext extends FunctionCallContext {
+
+    constructor(parser, ctx) {
+        super(parser);
+        super.copyFrom(ctx);
+    }
+
+	id() {
+	    return this.getTypedRuleContext(IdContext,0);
+	};
+
+	accept(visitor) {
+	    if ( visitor instanceof biesCVisitor ) {
+	        return visitor.visitFunctionCallNoParams_Label(this);
+	    } else {
+	        return visitor.visitChildren(this);
+	    }
+	}
+
+
+}
+
+biesCParser.FunctionCallNoParams_LabelContext = FunctionCallNoParams_LabelContext;
 
 class NumberContext extends antlr4.ParserRuleContext {
 
