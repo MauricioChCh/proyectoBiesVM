@@ -254,6 +254,14 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    visitConcat_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: concat'));
+
+
+
+        return null;
+    }
+
     generateMain() {
         this.code.push('$FUN $0 ARGS:0 PARENT:$0');
         this.code.push(...this.mainCode);
