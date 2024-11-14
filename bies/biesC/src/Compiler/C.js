@@ -52,6 +52,14 @@ class C {
         };
 
         switch (true) {
+            case instruction.startsWith('$FUN'):
+                this.bydeCode.push(instruction);
+                break;
+
+            case instruction.startsWith('$END'):
+                this.bydeCode.push(instruction);
+                break;
+
             case instruction === 'print':
                 this.bydeCode.push('PRN');
                 break;

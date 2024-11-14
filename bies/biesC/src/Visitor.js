@@ -20,7 +20,7 @@ export class Visitor extends biesCVisitor {
     visitProgram(ctx) {
         console.log(chalk.red('Nodo visitado: program'));
         this.visitChildren(ctx);
-        //this.sendCodeToCompiler();
+        this.sendCodeToCompiler();
         return this.compiler;
     }
 
@@ -200,17 +200,18 @@ export class Visitor extends biesCVisitor {
             invoking: functionCallName || null
         };
 
-        // Imprimir el contenido de functionMap
-        //console.log(this.functionMap);
-
-        // Imprimir la información de la función en el formato deseado
-        console.log(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+        // Asignar la información de la función a la variable funcDef
+        this.code.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+        // Imprimir la variable funcDef
+        //console.log(funcDef);
 
         // Actualizar el contexto padre actual
         this.compiler.currentParent = functionId;
 
         // Visitar el cuerpo de la función
         this.visitChildren(ctx);
+
+        this.code.push(`$END ${functionId}`);
 
         // Restaurar el contexto padre del compilador después de visitar la función
         this.compiler.currentParent = parentContext;
