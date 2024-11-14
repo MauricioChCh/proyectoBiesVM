@@ -124,7 +124,7 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.green('Nodo visitado: id ->'), id);
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
-            this.code.push(`BLD 0 ${this.variables[id]}`); // Generar el bytecode BLD en lugar de BST
+            this.code.push(this.variables[id].byteload); // Generar el bytecode BLD en lugar de BST
         } else {
             console.error(`Error: Variable ${id} no está definida`);
         }
@@ -208,6 +208,7 @@ export class Visitor extends biesCVisitor {
 
         // Finalizar función
         this.code.push(`$END ${functionId}`);
+        this.code.push('\n');
 
         // Restaurar el contexto padre del compilador después de visitar la función
         this.compiler.currentParent = parentContext;
@@ -255,11 +256,9 @@ export class Visitor extends biesCVisitor {
     }
 
     generateMain() {
-        this.code.push('$FUN $0 ARGS:0 PARENT:$0');
+        this.code.push('\n\n;Aquí inicia el "main"\n');
         this.code.push(...this.mainCode);
-        this.code.push('HLT');
-        this.code.push('$END $0');
-        this.code.push('INI $0');
+        this.code.push('\n;Aquí termina el "main"');
     }
 
     visitPrintInstr_Label(ctx) {

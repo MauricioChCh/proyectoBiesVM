@@ -174,6 +174,18 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesCParser#Concat_Label.
+	visitConcat_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#concatPart.
+	visitConcatPart(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesCParser#number.
 	visitNumber(ctx) {
 	  return this.visitChildren(ctx);

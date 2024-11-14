@@ -56,6 +56,16 @@ functionCall
     | id '(' expr (',' expr)* ')'           # FunctionCallWithParams_Label
     ;
 
+concatExpr
+    : concatPart (WS? ADD WS? concatPart)*  # Concat_Label
+    ;
+
+concatPart
+    : number
+    | string
+    | id
+    ;
+
 number
     : NUMBER
     ;
