@@ -54,7 +54,7 @@ class CommandExecutor {
      * @returns {string} Comando biesVM completo
      */
     buildBiesVMCommand() {
-        const baseCommand = `node src/biesVM.js ${path.join('basm', 'Compilador.basm')}`;
+        const baseCommand = `node src/biesVM.js "${path.join('basm', 'Compilador.basm')}"`;
         const flags = [
             this.logger.getVerbose() ? '-v' : '',
             this.logger.getDebug() ? '-d' : '',
@@ -71,9 +71,10 @@ class CommandExecutor {
      * @returns {string} Comandos concatenados
      */
     buildCommandList(biesVMPath, systemCommands) {
-        const antlrCommand = `java -jar ${path.join('lib', 'antlr-4.13.1-complete.jar')} ` +
-            `-Dlanguage=JavaScript ${path.join(biesVMPath, 'grammar', 'biesVM.g4')} ` +
-            `-no-listener -visitor -o ${path.join(biesVMPath, 'output')}`;
+        const antlrCommand = `java -jar "${path.join('lib', 'antlr-4.13.1-complete.jar')}" ` +
+        `-Dlanguage=JavaScript "${path.join(biesVMPath, 'grammar', 'biesVM.g4')}" ` +
+        `-no-listener -visitor -o "${path.join(biesVMPath, 'output')}"`;
+
 
         return [
             `cd "${biesVMPath}"`,
