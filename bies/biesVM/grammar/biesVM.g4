@@ -29,6 +29,7 @@ instruction
     | inputString // Instrucción para manejar la instrucción INO
     | stackInstr // Instrucción para manejar la instrucción SWP
     | castInstr // Instrucción para manejar la instrucción CST
+    | lengthInstr // Instrucción para manejar la instrucción LEN
     ;
 
 loadInstr
@@ -45,6 +46,7 @@ arithInstr
     | 'SUB' ES? // Instrucción de resta
     | 'DIV' ES? // Instrucción de división
     | 'NEG' ES? // Instrucción de negación
+    | 'POW' ES? // Instrucción de potencia
     ;
 
 logicalInst
@@ -101,6 +103,10 @@ signInstr
     : 'SGN' // Instrucción de signo
     ;
 
+lengthInstr
+    : 'LEN' // Instrucción de longitud
+    ;
+
 TYPE
     : 'number'
     | 'list'
@@ -151,6 +157,8 @@ XOR : 'XOR'; // Token para la instrucción XOR
 NOT : 'NOT'; // Token para la instrucción NOT
 SWP : 'SWP'; // Token para la instrucción SWP
 LNT : 'LNT'; // Token para la instrucción LNT
+LEN : 'LEN'; // Token para la instrucción LEN
+POW : 'POW'; // Token para la instrucción POW
 
 // Palabras clave para funciones
 FUN : '$FUN'; // Token para el inicio de una función

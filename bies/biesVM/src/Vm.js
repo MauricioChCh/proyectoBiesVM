@@ -21,6 +21,8 @@ import TypeCommands from '../command/TypeCommands.js';
 import IOCommands from '../command/IOCommands.js';
 import { Logger } from './Logger.js';
  
+import LengthCommands from '../command/LengthCommands.js';
+
 /**
  * Clase que representa una máquina virtual (VM).
  */
@@ -55,6 +57,7 @@ class VM {
         this.functionCommands = new FunctionCommands(this);
         this.typeCommands = new TypeCommands(this);
         this.ioCommands = new IOCommands(this);
+        this.lengthCommands = new LengthCommands(this);
 
         this.bindCommandMethods();
     }
@@ -80,6 +83,7 @@ class VM {
             this.functionCommands,
             this.typeCommands,
             this.ioCommands,
+            this.lengthCommands,
         ];
 
         commandCategories.forEach(category => {
@@ -186,6 +190,8 @@ class VM {
             'INO': this.typeCommands.INO,
             'PRN': this.ioCommands.PRN,
             'INP': this.ioCommands.INP,
+            'LEN': this.lengthCommands.LEN,
+            'POW': this.arithmeticCommands.POW,
         };
         return commandMap[instructionType];
     }

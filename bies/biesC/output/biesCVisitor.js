@@ -48,14 +48,26 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Const_NoParams_Label.
-	visitConst_NoParams_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#declaration.
+	visitDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Const_WithParams_Label.
-	visitConst_WithParams_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#SimpleConstInstr_Label.
+	visitSimpleConstInstr_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#LambdaConstNoParams_Label.
+	visitLambdaConstNoParams_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#LambdaConstWithParams_Label.
+	visitLambdaConstWithParams_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -92,6 +104,12 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesCParser#Mul_Label.
 	visitMul_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Exp_Label.
+	visitExp_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -144,6 +162,12 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesCParser#Pow_Label.
+	visitPow_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesCParser#Ge_Label.
 	visitGe_Label(ctx) {
 	  return this.visitChildren(ctx);
@@ -152,12 +176,6 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesCParser#FunctionCallExpr_Label.
 	visitFunctionCallExpr_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#Parens_Label.
-	visitParens_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -192,14 +210,8 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Concat_Label.
-	visitConcat_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#concatPart.
-	visitConcatPart(ctx) {
+	// Visit a parse tree produced by biesCParser#PredifinedFunctionCall_Label.
+	visitPredifinedFunctionCall_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -224,6 +236,60 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesCParser#id.
 	visitId(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Bool_Label.
+	visitBool_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#True_Label.
+	visitTrue_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#False_Label.
+	visitFalse_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Null_Label.
+	visitNull_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Input_Label.
+	visitInput_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Int_Label.
+	visitInt_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Str_Label.
+	visitStr_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#List_Label.
+	visitList_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#Len_Label.
+	visitLen_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

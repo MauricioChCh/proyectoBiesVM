@@ -7,24 +7,53 @@ import Command from './Command.js';
 class ArithmeticCommands extends Command {
     constructor(vm) {
         super(vm);
-        
-        const operations = {
-            ADD: (a, b) => a + b,
-            SUB: (a, b) => a - b,
-            MUL: (a, b) => a * b,
-            DIV: (a, b) => {
-                if (b === 0) throw new Error('Error: División por cero');
-                return a / b;
-            }
-        };
-
-        // Registra todas las operaciones automáticamente
-        Object.entries(operations).forEach(([name, operation]) => {
-            this[name] = this.performBinaryOperation(operation);
-        });
-
-        this.bindMethods(Object.keys(operations));
+        this.bindMethods(['ADD', 'SUB', 'MUL', 'DIV', 'POW']);
     }
+
+    /**
+     * Suma dos números.
+     * @type {Function}
+     */
+    ADD = this.performBinaryOperation((a, b) => a + b);
+
+    /**
+     * Resta dos números.
+     * @type {Function}
+     */
+    SUB = this.performBinaryOperation((a, b) => a - b);
+
+    /**
+     * Multiplica dos números.
+     * @type {Function}
+     */
+    MUL = this.performBinaryOperation((a, b) => a * b);
+
+    /**
+     * Divide dos números.
+     * @type {Function}
+     * @throws Lanzará un error si se intenta dividir por cero.
+     */
+    DIV = this.performBinaryOperation((a, b) => {
+        if (b === 0) {
+            throw new Error('Error: División por cero');
+        }
+        return a / b;
+    });
+
+    /**
+     * Calcula la potencia de un número.
+     * @type {Function}
+     * @throws Lanzará un error si los valores no son números o si el exponente es negativo.
+     */
+    POW = this.performBinaryOperation((a, b) => {
+        if (typeof a !== 'number' || typeof b !== 'number') {
+            throw new Error('Error: Ambos operandos deben ser números');
+        }
+        if (b < 0) {
+            throw new Error('Error: El exponente no puede ser negativo');
+        }
+        return Math.pow(a, b);
+    });
 }
 
 export default ArithmeticCommands;

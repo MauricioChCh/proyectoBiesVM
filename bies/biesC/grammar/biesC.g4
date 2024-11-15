@@ -31,8 +31,19 @@ letInExpr
     ;
 
 declaration
-    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # Const_NoParams_Label
-    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # Const_WithParams_Label
+    : simpleLetInstr
+    | simpleConstInstr
+    | anonymousConstFunction
+    | anonymousLetFunction
+    ;
+
+simpleConstInstr
+    : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
+    ;
+
+anonymousConstFunction
+    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaConstNoParams_Label
+    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaConstWithParams_Label
     ;
 
 primarydata                                 
@@ -50,6 +61,7 @@ expr
     | expr DIV expr                         # Div_Label
     | expr ADD expr                         # Add_Label
     | expr SUB expr                         # Sub_Label
+    | expr POW expr                         # Pow_Label
     | expr AND expr                         # And_Label
     | expr OR expr                          # Or_Label
     | expr EQ expr                          # Eq_Label
@@ -58,22 +70,13 @@ expr
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
     | expr GE expr                          # Ge_Label
-    | '(' expr ')'                          # Parens_Label
+    | '(' expr ')'                          # Exp_Label
     ;
 
 functionCall
     : id '()'                               # FunctionCallNoParams_Label
     | id '(' expr (',' expr)* ')'           # FunctionCallWithParams_Label
-    ;
-
-concatExpr
-    : concatPart (WS? ADD WS? concatPart)*  # Concat_Label
-    ;
-
-concatPart
-    : number
-    | string
-    | id
+    | predSymbols '(' expr (',' expr)* ')'  # PredifinedFunctionCall_Label
     ;
 
 number
@@ -92,7 +95,30 @@ id
     : ID                                    
     ;
 
+predSymbols
+    : BOOL      # Bool_Label
+    | TRUE      # True_Label
+    | FALSE     # False_Label
+    | NULL      # Null_Label
+    | INPUT     # Input_Label
+    | INT       # Int_Label
+    | STR       # Str_Label
+    | LIST      # List_Label
+    | LEN       # Len_Label
+    ;
+
 // Definición de tokens
+
+// Símbolos
+BOOL: 'bool';
+TRUE: 'true';
+FALSE: 'false';
+NULL: 'null';
+INPUT: 'input';
+INT: 'int';
+STR: 'str';
+LIST: 'list';
+LEN: 'len';
 
 // Datos Primarios
 STRING: '"' (~["\r\n])* '"';
@@ -105,6 +131,7 @@ MULT: '*';
 DIV: '/';
 ADD: '+';
 SUB: '-';
+POW: '**';
 
 // Operadores Lógicos
 AND: '&&';
