@@ -15,7 +15,7 @@ import { Logger } from './Logger.js';
  * @returns {boolean} Devuelve true si el análisis fue exitoso, false en caso contrario.
  */
 export function analizarArchivoBies(filePath) {
-    const logger = new Logger();
+    const logger =  Logger;
 
     try {
         // Lee el contenido del archivo especificado en `filePath`

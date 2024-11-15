@@ -6,9 +6,9 @@ import { Logger } from './Logger.js';
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
-        this.logger = new Logger();
+        this.logger =  Logger;
         this.code = [];
-        this.compiler = new C(logger);
+        this.compiler = new C();
         this.mainCode = [];
         this.functionCounter = 1; // Contador de funciones
         this.functionMap = {}; // Mapa de funciones

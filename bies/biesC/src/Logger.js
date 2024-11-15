@@ -1,12 +1,12 @@
-import chalk from "chalk";
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.
  * Permite activar diferentes niveles de detalle en los logs a través de las propiedades `isVerbose`, `isDebug`, `isOutfile` e `isErrfile`.
  */
-export class Logger {
-    // Propiedad estática para mantener la única instancia de la clase
-    static instance = null;
+class Logger {
+    
 
     /**
      * Crea una nueva instancia de la clase `Logger`.
@@ -17,19 +17,25 @@ export class Logger {
      * @param {boolean} [isOutfile=false] - Indica si se deben registrar mensajes en un archivo de salida.
      * @param {boolean} [isErrfile=false] - Indica si se deben registrar mensajes de error en un archivo.
      */
-    constructor(isVerbose = false, isDebug = false, isOutfile = false, isErrfile = false) {
-        if (Logger.instance) {
-            return Logger.instance; // Si ya existe una instancia, la retorna
+    constructor() {
+        if (!Logger.instance) {
+            // Configura las propiedades
+            this.isVerbose = false;
+            this.isDebug = false;
+            this.isOutfile = false;
+            this.isErrfile = false;
+            this.outfile = null;
+            this.errfile = null;
+            this.outStream = null;
+            this.errStream = null;
+
+            // Guarda la instancia en una propiedad estática
+            Logger.instance = this;
+
         }
+        return Logger.instance; // Si ya existe una instancia, la retorna
 
-        // Configura las propiedades
-        this.isVerbose = isVerbose;
-        this.isDebug = isDebug;
-        this.isOutfile = isOutfile;
-        this.isErrfile = isErrfile;
-
-        // Guarda la instancia en una propiedad estática
-        Logger.instance = this;
+        
     }
 
     /**
@@ -40,17 +46,21 @@ export class Logger {
      * @param {boolean} [isOutfile] - Actualiza el valor de `isOutfile`.
      * @param {boolean} [isErrfile] - Actualiza el valor de `isErrfile`.
      */
-    configure(isVerbose, isDebug, isOutfile, isErrfile) {
+    configure(isVerbose, isDebug, outfile, errfile) {
         this.isVerbose = isVerbose;
         this.isDebug = isDebug;
-        this.isOutfile = isOutfile;
-        this.isErrfile = isErrfile;
 
-        if(isOutfile){
-            console.log(chalk.red+ "isOutfile");
+        if (outfile) {
+            this.outfile = outfile;
+            this.outStream = fs.createWriteStream(outfile, { flags: 'a' });
+            this.isOutfile = true; // Marca que se está usando un archivo de salida
         }
-        if(isErrfile){
-            console.log(chalk.red+ "isErrfile");
+    
+        // Configura el archivo de errores si se proporciona
+        if (errfile) {
+            this.errfile = errfile;
+            this.errStream = fs.createWriteStream(errfile, { flags: 'a' });
+            this.isErrfile = true; // Marca que se está usando un archivo de errores
         }
 
     }
@@ -85,6 +95,18 @@ export class Logger {
         }
     }
 
+    out(message) {
+        if (this.outStream) {
+            this.outStream.write(`${message}\n`);
+        }
+    }
+
+    err(message) {
+        if (this.errStream) {
+            this.errStream.write(`${message}\n`);
+        }
+    }
+
     getVerbose() {
         return this.isVerbose;
     }
@@ -93,13 +115,27 @@ export class Logger {
         return this.isDebug;
     }
 
-    getOutfile() {
+    getisOutfile() {
         return this.isOutfile;
     }
 
-    getErrfile() {
+    getisErrfile() {
         return this.isErrfile;
     }
 
+    getOutfile(){
+        return this.outfile;
+    }
+
+    getErrfile(){
+        return this.errfile;
+    }
+
+
+
     
 }
+
+const instance = new Logger();
+
+export { instance as Logger };

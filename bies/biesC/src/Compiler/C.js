@@ -1,6 +1,6 @@
 import FileWriter from './FileWriter.js';
 import CommandExecutor from './CommandExecutor.js';
-import { Logger } from '../Logger.js';
+
 /**
  * Clase que representa el compilador (C).
  */

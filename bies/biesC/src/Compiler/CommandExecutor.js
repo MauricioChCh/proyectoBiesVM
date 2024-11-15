@@ -10,7 +10,7 @@ import { Logger } from '../Logger.js';
  */
 class CommandExecutor {
     constructor() {
-        this.logger = new Logger();
+        this.logger =  Logger;
     }
 
     /**
@@ -58,8 +58,8 @@ class CommandExecutor {
         const flags = [
             this.logger.getVerbose() ? '-v' : '',
             this.logger.getDebug() ? '-d' : '',
-            this.logger.getOutfile() ? '-o' : '',
-            this.logger.getErrfile() ? '-e' : ''
+            //this.logger.getOutfile() ? '-o' : '',
+           // this.logger.getErrfile() ? '-e' : ''
         ];
         return `${baseCommand} ${flags.filter(Boolean).join(' ')}`;
     }

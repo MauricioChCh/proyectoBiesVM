@@ -5,44 +5,26 @@ import Command from './Command.js';
  * @extends Command
  */
 class ArithmeticCommands extends Command {
-    /**
-     * Crea una instancia de ArithmeticCommands.
-     * @param {Object} vm - La instancia de la máquina virtual.
-     */
     constructor(vm) {
         super(vm);
-        this.bindMethods(['ADD', 'SUB', 'MUL', 'DIV']);
+        
+        const operations = {
+            ADD: (a, b) => a + b,
+            SUB: (a, b) => a - b,
+            MUL: (a, b) => a * b,
+            DIV: (a, b) => {
+                if (b === 0) throw new Error('Error: División por cero');
+                return a / b;
+            }
+        };
+
+        // Registra todas las operaciones automáticamente
+        Object.entries(operations).forEach(([name, operation]) => {
+            this[name] = this.performBinaryOperation(operation);
+        });
+
+        this.bindMethods(Object.keys(operations));
     }
-
-    /**
-     * Suma dos números.
-     * @type {Function}
-     */
-    ADD = this.performBinaryOperation((a, b) => a + b);
-
-    /**
-     * Resta dos números.
-     * @type {Function}
-     */
-    SUB = this.performBinaryOperation((a, b) => a - b);
-
-    /**
-     * Multiplica dos números.
-     * @type {Function}
-     */
-    MUL = this.performBinaryOperation((a, b) => a * b);
-
-    /**
-     * Divide dos números.
-     * @type {Function}
-     * @throws Lanzará un error si se intenta dividir por cero.
-     */
-    DIV = this.performBinaryOperation((a, b) => {
-        if (b === 0) {
-            throw new Error('Error: División por cero');
-        }
-        return a / b;
-    });
 }
 
 export default ArithmeticCommands;
