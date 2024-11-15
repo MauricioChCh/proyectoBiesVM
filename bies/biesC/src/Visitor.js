@@ -101,11 +101,7 @@ export class Visitor extends biesCVisitor {
         // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
         const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
         this.isFunction() ? this.functionCode.push(bytecode) : this.code.push(bytecode);
-        // if(this.func) {
-        //     this.functionCode.push(bytecode);
-        // } else {
-        //     this.code.push(bytecode);
-        // }
+      
 
         return null;
     }
@@ -114,11 +110,6 @@ export class Visitor extends biesCVisitor {
         const number = ctx.getText();
         console.log(chalk.green('Nodo visitado: number ->'), number);
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.code.push('LDV ' + number);
-        // if(this.func) {
-        // this.functionCode.push('LDV ' + number);
-        // } else {
-        //     this.code.push('LDV ' + number);
-        // }
         return null;
     }
 
@@ -126,11 +117,6 @@ export class Visitor extends biesCVisitor {
         const string = ctx.getText();
         console.log(chalk.green('Nodo visitado: string ->'), string);
         this.isFunction() ? this.functionCode.push('LDV ' + string) : this.code.push('LDV ' + string);
-        // if(this.func) {
-        //     this.functionCode.push('LDV ' + string);
-        // } else {
-        //     this.code.push('LDV ' + string);
-        // }
         return null;
     }
 
@@ -138,11 +124,6 @@ export class Visitor extends biesCVisitor {
         const array = ctx.getText();
         console.log(chalk.green('Nodo visitado: array ->'), array);
         this.isFunction() ? this.functionCode.push('LDV ' + array) : this.code.push('LDV ' + array);
-        // if(this.func) {
-        //     this.functionCode.push('LDV ' + array);
-        // } else {
-        //         this.code.push('LDV ' + array);
-        // }
         return null;
     }
 
@@ -152,11 +133,6 @@ export class Visitor extends biesCVisitor {
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.code.push(this.variables[id].byteload);
-            // if(this.func) {
-            //     this.functionCode.push(this.variables[id].byteload); // Generar el bytecode BLD en lugar de BST
-            // } else {
-            //     this.code.push(this.variables[id].byteload); // Generar el bytecode BLD en lugar de BST
-            // }
         } else {
             console.error(`Error: Variable ${id} no está definida`);
         }
@@ -325,7 +301,6 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.red('Nodo visitado: functionCallNoParams'));
 
         this.visitChildren(ctx);
-        console.log(this.functionMap[ctx.id().getText()]);
         this.code.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
         this.code.push('APP ' + this.functionMap[ctx.id().getText()].args);
 
@@ -346,11 +321,6 @@ export class Visitor extends biesCVisitor {
 
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('PRN') : this.code.push('PRN');
-        // if(this.func) {
-        //     this.functionCode.push('PRN');
-        // } else {
-        //     this.code.push('PRN');
-        // }
 
         return null;
     }
