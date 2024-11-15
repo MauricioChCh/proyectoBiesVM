@@ -8,9 +8,12 @@ export class Visitor extends biesCVisitor {
         super();
         this.logger = new Logger();
         this.code = [];
-        this.compiler = new C();
+        this.compiler = new C(logger);
+        this.mainCode = [];
         this.functionCounter = 1; // Contador de funciones
         this.functionMap = {}; // Mapa de funciones
+        this.variableCounter = 0; // Contador de variables
+        this.variables = {}; // Mapa de variables
     }
 
     /**
@@ -21,6 +24,7 @@ export class Visitor extends biesCVisitor {
     visitProgram(ctx) {
         console.log(chalk.red('Nodo visitado: program'));
         this.visitChildren(ctx);
+        this.generateMain();
         this.sendCodeToCompiler();
         return this.compiler;
     }
@@ -54,31 +58,31 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
 
-    processArithmeticOperation(ctx, operator) {
+    processArithmeticOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
         console.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
-        this.code.push(operator);
+        this.code.push(bytecode);
     }
 
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
     visitMul_Label(ctx) {
-        this.processArithmeticOperation(ctx, '*');
+        this.processArithmeticOperation(ctx, '*', 'MUL');
         return null;
     }
 
     visitDiv_Label(ctx) {
-        this.processArithmeticOperation(ctx, '/');
+        this.processArithmeticOperation(ctx, '/', 'DIV');
         return null;
     }
 
     visitAdd_Label(ctx) {
-        this.processArithmeticOperation(ctx, '+');
+        this.processArithmeticOperation(ctx, '+', 'ADD');
         return null;
     }
 
     visitSub_Label(ctx) {
-        this.processArithmeticOperation(ctx, '-');
+        this.processArithmeticOperation(ctx, '-', 'SUB');
         return null;
     }
 
@@ -87,56 +91,67 @@ export class Visitor extends biesCVisitor {
     visitPrimaryData_Label(ctx) {
         const primaryData = ctx.getText();
         console.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
-        this.code.push(primaryData);
+
+        // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
+        const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
+        this.code.push(bytecode);
+
         return null;
     }
 
     visitNumber_Label(ctx) {
         const number = ctx.getText();
         console.log(chalk.green('Nodo visitado: number ->'), number);
-        this.code.push(number);
+        this.code.push('LDV ' + number);
         return null;
     }
 
     visitString(ctx) {
         const string = ctx.getText();
         console.log(chalk.green('Nodo visitado: string ->'), string);
-        this.code.push(string);
+        this.code.push('LDV ' + string);
         return null;
     }
 
     visitArray(ctx) {
         const array = ctx.getText();
         console.log(chalk.green('Nodo visitado: array ->'), array);
-        this.code.push(array);
+        this.code.push('LDV ' + array);
         return null;
     }
 
-    visitIdentifierData_Label(ctx) {
+    visitId_Label(ctx) {
         const id = ctx.getText();
         console.log(chalk.green('Nodo visitado: id ->'), id);
-        this.code.push(id);
+
+        if (id in this.variables) { // Verificar si el id está en el mapa de variables
+            this.code.push(this.variables[id].byteload); // Generar el bytecode BLD en lugar de BST
+        } else {
+            console.error(`Error: Variable ${id} no está definida`);
+        }
+
         return null;
     }
 
     // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
 
-    // --------------------------------------------- Visitas a nodos de 'simple let' ---------------------------------------------
+    // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
 
-    visitsimpleLetInstr(ctx) {
+    visitSimpleLetInstr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: simpleLetInstr'));
         const id = ctx.id().getText();
-        const instruction = `let ${id} =`;  // Corregido: Template literal debe estar entre comillas invertidas
 
-        // Verificar si la expresión no es nula antes de visitarla
-        const expr = ctx.expr();
-        if (expr) {
-            this.visit(expr);
+        // Verificar si la variable ya está en el mapa de variables
+        if (!(id in this.variables)) {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
         }
 
-        if (!this.code.includes(instruction)) {
-            console.log(chalk.green('Nodo visitado: simpleLetInstr'), instruction);
-            this.code.push(instruction);
-        }
+        // Visitar los hijos del nodo para procesar la expresión
+        this.visitChildren(ctx);
+
+        // Generar el bytecode para asignar el valor a la variable
+        this.code.push(`BST 0 ${this.variableCounter++}`);
+
         return null;
     }
 
@@ -148,37 +163,17 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
-    visitIdentifier(ctx) {
-        const id = ctx.getText();
-        console.log(chalk.green('Nodo visitado: id'), id);
-
-        // Verificar si el identificador es una función y asignar el contexto de invocación
-        if (this.functionMap[id]) {
-            const functionData = this.functionMap[id];
-            const parentContext = this.compiler.currentParent;
-
-            // Registrar el contexto en el que ocurre
-            functionData.invokedIn = parentContext;
-
-            console.log(chalk.green('Invocación de función:'), functionData.id);
-            console.log(chalk.green('Contexto de invocación:'), parentContext);
-        }
-
-        this.code.push(id);
-        return null;
-    }
-
-    visitLambdaWithParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: LambdaWithParams'));
+    visitLambda_Label(ctx, paramCount = 0) {
+        const functionType = paramCount === 0 ? 'LambdaNoParams' : 'LambdaWithParams';
+        console.log(chalk.red(`Nodo visitado: ${functionType}`));
 
         const functionName = ctx.id(0).getText(); // Nombre de la función
-        const paramCount = ctx.id().length - 1; // Cantidad de parámetros
         let parentContext = '$0'; // Contexto padre por defecto
         const functionId = `$${this.functionCounter++}`; // Identificador único de la función
 
-        let functionCallName = null; // Variable para la llamada a función
-
         // Detectar si hay una llamada a función dentro del cuerpo de la lambda
+        let functionCallName = null;
+
         if (ctx.expr()) {
             const exprText = ctx.expr().getText();
             functionCallName = exprText.includes('(') ? exprText.split('(')[0].trim() : null;
@@ -201,11 +196,10 @@ export class Visitor extends biesCVisitor {
             invoking: functionCallName || null
         };
 
-        // Imprimir el contenido de functionMap
-        //console.log(this.functionMap);
+        // Agregar información de la función a `code`
+        this.code.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
 
-        // Imprimir la información de la función en el formato deseado
-        console.log(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+        this.code.push(...Array.from({ length: paramCount }, (_, i) => `BLD 0 ${i}`)); //Agrega un 'BLD' para cada parámetro
 
         // Actualizar el contexto padre actual
         this.compiler.currentParent = functionId;
@@ -213,14 +207,25 @@ export class Visitor extends biesCVisitor {
         // Visitar el cuerpo de la función
         this.visitChildren(ctx);
 
+        // Finalizar función
+        this.code.push(`$END ${functionId}`);
+        this.code.push('\n');
+
         // Restaurar el contexto padre del compilador después de visitar la función
         this.compiler.currentParent = parentContext;
 
         return null;
     }
 
+    // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
+    visitLambdaNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
 
-
+    visitLambdaWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
+    }
 
     visitFunctionCallExpr_Label(ctx) {
         const funcName = ctx.getText();
@@ -229,24 +234,41 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
-    visitPrintInstr(ctx) {
-        let printArgument = '';
+    visitFunctionCallWithParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: functionCallWithParams'));
 
-        if (ctx.primarydata()) {
-            const primaryData = ctx.primarydata();
-            printArgument = primaryData.getText();
-        } else if (ctx.expr()) {
-            printArgument = ctx.expr().getText();
-            this.visit(ctx.expr());
-        }
+        this.visitChildren(ctx);
 
-        console.log(chalk.green('Nodo visitado: printInstr'), `print(${printArgument})`);
+        this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
 
-        if (!ctx.expr()) {
-            this.code.push(printArgument);
-        }
+        return null;
+    }
 
-        this.code.push('print');
+    visitFunctionCallNoParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: functionCallNoParams'));
+
+        this.visitChildren(ctx);
+
+        this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
+
+        return null;
+    }
+
+    generateMain() {
+        this.code.push('\n\n;Aquí inicia el "main"\n');
+        this.code.push(...this.mainCode);
+        this.code.push('\n;Aquí termina el "main"');
+    }
+
+    visitPrintInstr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: printInstr'));
+
+        this.visitChildren(ctx);
+
+        this.code.push('PRN');
+
         return null;
     }
 }

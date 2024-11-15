@@ -9,14 +9,15 @@ statement
     : printInstr
     | simpleLetInstr
     | anonymousLetFunction // Permitir funciones anónimas como statement
+    | functionCall
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'
+    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
     ;
 
 simpleLetInstr
-    : 'let' WS? id WS? '=' WS? expr
+    : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
     ;
 
 anonymousLetFunction
@@ -51,7 +52,18 @@ expr
     ;
 
 functionCall
-    : id '(' (expr (',' expr)*)? ')'
+    : id '()'                               # FunctionCallNoParams_Label
+    | id '(' expr (',' expr)* ')'           # FunctionCallWithParams_Label
+    ;
+
+concatExpr
+    : concatPart (WS? ADD WS? concatPart)*  # Concat_Label
+    ;
+
+concatPart
+    : number
+    | string
+    | id
     ;
 
 number
