@@ -31,6 +31,7 @@ export class Visitor extends biesCVisitor {
         this.builtIns = null;
     }
 
+
     /**
      * Visita el nodo del programa.
      * @param {Object} ctx - El contexto del nodo.
@@ -101,6 +102,7 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+
     visitPow_Label(ctx) {
         this.processOperation(ctx, '**', 'POW');
         return null;
@@ -140,9 +142,7 @@ export class Visitor extends biesCVisitor {
 
     visitPrimaryData_Label(ctx) {
         this.logger.log(chalk.magenta('Nodo visitado: primaryData ->'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
@@ -221,6 +221,7 @@ export class Visitor extends biesCVisitor {
         // Generar el bytecode para asignar el valor a la variable
         const targetArray = this.isFunction() ? this.functionCode : this.byteCode;
         targetArray.push(`BST 0 ${this.variables[id]?.arg2 ?? this.variableCounter++}`);
+
 
         return null;
     }
