@@ -6,12 +6,21 @@ import { Logger } from './Logger.js';
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
-        this.logger =  Logger;
-        this.code = [];
-        this.compiler = new C();
-        this.mainCode = [];
+        this.logger = logger;
+
+        this.func = false; // Indicador de si estamos dentro de una función
+        this.compiler = new C(logger);
+
+        // C -> Codigo generado por el visitor   
+        this.byteCode = []; // byteCode almacenado
+        this.mainCode = []; // Código principal
+        this.functionCode = []; // Código específico para funciones
+
+        // D -> Contextos de Ejecución
         this.functionCounter = 1; // Contador de funciones
         this.functionMap = {}; // Mapa de funciones
+
+        // B -> Bindings
         this.variableCounter = 0; // Contador de variables
         this.variables = {}; // Mapa de variables
     }
@@ -45,7 +54,7 @@ export class Visitor extends biesCVisitor {
      * Envía el código al compilador.
      */
     sendCodeToCompiler() {
-        this.compiler.run(this.code);
+        this.compiler.run(this.byteCode);
     }
 
     //--------------------------------------------- Funciones de visitas a los nodos ---------------------------------------------
@@ -61,7 +70,11 @@ export class Visitor extends biesCVisitor {
     processArithmeticOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
         console.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
-        this.code.push(bytecode);
+        if (this.func) {
+            this.functionCode.push(bytecode);
+        } else {
+            this.byteCode.push(bytecode);
+        }
     }
 
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
@@ -86,6 +99,7 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    isFunction = () => this.func;
     //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
 
     visitPrimaryData_Label(ctx) {
@@ -94,7 +108,7 @@ export class Visitor extends biesCVisitor {
 
         // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
         const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
-        this.code.push(bytecode);
+        this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
 
         return null;
     }
@@ -102,21 +116,21 @@ export class Visitor extends biesCVisitor {
     visitNumber_Label(ctx) {
         const number = ctx.getText();
         console.log(chalk.green('Nodo visitado: number ->'), number);
-        this.code.push('LDV ' + number);
+        this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
         return null;
     }
 
     visitString(ctx) {
         const string = ctx.getText();
         console.log(chalk.green('Nodo visitado: string ->'), string);
-        this.code.push('LDV ' + string);
+        this.isFunction() ? this.functionCode.push('LDV ' + string) : this.byteCode.push('LDV ' + string);
         return null;
     }
 
     visitArray(ctx) {
         const array = ctx.getText();
         console.log(chalk.green('Nodo visitado: array ->'), array);
-        this.code.push('LDV ' + array);
+        this.isFunction() ? this.functionCode.push('LDV ' + array) : this.byteCode.push('LDV ' + array);
         return null;
     }
 
@@ -125,11 +139,8 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.green('Nodo visitado: id ->'), id);
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
-            this.code.push(this.variables[id].byteload); // Generar el bytecode BLD en lugar de BST
-        } else {
-            console.error(`Error: Variable ${id} no está definida`);
+            this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.byteCode.push(this.variables[id].byteload);
         }
-
         return null;
     }
 
@@ -150,9 +161,34 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
 
         // Generar el bytecode para asignar el valor a la variable
-        this.code.push(`BST 0 ${this.variableCounter++}`);
-
+        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.byteCode.push(`BST 0 ${this.variableCounter++}`);
         return null;
+    }
+
+    // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
+
+    visitLetInExpr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: letInInstr'));
+
+        this.visitChildren(ctx);
+
+        return null
+    }
+
+    visitConst_WithParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: constWithParams'));
+
+        this.visitChildren(ctx);
+
+        return null
+    }
+
+    visitConst_NoParams_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: const_NoParams'));
+
+        this.visitChildren(ctx);
+
+        return null
     }
 
     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
@@ -197,9 +233,10 @@ export class Visitor extends biesCVisitor {
         };
 
         // Agregar información de la función a `code`
-        this.code.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+        this.functionCode.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
+        this.func = true;
 
-        this.code.push(...Array.from({ length: paramCount }, (_, i) => `BLD 0 ${i}`)); //Agrega un 'BLD' para cada parámetro
+        this.functionCode.push(...Array.from({ length: paramCount }, (_, i) => `BLD 0 ${i}`)); //Agrega un 'BLD' para cada parámetro
 
         // Actualizar el contexto padre actual
         this.compiler.currentParent = functionId;
@@ -207,9 +244,12 @@ export class Visitor extends biesCVisitor {
         // Visitar el cuerpo de la función
         this.visitChildren(ctx);
 
+        // Agregar el bytecode de retorno a la función
+        this.functionCode.push('RET');
         // Finalizar función
-        this.code.push(`$END ${functionId}`);
-        this.code.push('\n');
+        this.functionCode.push(`$END ${functionId}`);
+        this.functionCode.push('\n');
+        this.func = false;
 
         // Restaurar el contexto padre del compilador después de visitar la función
         this.compiler.currentParent = parentContext;
@@ -239,8 +279,8 @@ export class Visitor extends biesCVisitor {
 
         this.visitChildren(ctx);
 
-        this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
-        this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
+        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
 
         return null;
     }
@@ -250,25 +290,26 @@ export class Visitor extends biesCVisitor {
 
         this.visitChildren(ctx);
 
-        this.mainCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
-        this.mainCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
+        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
 
         return null;
     }
 
     generateMain() {
-        this.code.push('\n\n;Aquí inicia el "main"\n');
-        this.code.push(...this.mainCode);
-        this.code.push('\n;Aquí termina el "main"');
+        const main = [];
+        main.push(...this.functionCode);
+        main.push('\n;Aquí inicia el "main"\n');
+        main.push(...this.byteCode);
+        main.push('\n;Aquí termina el "main"');
+        this.byteCode = main;
     }
 
     visitPrintInstr_Label(ctx) {
         console.log(chalk.red('Nodo visitado: printInstr'));
 
         this.visitChildren(ctx);
-
-        this.code.push('PRN');
-
+        this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
     }
 }

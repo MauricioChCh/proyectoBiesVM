@@ -8,8 +8,9 @@ program
 statement
     : printInstr
     | simpleLetInstr
-    | anonymousLetFunction // Permitir funciones anónimas como statement
+    | anonymousLetFunction
     | functionCall
+    | letInExpr
     ;
 
 printInstr
@@ -23,6 +24,15 @@ simpleLetInstr
 anonymousLetFunction
     : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
     | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    ;
+
+letInExpr
+    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' ('{' (statement (NL | WS)*)* '}')?  # LetInExpr_Label
+    ;
+
+declaration
+    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # Const_NoParams_Label
+    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # Const_WithParams_Label
     ;
 
 primarydata                                 
