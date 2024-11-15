@@ -3,7 +3,7 @@ cd C:\Users\Eddy\Desktop\Proyecto Paradigmas de la Programación\bies\biesC && r
 */
 // Generated from ./grammar/biesC.g4 by ANTLR 4.9.2
 
-
+/*
 //Print con primaryData
 print(666)
 
@@ -45,8 +45,12 @@ let greetings = () => "Hello World!"
 let version = (4 + 1 - 2)
 splash("Testing helloworld Version " + version + " ***")
 print(greetings()) 
+*/
 
+//let splash = (msg) => print(msg)
+len(666)
 /*
+
 let {
 	 const splash = (msg) => print(msg)
 	 const greetings = () => "Hello World!"
@@ -55,7 +59,7 @@ let {
 		//splash("Testing helloworld Version " + version + " ***")
 		//print(greetings()) 
 	}
-*/
+
 /*
 //-------------------------------------------------------------------------------
 ```js

@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import biesCVisitor from '../output/biesCVisitor.js';
+import BuiltInsProcessor from './PredifinedSymbol.js';
 import C from './Compiler/C.js';
 
 export class Visitor extends biesCVisitor {
@@ -7,7 +8,6 @@ export class Visitor extends biesCVisitor {
         super();
         this.logger = logger;
 
-        this.func = false; // Indicador de si estamos dentro de una función
         this.compiler = new C(logger);
 
         // C -> Codigo generado por el visitor   
@@ -18,10 +18,16 @@ export class Visitor extends biesCVisitor {
         // D -> Contextos de Ejecución
         this.functionCounter = 1; // Contador de funciones
         this.functionMap = {}; // Mapa de funciones
+        this.currentScope = 0; // Scope actual
+        this.func = false; // Indicador de si estamos dentro de una función
 
         // B -> Bindings
         this.variableCounter = 0; // Contador de variables
         this.variables = {}; // Mapa de variables
+
+        // Instancia de BuiltInsProcessor
+        this.builtInsProcessor = new BuiltInsProcessor(this);
+        this.builtIns = null;
     }
 
     /**
@@ -69,11 +75,7 @@ export class Visitor extends biesCVisitor {
     processArithmeticOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
         console.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
-        if (this.func) {
-            this.functionCode.push(bytecode);
-        } else {
-            this.byteCode.push(bytecode);
-        }
+        (this.func ? this.functionCode : this.byteCode).push(bytecode);
     }
 
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
@@ -108,6 +110,11 @@ export class Visitor extends biesCVisitor {
         // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
         const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
         this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
+
+        // Procesar builtIns si está definido
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
 
         return null;
     }
@@ -168,6 +175,9 @@ export class Visitor extends biesCVisitor {
 
     visitLetInExpr_Label(ctx) {
         console.log(chalk.red('Nodo visitado: letInInstr'));
+
+
+        console.log('Scope actual:', this.currentScope);
 
         this.visitChildren(ctx);
 
@@ -230,6 +240,9 @@ export class Visitor extends biesCVisitor {
             parent: parentContext,
             invoking: functionCallName || null
         };
+
+        // Cambiar el scope actual al nuevo scope de la función
+        this.currentScope = this.functionCounter;
 
         // Agregar información de la función a `code`
         this.functionCode.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
@@ -310,6 +323,69 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
+    }
+
+    visitPredifinedFunctionCall_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: predifinedFunctionCall'));
+
+        this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitExp_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: exp'));
+
+        return null;
+    }
+
+    // PredifinedSymbols ------------------------------------------------------------------------------------------------------------
+
+    // Método genérico para visitar los nodos de los símbolos predefinidos
+    visitBuiltIns(ctx, label) {
+        console.log(chalk.red(`Nodo visitado: ${label}`));
+    
+        this.builtIns = label;
+        this.visitChildren(ctx);
+    
+        return null;
+    }
+
+    // Luego, los métodos específicos pueden delegar en la función genérica:
+    visitBool_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'bool');
+    }
+
+    visitTrue_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'true');
+    }
+    
+    visitFalse_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'false');
+    }
+    
+    visitNull_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'null');
+    }
+    
+    visitInput_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'input');
+    }
+    
+    visitInt_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'int');
+    }
+    
+    visitStr_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'str');
+    }
+    
+    visitList_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'list');
+    }
+    
+    visitLen_Label(ctx) {
+        return this.visitBuiltIns(ctx, 'len');
     }
 }
 
