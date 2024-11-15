@@ -1,14 +1,9 @@
-LDV 654
-LDV 1
-ADD
-LDV 11
-LDV 2
-MUL
-LDV 9
-DIV
-ADD
-LDV 2
-LDV 5
-ADD
-SUB
+
+;Aquí inicia el "main"
+
+LDV 666
+EQ
+NOT
 PRN
+
+;Aquí termina el "main"

@@ -90,6 +90,12 @@ export default class biesVMVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesVMParser#lengthInstr.
+	visitLengthInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesVMParser#castInstr.
 	visitCastInstr(ctx) {
 	  return this.visitChildren(ctx);

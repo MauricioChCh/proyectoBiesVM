@@ -11,7 +11,7 @@ class ArithmeticCommands extends Command {
      */
     constructor(vm) {
         super(vm);
-        this.bindMethods(['ADD', 'SUB', 'MUL', 'DIV']);
+        this.bindMethods(['ADD', 'SUB', 'MUL', 'DIV', 'POW']);
     }
 
     /**
@@ -42,6 +42,21 @@ class ArithmeticCommands extends Command {
             throw new Error('Error: División por cero');
         }
         return a / b;
+    });
+
+    /**
+     * Calcula la potencia de un número.
+     * @type {Function}
+     * @throws Lanzará un error si los valores no son números o si el exponente es negativo.
+     */
+    POW = this.performBinaryOperation((a, b) => {
+        if (typeof a !== 'number' || typeof b !== 'number') {
+            throw new Error('Error: Ambos operandos deben ser números');
+        }
+        if (b < 0) {
+            throw new Error('Error: El exponente no puede ser negativo');
+        }
+        return Math.pow(a, b);
     });
 }
 

@@ -32,8 +32,10 @@ class IOCommands extends Command {
      */
     PRN() {
         const value = this.vm.stack.pop();
-        const output = Array.isArray(value) ? this.formatArray(value) : value;
-        console.log(chalk.cyan(output));
+        if (value !== undefined) {
+            const output = Array.isArray(value) ? this.formatArray(value) : value;
+            console.log(chalk.cyan(output));
+        }
     }
 
     /**
