@@ -182,19 +182,38 @@ export class Visitor extends biesCVisitor {
 
         // Generar el bytecode para asignar el valor a la variable
         this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
-        // if(this.func) {
-        //     this.functionCode.push(`BST 0 ${this.variableCounter++}`);
-        // } else {
-        //     this.code.push(`BST 0 ${this.variableCounter++}`);
-        // }
+
 
         return null;
     }
 
+    visitSimpleConstInstr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: simpleConstInstr'));
+        const id = ctx.id().getText();
+
+        // Verificar si la variable ya está en el mapa de variables
+        if (!(id in this.variables)) {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
+        }
+
+        // Visitar los hijos del nodo para procesar la expresión
+        this.visitChildren(ctx);
+
+        // Generar el bytecode para asignar el valor a la variable
+        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
+
+        return null;
+    }
     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
 
     visitAnonymousLetFunction(ctx) {
         console.log(chalk.red('Nodo visitado: anonymousLetFunction'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitAnonymousConstFunction(ctx) {
+        console.log(chalk.red('Nodo visitado: anonymousConstFunction'));
         this.visitChildren(ctx);
         return null;
     }
@@ -246,6 +265,7 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
 
         // Finalizar función
+        this.functionCode.push('RET');
         this.functionCode.push(`$END ${functionId}`);
         this.functionCode.push('\n');
         this.func = false;
@@ -265,6 +285,23 @@ export class Visitor extends biesCVisitor {
         const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
         return this.visitLambda_Label(ctx, paramCount);
     }
+
+    // Metodos especificos para LamdbaConstNoParams y LambdaConstWithParams
+    visitLambdaConstNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
+
+    visitLambdaConstWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
+    }
+
+    visitLetInExpr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: letInExpr'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
 
     visitFunctionCallExpr_Label(ctx) {
         const funcName = ctx.getText();
@@ -288,7 +325,7 @@ export class Visitor extends biesCVisitor {
         console.log(chalk.red('Nodo visitado: functionCallNoParams'));
 
         this.visitChildren(ctx);
-
+        console.log(this.functionMap[ctx.id().getText()]);
         this.code.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
         this.code.push('APP ' + this.functionMap[ctx.id().getText()].args);
 

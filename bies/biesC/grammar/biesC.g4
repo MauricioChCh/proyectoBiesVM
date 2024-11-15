@@ -9,13 +9,16 @@ statement
     : printInstr
     | simpleLetInstr
     | anonymousLetFunction
+    | simpleConstInstr
+    | anonymousConstFunction
     | functionCall
     | letInExpr
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
+    : 'print' '(' (primarydata | expr | statement) ')'  # PrintInstr_Label
     ;
+
 
 simpleLetInstr
     : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
@@ -31,8 +34,19 @@ letInExpr
     ;
 
 declaration
-    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # Const_NoParams_Label
-    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # Const_WithParams_Label
+    : simpleLetInstr
+    | simpleConstInstr
+    | anonymousConstFunction
+    | anonymousLetFunction
+    ;
+
+simpleConstInstr
+    : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
+    ;
+
+anonymousConstFunction
+    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaConstNoParams_Label
+    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaConstWithParams_Label
     ;
 
 primarydata                                 
@@ -43,7 +57,8 @@ primarydata
     ;
 
 expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
+    | anonymousLetFunction                  # AnonymousFunctionExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
