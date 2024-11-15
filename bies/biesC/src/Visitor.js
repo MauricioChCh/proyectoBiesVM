@@ -548,7 +548,6 @@ export class Visitor extends biesCVisitor {
         main.push('\n;Aquí termina el "main"');
         this.byteCode = main;
     }
-
     visitPrintInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
         this.visitChildren(ctx);
@@ -562,7 +561,6 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
         return null;
     }
-
     visitExp_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: exp'));
         this.visitChildren(ctx);
