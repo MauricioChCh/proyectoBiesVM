@@ -281,6 +281,7 @@ export class Visitor extends biesCVisitor {
 
     }
 
+
     // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
 
     visitConst_WithParams_Label(ctx) {
@@ -365,6 +366,7 @@ export class Visitor extends biesCVisitor {
         // Agregar el bytecode de retorno a la función
         this.functionCode.push('RET');
         // Finalizar función
+        this.functionCode.push('RET');
         this.functionCode.push(`$END ${functionId}`);
         this.functionCode.push('\n');
         this.func = false;
@@ -507,6 +509,12 @@ export class Visitor extends biesCVisitor {
         return this.visitLambda_Label(ctx, paramCount);
     }
 
+    visitLetInExpr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: letInExpr'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
     visitFunctionCallExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
         this.visitChildren(ctx);
@@ -548,6 +556,7 @@ export class Visitor extends biesCVisitor {
         main.push('\n;Aquí termina el "main"');
         this.byteCode = main;
     }
+    
     visitPrintInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
         this.visitChildren(ctx);

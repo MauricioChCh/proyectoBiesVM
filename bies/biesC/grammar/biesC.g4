@@ -35,7 +35,6 @@ anonymousLetFunction
 letInExpr
     : let in # LenInExpr_Label
     ;
-
 let
     : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}'               # LetExpr_Label
     ;
