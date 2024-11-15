@@ -34,8 +34,11 @@ program
     .argument('<archivo>', 'Archivo BASM a ejecutar') // Argumento obligatorio (el archivo)
     .option('-v, --verbose', 'Modo verbose') // Opción opcional para ver el proceso más detallado
     .option('-d, --detail', 'Modo detallado') // Opción opcional ver más detalladamente el proceso de parseo
+    .option('-o, --outfile', 'Modo outfile, sysout del archivo') // las salidas de print (sysout) en el archivo outfile
+    .option('-e, --errFile', 'Modo errfile, salidas syserr del archivo') // las salidas de errores (syserr) en el archivo errfile
     .action((fileName, options) => {
-        const logger = new Logger(options.verbose, options.detail);
+        const logger = new Logger();
+        logger.configure(options.verbose, options.detail, options.outfile, options.errFile);
 
         /**
          * Verifica que el archivo tenga la extensión .basm y que exista.
@@ -63,7 +66,7 @@ program
 
 
         try{
-            analizarArchivoBasm(fileName, logger);
+            analizarArchivoBasm(fileName);
 
             // if (esValido) {
             //     console.log(chalk.green(`El archivo ${fileName} es válido.`));

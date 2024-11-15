@@ -19,6 +19,9 @@ import BranchCommands from '../command/BranchCommands.js';
 import FunctionCommands from '../command/FunctionCommands.js';
 import TypeCommands from '../command/TypeCommands.js';
 import IOCommands from '../command/IOCommands.js';
+import { Logger } from './Logger.js';
+ 
+import LengthCommands from '../command/LengthCommands.js';
 
 /**
  * Clase que representa una máquina virtual (VM).
@@ -26,16 +29,17 @@ import IOCommands from '../command/IOCommands.js';
 class VM {
     /**
      * Crea una instancia de VM.
-     * @param {Object} [logger={ log: () => { } }] - El objeto logger para registrar mensajes.
+     *
      */
-    constructor(logger = { log: () => { } }) {
+    constructor() {
         this.stack = [];
         this.bindings = [{}];
         this.contextStack = [];
         this.code = [];
         this.functions = {};
         this.programCounter = 0;
-        this.logger = logger;
+        this.logger = new Logger();
+  
 
         this.initCommands = new InitCommands(this);
         this.stackCommands = new StackCommands(this);
@@ -53,6 +57,7 @@ class VM {
         this.functionCommands = new FunctionCommands(this);
         this.typeCommands = new TypeCommands(this);
         this.ioCommands = new IOCommands(this);
+        this.lengthCommands = new LengthCommands(this);
 
         this.bindCommandMethods();
     }
@@ -78,6 +83,7 @@ class VM {
             this.functionCommands,
             this.typeCommands,
             this.ioCommands,
+            this.lengthCommands,
         ];
 
         commandCategories.forEach(category => {
@@ -184,6 +190,8 @@ class VM {
             'INO': this.typeCommands.INO,
             'PRN': this.ioCommands.PRN,
             'INP': this.ioCommands.INP,
+            'LEN': this.lengthCommands.LEN,
+            'POW': this.arithmeticCommands.POW,
         };
         return commandMap[instructionType];
     }

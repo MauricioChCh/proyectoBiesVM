@@ -1,4 +1,4 @@
-// Generated from ./grammar/biesVM.g4 by ANTLR 4.13.1
+// Generated from /home/mauricio/Documents/Obsidian/2024/Ciclo2/Paradigmas/Evaluaciones/Proyectos/Proyecto_2/proyectoBiesVM/bies/biesVM/grammar/biesVM.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
@@ -86,6 +86,12 @@ export default class biesVMVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesVMParser#signInstr.
 	visitSignInstr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesVMParser#lengthInstr.
+	visitLengthInstr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
