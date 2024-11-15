@@ -31,8 +31,19 @@ letInExpr
     ;
 
 declaration
-    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # Const_NoParams_Label
-    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # Const_WithParams_Label
+    : simpleLetInstr
+    | simpleConstInstr
+    | anonymousConstFunction
+    | anonymousLetFunction
+    ;
+
+simpleConstInstr
+    : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
+    ;
+
+anonymousConstFunction
+    : 'const' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaConstNoParams_Label
+    | 'const' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaConstWithParams_Label
     ;
 
 primarydata                                 
@@ -50,6 +61,7 @@ expr
     | expr DIV expr                         # Div_Label
     | expr ADD expr                         # Add_Label
     | expr SUB expr                         # Sub_Label
+    | expr POW expr                         # Pow_Label
     | expr AND expr                         # And_Label
     | expr OR expr                          # Or_Label
     | expr EQ expr                          # Eq_Label
@@ -119,6 +131,7 @@ MULT: '*';
 DIV: '/';
 ADD: '+';
 SUB: '-';
+POW: '**';
 
 // Operadores Lógicos
 AND: '&&';

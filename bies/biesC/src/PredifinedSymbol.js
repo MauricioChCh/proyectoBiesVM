@@ -41,6 +41,11 @@ class BuiltInsProcessor {
         this.visitor.byteCode.push('LEN');
         this.visitor.byteCode.push('PRN');
     }
+
+    pow() {
+        this.visitor.byteCode.push('POW');
+        this.visitor.byteCode.push('PRN');
+    }
 }
 
 export default BuiltInsProcessor;
