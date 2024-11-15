@@ -178,7 +178,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitSimpleConstInstr_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: simpleConstInstr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: simpleConstInstr'));
         const id = ctx.id().getText();
 
         // Verificar si la variable ya está en el mapa de variables
@@ -233,7 +233,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitAnonymousConstFunction(ctx) {
-        console.log(chalk.red('Nodo visitado: anonymousConstFunction'));
+        this.logger.debug(chalk.magenta('Nodo visitado: anonymousConstFunction'));
         this.visitChildren(ctx);
         return null;
     }
@@ -366,7 +366,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitPredifinedFunctionCall_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: predifinedFunctionCall'));
+        this.logger.debug(chalk.magenta('Nodo visitado: predifinedFunctionCall'));
 
         this.visitChildren(ctx);
 
@@ -374,7 +374,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitExp_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: exp'));
+        this.logger.debug(chalk.magenta('Nodo visitado: exp'));
 
         this.visitChildren(ctx);
 
@@ -385,7 +385,7 @@ export class Visitor extends biesCVisitor {
 
     // Método genérico para visitar los nodos de los símbolos predefinidos
     visitBuiltIns(ctx, label) {
-        console.log(chalk.red(`Nodo visitado: ${label}`));
+        this.logger.debug(chalk.magenta(`Nodo visitado: ${label}`));
 
         this.builtIns = label;
         this.visitChildren(ctx);

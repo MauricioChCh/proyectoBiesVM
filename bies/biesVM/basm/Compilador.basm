@@ -1,9 +1,36 @@
+$FUN $1 ARGS:1 PARENT:$0
+BLD 0 0
+PRN
+RET
+$END $1
+
+
+$FUN $2 ARGS:0 PARENT:$0
+LDV "Hello World!"
+RET
+$END $2
+
+
 
 ;Aquí inicia el "main"
 
-LDV 666
-EQ
-NOT
+LDV 4
+LDV 4
+MUL
+LDV 3
+LDV 1
+ADD
+DIV
+BST 0 0
+LDV "Testing helloworld Version "
+BLD 0 0
+ADD
+LDV " ***"
+ADD
+LDF $1
+APP 1
+LDF $2
+APP 0
 PRN
 
 ;Aquí termina el "main"
