@@ -1,5 +1,6 @@
+import chalk from 'chalk';
 import fs from 'fs';
-import path from 'path';
+
 
 /**
  * Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.
@@ -95,13 +96,10 @@ class Logger {
         }
     }
 
-    out(message) {
-        if (this.outStream) {
-            this.outStream.write(`${message}\n`);
-        }
-    }
 
-    err(message) {
+    err(...args) {
+        const message = args.join(' ');
+        console.error(chalk.red(...args));
         if (this.errStream) {
             this.errStream.write(`${message}\n`);
         }

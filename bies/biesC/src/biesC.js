@@ -53,13 +53,13 @@ program
 
         const fileExt = path.extname(fileName);
         if (fileExt !== '.bies') {
-            console.error(chalk.red("Error: El archivo debe tener la extensión .bies"));
+            logger.err("Error: El archivo debe tener la extensión .bies");
             process.exit(1);
         }
 
         // Verificar si el archivo existe
         if (!fs.existsSync(fileName)) {
-            console.error(chalk.red(`Error: El archivo ${fileName} no existe.`));
+            logger.err(`Error: El archivo ${fileName} no existe.`);
             process.exit(1);
         }
 
@@ -71,7 +71,7 @@ program
                 // Si no hay extensión, agregar .basm
                 options.outfile += '.basm';
             } else if (outExt !== '.basm') {
-                console.error(chalk.red("Error: El archivo de salida debe tener la extensión .basm"));
+                logger.err("Error: El archivo de salida debe tener la extensión .basm");
                 process.exit(1);
             }
         }
@@ -84,7 +84,7 @@ program
                 // Si no hay extensión, agregar .txt
                 options.errFile += '.txt';
             } else if (errExt !== '.txt') {
-                console.error(chalk.red("Error: El archivo de errores debe tener la extensión .txt"));
+                logger.err("Error: El archivo de errores debe tener la extensión .txt");
                 process.exit(1);
             }
         } 
@@ -100,7 +100,7 @@ program
             analizarArchivoBies(fileName);
 
         } catch (error) {
-            console.error(chalk.red(`Error al analizar el archivo ${fileName}:`), error);
+            logger.err((`Error al analizar el archivo ${fileName}:`), error);
         }
 
     });

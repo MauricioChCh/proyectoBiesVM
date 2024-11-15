@@ -13,9 +13,9 @@ class FileWriter {
      * @returns {Promise<void>}
      */
     async writeByteCodeToFile(bytecode) {
+        const logger = Logger;
         try {
             const content = bytecode.join('\n');
-            const logger = Logger;
             const outfile = logger.getOutfile();
 
             // Escribir en el archivo proporcionado por el usuario si existe
@@ -29,7 +29,7 @@ class FileWriter {
             await this._writeToFile(defaultFilePath, content);
 
         } catch (error) {
-            console.error(chalk.red(`Error al escribir el bytecode: ${error.message}`));
+            logger.err(chalk.red(`Error al escribir el bytecode: ${error.message}`));
         }
     }
 

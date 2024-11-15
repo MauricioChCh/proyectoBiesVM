@@ -33,7 +33,7 @@ export function analizarArchivoBasm(filePath) {
         const tree = parser.program(); // Inicia el análisis sintáctico
 
         logger.debug(chalk.cyanBright('Árbol de análisis sintáctico:'));
-        logger.debug(tree.toStringTree(null, parser)); // Muestra el árbol de análisis
+        logger.debug(chalk.cyan(tree.toStringTree(null, parser))); // Muestra el árbol de análisis
 
         const visitor = new Visitor(); // Crea una instancia del visitor
         visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones

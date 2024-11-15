@@ -6,10 +6,10 @@ import { Logger } from './Logger.js';
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
-        this.logger = logger;
+        this.logger = Logger;
 
         this.func = false; // Indicador de si estamos dentro de una función
-        this.compiler = new C(logger);
+        this.compiler = new C();
 
         // C -> Codigo generado por el visitor   
         this.byteCode = []; // byteCode almacenado
@@ -31,7 +31,7 @@ export class Visitor extends biesCVisitor {
      * @returns {C} - El compilador.
      */
     visitProgram(ctx) {
-        console.log(chalk.red('Nodo visitado: program'));
+        this.logger.debug(chalk.magenta('Nodo visitado: program'));
         this.visitChildren(ctx);
         this.generateMain();
         this.sendCodeToCompiler();
@@ -39,13 +39,13 @@ export class Visitor extends biesCVisitor {
     }
 
     visitStatement(ctx) {
-        console.log(chalk.red('Nodo visitado: statement'));
+        this.logger.debug(chalk.magenta('Nodo visitado: statement'));
         this.visitChildren(ctx);
         return null;
     }
 
     visitExpr(ctx) {
-        console.log(chalk.red('Nodo visitado: expr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: expr'));
         this.visitChildren(ctx);
         return null;
     }
@@ -69,7 +69,7 @@ export class Visitor extends biesCVisitor {
 
     processArithmeticOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
-        console.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
+        this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
         if (this.func) {
             this.functionCode.push(bytecode);
         } else {
@@ -104,7 +104,7 @@ export class Visitor extends biesCVisitor {
 
     visitPrimaryData_Label(ctx) {
         const primaryData = ctx.getText();
-        console.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
+        this.logger.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
 
         // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
         const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
@@ -115,28 +115,28 @@ export class Visitor extends biesCVisitor {
 
     visitNumber_Label(ctx) {
         const number = ctx.getText();
-        console.log(chalk.green('Nodo visitado: number ->'), number);
+        this.logger.log(chalk.green('Nodo visitado: number ->'), number);
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
         return null;
     }
 
     visitString(ctx) {
         const string = ctx.getText();
-        console.log(chalk.green('Nodo visitado: string ->'), string);
+        this.logger.log(chalk.green('Nodo visitado: string ->'), string);
         this.isFunction() ? this.functionCode.push('LDV ' + string) : this.byteCode.push('LDV ' + string);
         return null;
     }
 
     visitArray(ctx) {
         const array = ctx.getText();
-        console.log(chalk.green('Nodo visitado: array ->'), array);
+        this.logger.log(chalk.green('Nodo visitado: array ->'), array);
         this.isFunction() ? this.functionCode.push('LDV ' + array) : this.byteCode.push('LDV ' + array);
         return null;
     }
 
     visitId_Label(ctx) {
         const id = ctx.getText();
-        console.log(chalk.green('Nodo visitado: id ->'), id);
+        this.logger.log(chalk.green('Nodo visitado: id ->'), id);
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.byteCode.push(this.variables[id].byteload);
@@ -149,7 +149,7 @@ export class Visitor extends biesCVisitor {
     // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
 
     visitSimpleLetInstr_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: simpleLetInstr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: simpleLetInstr'));
         const id = ctx.id().getText();
 
         // Verificar si la variable ya está en el mapa de variables
@@ -168,7 +168,7 @@ export class Visitor extends biesCVisitor {
     // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
 
     visitLetInExpr_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: letInInstr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: letInInstr'));
 
         this.visitChildren(ctx);
 
@@ -176,7 +176,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitConst_WithParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: constWithParams'));
+        this.logger.debug(chalk.magenta('Nodo visitado: constWithParams'));
 
         this.visitChildren(ctx);
 
@@ -184,7 +184,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitConst_NoParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: const_NoParams'));
+        this.logger.debug(chalk.magenta('Nodo visitado: const_NoParams'));
 
         this.visitChildren(ctx);
 
@@ -194,14 +194,14 @@ export class Visitor extends biesCVisitor {
     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
 
     visitAnonymousLetFunction(ctx) {
-        console.log(chalk.red('Nodo visitado: anonymousLetFunction'));
+        this.logger.debug(chalk.magenta('Nodo visitado: anonymousLetFunction'));
         this.visitChildren(ctx);
         return null;
     }
 
     visitLambda_Label(ctx, paramCount = 0) {
         const functionType = paramCount === 0 ? 'LambdaNoParams' : 'LambdaWithParams';
-        console.log(chalk.red(`Nodo visitado: ${functionType}`));
+        this.logger.debug(chalk.magenta(`Nodo visitado: ${functionType}`));
 
         const functionName = ctx.id(0).getText(); // Nombre de la función
         let parentContext = '$0'; // Contexto padre por defecto
@@ -269,13 +269,13 @@ export class Visitor extends biesCVisitor {
 
     visitFunctionCallExpr_Label(ctx) {
         const funcName = ctx.getText();
-        console.log(chalk.red('Nodo visitado: FunctionCall -> '), funcName);
+        this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), funcName);
         this.visitChildren(ctx);
         return null;
     }
 
     visitFunctionCallWithParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: functionCallWithParams'));
+        this.logger.debug(chalk.magenta('Nodo visitado: functionCallWithParams'));
 
         this.visitChildren(ctx);
 
@@ -286,7 +286,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitFunctionCallNoParams_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: functionCallNoParams'));
+        this.logger.debug(chalk.magenta('Nodo visitado: functionCallNoParams'));
 
         this.visitChildren(ctx);
 
@@ -306,7 +306,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitPrintInstr_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: printInstr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
 
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');

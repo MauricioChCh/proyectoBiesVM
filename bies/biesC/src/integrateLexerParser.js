@@ -31,14 +31,14 @@ export function analizarArchivoBies(filePath) {
 
         parser.buildParseTrees = true; // Habilita la construcción de árboles de análisis
         const tree = parser.program(); // Inicia el análisis sintáctico
-        logger.log(chalk.cyan(tree.toStringTree(parser.ruleNames))); // Imprime el árbol de análisis
+        logger.debug(chalk.cyan(tree.toStringTree(parser.ruleNames))); // Imprime el árbol de análisis
 
         const visitor = new Visitor(); // Crea una instancia del visitor
         visitor.visit(tree); // Ejecuta el visitor, lo que también ejecutará las instrucciones
         return true; // Indica que el análisis fue exitoso
     } catch (error) {
         // Captura y muestra cualquier error que ocurra durante el análisis
-        console.error(chalk.red('Error durante el análisis del archivo:'), error);
+        logger.err(('Error durante el análisis del archivo:'), error);
         return false; // Indica que el análisis falló
     }
 }

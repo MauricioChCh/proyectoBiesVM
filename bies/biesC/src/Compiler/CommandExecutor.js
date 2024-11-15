@@ -118,10 +118,10 @@ class CommandExecutor {
      */
     async executeCommands() {
         try {
-            this.logger.log(chalk.blueBright('Ejecutando los comandos...'));
+            console.log(chalk.blueBright('Llamando a biesVM ...'));
             
             const projectRoot = this.getProjectRoot();
-            console.log(`Project root: ${projectRoot}`);
+            this.logger.log(`Project root: ${projectRoot}`);
             
             const biesVMPath = this.validateBiesVMDirectory(projectRoot);
             const systemCommands = this.getSystemCommands(process.platform === 'win32');
@@ -129,7 +129,7 @@ class CommandExecutor {
             
             await this.executeProcess(commands, projectRoot);
         } catch (error) {
-            console.error(chalk.red(error.message));
+            this.logger.err(chalk.red(error.message));
         }
     }
 }
