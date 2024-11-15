@@ -222,7 +222,6 @@ export class Visitor extends biesCVisitor {
         const targetArray = this.isFunction() ? this.functionCode : this.byteCode;
         targetArray.push(`BST 0 ${this.variables[id]?.arg2 ?? this.variableCounter++}`);
 
-
         return null;
     }
 
@@ -230,23 +229,19 @@ export class Visitor extends biesCVisitor {
 
     visitConst_WithParams_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: constWithParams'));
-
         this.visitChildren(ctx);
-
         return null
     }
 
     visitConst_NoParams_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: const_NoParams'));
-
         this.visitChildren(ctx);
-
         return null
     }
 
-    // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
+     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
 
-    visitAnonymousLetFunction(ctx) {
+     visitAnonymousLetFunction(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousLetFunction'));
         this.visitChildren(ctx);
         return null;
@@ -324,6 +319,7 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+
     // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
 
     visitLetInExpr_Label(ctx) {
@@ -400,14 +396,10 @@ export class Visitor extends biesCVisitor {
 
             this.functionCounter++;
         };
-
-        // Generar funciones intermedias
-        for (let i = 0; i < paramCount - 1; i++) {
+        for (let i = 0; i < paramCount - 1; i++) { // Generar funciones intermedias
             generateFunctionBlock(1);
         }
-
-        // Generar la última función
-        if (paramCount > 0) {
+        if (paramCount > 0) {   // Generar la última función
             generateFunctionBlock(paramCount, true);
         }
         this.func = false;
@@ -425,17 +417,7 @@ export class Visitor extends biesCVisitor {
         const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
         return this.visitLambda_Label(ctx, paramCount);
     }
-
-    // Metodos especificos para LamdbaConstNoParams y LambdaConstWithParams
-    visitLambdaConstNoParams_Label(ctx) {
-        return this.visitLambda_Label(ctx, 0);
-    }
-
-    visitLambdaConstWithParams_Label(ctx) {
-        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
-        return this.visitLambda_Label(ctx, paramCount);
-    }
-
+    
     visitFunctionCallExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
         this.visitChildren(ctx);
@@ -483,7 +465,6 @@ export class Visitor extends biesCVisitor {
 
     visitPrintInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
-
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
@@ -491,17 +472,13 @@ export class Visitor extends biesCVisitor {
 
     visitPredifinedFunctionCall_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: predifinedFunctionCall'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitExp_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: exp'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
@@ -509,43 +486,34 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
         this.func = true;
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitIf_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: if'));
-
         this.visitChildren(ctx);
         this.functionCode.push('BF 3');
-
         return null;
     }
 
     visitThen_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: then'));
-
         this.visitChildren(ctx);
         this.functionCode.push('RET');
-
         return null;
     }
 
     visitElse_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: else'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitArrayAccess_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
-
         this.visitId_Label(ctx.id());
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
-
         return null;
     }
 
@@ -600,6 +568,22 @@ export class Visitor extends biesCVisitor {
 
     visitTrue_Label(ctx) {
         this.visitBuiltIns(ctx, 'true');
+    }
+    
+    visitInputExprInstr_Label() {
+        this.builtIns = 'input';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
+    }
+
+    visitInputExprInstrArgs_Label() {
+        this.builtIns = 'input';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 }
 

@@ -17,8 +17,9 @@ statement
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
+    : 'print' '(' (primarydata | expr | statement) ')'  # PrintInstr_Label
     ;
+
 
 simpleLetInstr
     : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
@@ -32,6 +33,11 @@ anonymousLetFunction
 
 letInExpr
     : let in # LetInExpr_Label
+    ;
+
+inputExpr
+    : INPUT '()'                    # InputExprInstr_Label
+    | INPUT '(' WS? expr WS? ')'    # InputExprInstrArgs_Label
     ;
 
 let
