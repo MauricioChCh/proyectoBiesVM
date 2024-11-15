@@ -375,6 +375,8 @@ export class Visitor extends biesCVisitor {
     visitExp_Label(ctx) {
         console.log(chalk.red('Nodo visitado: exp'));
 
+        this.visitChildren(ctx);
+
         return null;
     }
 
