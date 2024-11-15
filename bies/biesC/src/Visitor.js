@@ -7,6 +7,7 @@ import { Logger } from './Logger.js';
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
+
         this.logger = Logger;
 
         this.compiler = new C();
@@ -101,11 +102,12 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+
     visitPow_Label(ctx) {
         this.processArithmeticOperation(ctx, '**', 'POW');
         return null;
     }
-
+  
     isFunction = () => this.func;
     //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
 
@@ -152,6 +154,8 @@ export class Visitor extends biesCVisitor {
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.byteCode.push(this.variables[id].byteload);
+        } else {
+            console.error(`Error: Variable ${id} no está definida`);
         }
         return null;
     }
@@ -195,6 +199,7 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+//<<<<<<< Eddy
     // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
 
     visitLetInExpr_Label(ctx) {
@@ -224,6 +229,25 @@ export class Visitor extends biesCVisitor {
         return null
     }
 
+//=======
+    visitSimpleConstInstr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: simpleConstInstr'));
+        const id = ctx.id().getText();
+
+        // Verificar si la variable ya está en el mapa de variables
+        if (!(id in this.variables)) {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
+        }
+
+        // Visitar los hijos del nodo para procesar la expresión
+        this.visitChildren(ctx);
+
+        // Generar el bytecode para asignar el valor a la variable
+        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
+
+        return null;
+    }
+//>>>>>>> Joshua2
     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
 
     visitAnonymousLetFunction(ctx) {
@@ -234,6 +258,12 @@ export class Visitor extends biesCVisitor {
 
     visitAnonymousConstFunction(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousConstFunction'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitAnonymousConstFunction(ctx) {
+        console.log(chalk.red('Nodo visitado: anonymousConstFunction'));
         this.visitChildren(ctx);
         return null;
     }
@@ -319,6 +349,12 @@ export class Visitor extends biesCVisitor {
         return this.visitLambda_Label(ctx, paramCount);
     }
 
+    visitLetInExpr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: letInExpr'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
     visitFunctionCallExpr_Label(ctx) {
         const funcName = ctx.getText();
         this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), funcName);
@@ -361,6 +397,7 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
 
         this.visitChildren(ctx);
+
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
     }
