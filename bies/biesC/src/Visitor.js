@@ -426,6 +426,7 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: if'));
 
         this.visitChildren(ctx);
+        this.functionCode.push('BF 3');
 
         return null;
     }
