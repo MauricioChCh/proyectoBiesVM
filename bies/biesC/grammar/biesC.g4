@@ -14,11 +14,13 @@ statement
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
+    : 'print' '(' (primarydata | expr | statement) ')'  # PrintInstr_Label
     ;
+
 
 simpleLetInstr
     : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
@@ -29,6 +31,7 @@ anonymousLetFunction
     | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
+
 
 letInExpr
     : let in # LetInExpr_Label
@@ -44,7 +47,12 @@ in
 
 ifElseExpr
     : if then else  # IfElseExpr_Label
+
+inputExpr
+    : INPUT '()' # InputExprInstr_Label
+    | INPUT '(' WS? string WS? ')' # InputExprInstrArgs_Label
     ;
+
 
 simpleConstInstr
     : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
@@ -63,7 +71,8 @@ primarydata
     ;
 
 expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
+    | inputExpr                             # InputExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
@@ -117,6 +126,7 @@ then
 else
     : 'else' WS? expr                        # Else_Label
     ;
+
 
 arrayAccess
     : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label
