@@ -73,7 +73,7 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
 
-    processArithmeticOperation(ctx, operator, bytecode) {
+    processOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
         this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
         (this.func ? this.functionCode : this.byteCode).push(bytecode);
@@ -82,45 +82,65 @@ export class Visitor extends biesCVisitor {
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
     visitMul_Label(ctx) {
-        this.processArithmeticOperation(ctx, '*', 'MUL');
+        this.processOperation(ctx, '*', 'MUL');
         return null;
     }
 
     visitDiv_Label(ctx) {
-        this.processArithmeticOperation(ctx, '/', 'DIV');
+        this.processOperation(ctx, '/', 'DIV');
         return null;
     }
 
     visitAdd_Label(ctx) {
-        this.processArithmeticOperation(ctx, '+', 'ADD');
+        this.processOperation(ctx, '+', 'ADD');
         return null;
     }
 
     visitSub_Label(ctx) {
-        this.processArithmeticOperation(ctx, '-', 'SUB');
+        this.processOperation(ctx, '-', 'SUB');
         return null;
     }
 
     visitPow_Label(ctx) {
-        this.processArithmeticOperation(ctx, '**', 'POW');
+        this.processOperation(ctx, '**', 'POW');
         return null;
     }
+
+    // ----------------------------------------- Visitas a nodos de operaciones comparacion ---------------------------------------------
+
+    visitLt_Label(ctx) {
+        this.processOperation(ctx, '<', 'LT');
+        return null;
+    }
+
+    visitGt_Label(ctx) {
+        this.processOperation(ctx, '>', 'GT');
+        return null;
+    }
+
+    visitLe_Label(ctx) {
+        this.processOperation(ctx, '<=', 'LE');
+        return null;
+    }
+
+    visitGe_Label(ctx) {
+        this.processOperation(ctx, '>=', 'GE');
+        return null;
+    }
+
+    // --------------------------------------------- Visitas a nodos de operaciones lógicas ---------------------------------------------
 
     isFunction = () => this.func;
     //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
 
     visitPrimaryData_Label(ctx) {
-        const primaryData = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
+        this.logger.log(chalk.magenta('Nodo visitado: primaryData ->'));
+
+        this.visitChildren(ctx);
 
         // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
-        const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
-        this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
-
-        // Procesar builtIns si está definido
-        if (this.builtInsProcessor[this.builtIns]) {
-            this.builtInsProcessor[this.builtIns]();
-        }
+        //const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
+        //this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
 
         return null;
     }
@@ -129,6 +149,10 @@ export class Visitor extends biesCVisitor {
         const number = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: number ->'), number);
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
 
@@ -136,6 +160,10 @@ export class Visitor extends biesCVisitor {
         const string = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: string ->'), string);
         this.isFunction() ? this.functionCode.push('LDV ' + string) : this.byteCode.push('LDV ' + string);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
 
@@ -143,6 +171,10 @@ export class Visitor extends biesCVisitor {
         const array = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: array ->'), array);
         this.isFunction() ? this.functionCode.push('LDV ' + array) : this.byteCode.push('LDV ' + array);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
 
@@ -378,6 +410,42 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: exp'));
 
         this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitIfElseExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
+
+        this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitIf_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: if'));
+
+        this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitThen_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: then'));
+
+        this.visitChildren(ctx);
+        this.functionCode.push(ctx.expr().getText());
+        this.functionCode.push('RET');
+
+        return null;
+    }
+
+    visitElse_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: else'));
+
+        this.visitChildren(ctx);
+        this.functionCode.push(ctx.expr().getText());
+        this.functionCode.push('RET');
 
         return null;
     }

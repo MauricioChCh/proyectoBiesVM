@@ -60,12 +60,6 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#declaration.
-	visitDeclaration(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by biesCParser#SimpleConstInstr_Label.
 	visitSimpleConstInstr_Label(ctx) {
 	  return this.visitChildren(ctx);
@@ -264,14 +258,14 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Else_Label.
-	visitElse_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#Then_Label.
+	visitThen_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Then_Label.
-	visitThen_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#Else_Label.
+	visitElse_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

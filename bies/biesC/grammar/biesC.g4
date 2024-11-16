@@ -30,18 +30,11 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
+    : 'let' '{' (anonymousConstFunction (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
     ;
 
 ifElseExpr
-    : if WS? '(' expr ')' WS? then WS? expr WS? else WS? expr  # IfElseExpr_Label
-    ;
-
-declaration
-    : simpleLetInstr
-    | simpleConstInstr
-    | anonymousConstFunction
-    | anonymousLetFunction
+    : if then else  # IfElseExpr_Label
     ;
 
 simpleConstInstr
@@ -104,13 +97,15 @@ id
     ;
 
 if
-    : 'if'                                   # If_Label
+    : 'if' WS? '(' expr ')' WS?              # If_Label
     ;
-else
-    : 'else'                                 # Else_Label
-    ;
+
 then
-    : 'then'                                 # Then_Label
+    : 'then' WS? expr WS?                    # Then_Label
+    ;
+
+else
+    : 'else' WS? expr                        # Else_Label
     ;
 
 arrayAccess

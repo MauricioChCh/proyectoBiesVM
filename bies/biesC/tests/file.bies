@@ -24,62 +24,44 @@ print(x5)
 print(x4)
 print(x3)
 */
-//Versión 0
-// print("Testing helloworld Version 0 ***")
-// print("Hello World!") 
 
-// //Versión 1
-// let splash = () => print("Testing helloworld Version 1 ***")
-// splash()
-// print("Hello World!")
+//---------------------------------------------------------------------------------------------------------------
 
-// Version Extra compleja 7 Maximo entre dos números, lambda anidada
+let max = (x, y) => if (x > y) then x else y
 
+//let max = (x, y) => if (x > y) then x else y
+//let {
+	//let x = 10
+	//let y = 20
+//} in {
+	//print("*** Testing max("+ x + " ," + y + ") ***")
+//	print(max(x, y))
+//}
 
-let sumList = (a, from, to, s) => if (from == to) then s else sumList(a, from + 1, to, a[from] + s)
-let sumListShort = (a, n) => sumList(a, 0, n, 0)
-let {const a = [1, 2, 3, 4, 5]
-	 const from = 0
-	 const to = 3 
-	} in {
-	print("*** Testing sumList("+ a + " ," + from + ", " + to + ") ***")
-	print(sumList(a, from, to, 0) )
-	print(sumListShort(a, to))
-	}
-
+//---------------------------------------------------------------------------------------------------------------
 /*
-//-------------------------------------------------------------------------------
-```js
 // Version compleja 0
 print("Testing helloworld Version 0 ***")
 print("Hello World!") 
-```
 
-```js
 // Version compleja 1
 let splash = () => print("Testing helloworld Version 1 ***")
 splash()
 print("Hello World!") 
-```
 
-```js
 // Version compleja 2
 let splash = (msg) => print(msg)
 let version = 666 - 664
 splash("Testing helloworld Version " + version + "***")
 print("Hello World!") 
-```
 
-```js
 // Version compleja 3
 let splash = (msg) => print(msg)
 let greetings = () => "Hello World!"
 let version = (4 + 1 - 2)
 splash("Testing helloworld Version " + version + " ***")
 print(greetings()) 
-```
 
-```js
 // Version compleja 4 let-in
 let {
 	 const splash = (msg) => print(msg)
@@ -89,9 +71,7 @@ let {
 		splash("Testing helloworld Version " + version + " ***")
 		print(greetings()) 
 	}
-```
 
-```js
 // Version compleja 5 let-in
 let {
 		const splash = (msg) => print(msg)
@@ -104,10 +84,9 @@ let {
 		splash("Testing helloworld Version " + version + " ***")
 		print(greetings())
     }		
-```
 
-* Máximo entre dos números (<span style="color:red">** NUEVO **</span>)
-```js
+// Máximo entre dos números (<span style="color:red">** NUEVO **</span>)
+
 // Version Extra compleja 6 Maximo entre dos números, lambda binaria
 let max = (x, y) => if (x > y) then x else y
 let {
@@ -117,9 +96,9 @@ let {
 	print("*** Testing max("+ x + " ," + y + ") ***")
 	print(max(x, y))
 }
-```
-* Máximo entre dos números lambda anidada (<span style="color:red">** NUEVO **</span>)
-```js
+
+// Máximo entre dos números lambda anidada (<span style="color:red">** NUEVO **</span>)
+
 // Version Extra compleja 7 Maximo entre dos números, lambda anidada
 let max = x => y => if (x > y) then x else y
 let {
@@ -129,18 +108,18 @@ let {
 	print("*** Testing max("+ x + " ," + y + ") ***")
 	print(max(x)(y))
 }
-```
-* Acceso a un elemento de una lista (<span style="color:red">** NUEVO **</span>)
-```js
+
+// Acceso a un elemento de una lista (<span style="color:red">** NUEVO **</span>)
+
 // Version Extra compleja 8 Acceso a un elemento de una lista
 let {const a = [1, 2, 3, "Hello World!", 5, 6, 7]
 	} in {
 	print("*** Testing List Access ("+ a + ") ***")
 	print(a[ a[0] + 2 ])
 }
-```
-* Suma de elementos en una lista (recursivo) (<span style="color:red">** NUEVO **</span>)
-```js
+
+// Suma de elementos en una lista (recursivo) (<span style="color:red">** NUEVO **</span>)
+
 // Version Extra compleja 9 Largo de una lista (iterativo) lambda multi_argumento. Lambda derivada
 let sumList = (a, from, to, s) => if (from == to) then s else sumList(a, from + 1, to, a[from] + s)
 let sumListShort = (a, n) => sumList(a, 0, n, 0)
@@ -152,5 +131,4 @@ let {const a = [1, 2, 3, 4, 5]
 	print(sumList(a, from, to, 0) )
 	print(sumListShort(a, to))
 }
-```
 */
