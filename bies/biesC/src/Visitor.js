@@ -138,16 +138,13 @@ export class Visitor extends biesCVisitor {
 
         this.visitChildren(ctx);
 
-        // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
-        //const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
-        //this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
-
         return null;
     }
 
     visitNumber_Label(ctx) {
         const number = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: number ->'), number);
+
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
 
         if (this.builtInsProcessor[this.builtIns]) {
@@ -184,7 +181,10 @@ export class Visitor extends biesCVisitor {
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.byteCode.push(this.variables[id].byteload);
+        }   else {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter++ };
         }
+
         return null;
     }
 
@@ -223,7 +223,6 @@ export class Visitor extends biesCVisitor {
 
         // Generar el bytecode para asignar el valor a la variable
         this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
-
         return null;
     }
 
@@ -383,8 +382,8 @@ export class Visitor extends biesCVisitor {
         main.push('\n;Aquí inicia el "main"\n');
         main.push('$FUN $0 ARGS:0 PARENT:$0');
         main.push(...this.byteCode);
-        main.push('$END $0');
         main.push('HLT');
+        main.push('$END $0');
         main.push('INI $0');
         main.push('\n;Aquí termina el "main"');
         this.byteCode = main;
@@ -435,7 +434,7 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: then'));
 
         this.visitChildren(ctx);
-        this.functionCode.push(ctx.expr().getText());
+        //this.functionCode.push(ctx.expr().getText());
         this.functionCode.push('RET');
 
         return null;
@@ -445,8 +444,6 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: else'));
 
         this.visitChildren(ctx);
-        this.functionCode.push(ctx.expr().getText());
-        this.functionCode.push('RET');
 
         return null;
     }

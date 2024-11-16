@@ -10,6 +10,7 @@ statement
     | simpleLetInstr
     | simpleConstInstr
     | anonymousLetFunction
+    | anonymousConstFunction
     | functionCall
     | letInExpr
     | ifElseExpr
@@ -30,7 +31,7 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (anonymousConstFunction (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
+    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}' 'in' (statement | '{' (expr | statement (NL | WS)*)* '}')
     ;
 
 ifElseExpr
