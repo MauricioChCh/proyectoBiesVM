@@ -32,21 +32,21 @@ anonymousLetFunction
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
+
 letInExpr
-    : let in # LenInExpr_Label
+    : let in # LetInExpr_Label
     ;
 
 let
-    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}'               # LetExpr_Label
+    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}' # LetExpr_Label
     ;
 
 in
-    :  'in' (statement | '{' (statement (NL | WS)*)* '}')   # InExpr_Label
+    : 'in' (statement | '{' (expr | statement (NL | WS)*)* '}') # InExpr_Label
     ;
 
 ifElseExpr
-    :  if then else # IfElseExpr_Label
-    ;
+    : if then else  # IfElseExpr_Label
 
 inputExpr
     : INPUT '()' # InputExprInstr_Label
@@ -94,10 +94,11 @@ expr
 
 functionCall
     : id '()'                                                               # FunctionCallNoParams_Label
-    | id '(' expr (',' expr)* ')' ( '(' expr (',' expr)* ')' )*             # FunctionCallWithParams_Label
+    | id '(' expr (',' expr)* ')'                                           # FunctionCallWithParams_Label
+    | id '(' expr ')' ( '(' expr ')' )*                                     # FunctionCallNested_Label    
     | predSymbols '(' expr (',' expr)* ')'                                  # PredifinedFunctionCall_Label
     ;
-
+//functionCallWithParams
 number
     : NUMBER
     ;
