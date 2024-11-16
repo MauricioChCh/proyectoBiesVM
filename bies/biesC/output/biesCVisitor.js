@@ -42,8 +42,14 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#LetInExpr_Label.
-	visitLetInExpr_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#letInExpr.
+	visitLetInExpr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#IfElseExpr_Label.
+	visitIfElseExpr_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

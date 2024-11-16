@@ -11,6 +11,7 @@ statement
     | anonymousLetFunction
     | functionCall
     | letInExpr
+    | ifElseExpr
     ;
 
 printInstr
@@ -27,7 +28,11 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' ('{' (statement (NL | WS)*)* '}')?  # LetInExpr_Label
+    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (expr | statement | '{' (statement (NL | WS)*)* '}')
+    ;
+
+ifElseExpr
+    : 'if' WS? '(' expr ')' WS? 'then' WS? expr WS? 'else' WS? expr  # IfElseExpr_Label
     ;
 
 declaration
