@@ -139,6 +139,11 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    visitNeg_Label(ctx) {
+        this.processOperation(ctx, '!=', 'NEG');
+        return
+    }
+
 
     visitNeg_Label(ctx) {
         this.processOperation(ctx, '!=', 'NEG');
