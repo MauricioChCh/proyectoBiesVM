@@ -190,13 +190,11 @@ export class Visitor extends biesCVisitor {
         this.logger.log(chalk.green('Nodo visitado: id ->'), id);
 
         if (id in this.variables) {
-            const command = `${'BLD'} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
+            const command = `${this.variables[id].byteload} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
             this.isFunction() ? this.functionCode.push(command) : this.byteCode.push(command);
-        }
-        else {
+        } else {
             this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
         }
-
         return null;
     }
 
@@ -234,6 +232,7 @@ export class Visitor extends biesCVisitor {
     //     return null;
     // }
 
+
     // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
 
 
@@ -250,7 +249,7 @@ export class Visitor extends biesCVisitor {
         const id = ctx.id().getText();
 
         if (!(id in this.variables)) {
-            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter };
+            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
         }
 
         this.visitChildren(ctx);
@@ -596,6 +595,16 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: else'));
 
         this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitArrayAccess_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
+
+        this.visitId_Label(ctx.id());
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
 
         return null;
     }
