@@ -28,11 +28,11 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (expr | statement | '{' (statement (NL | WS)*)* '}')
+    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
     ;
 
 ifElseExpr
-    : 'if' WS? '(' expr ')' WS? 'then' WS? expr WS? 'else' WS? expr  # IfElseExpr_Label
+    : if WS? '(' expr ')' WS? then WS? expr WS? else WS? expr  # IfElseExpr_Label
     ;
 
 declaration
@@ -98,6 +98,16 @@ array
 
 id
     : ID                                    
+    ;
+
+if
+    : 'if'                                   # If_Label
+    ;
+else
+    : 'else'                                 # Else_Label
+    ;
+then
+    : 'then'                                 # Then_Label
     ;
 
 predSymbols
