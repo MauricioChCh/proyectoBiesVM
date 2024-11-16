@@ -10,11 +10,11 @@ statement
     | simpleLetInstr
     | simpleConstInstr
     | anonymousLetFunction
-    | simpleConstInstr
     | anonymousConstFunction
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
@@ -33,19 +33,26 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
+    : let in # LenInExpr_Label
+    ;
+
+let
+    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}'               # LetExpr_Label
+    ;
+
+in
+    :  'in' (statement | '{' (statement (NL | WS)*)* '}')   # InExpr_Label
     ;
 
 ifElseExpr
-    : if WS? '(' expr ')' WS? then WS? expr WS? else WS? expr  # IfElseExpr_Label
+    :  if then else # IfElseExpr_Label
     ;
 
-declaration
-    : simpleLetInstr
-    | simpleConstInstr
-    | anonymousConstFunction
-    | anonymousLetFunction
+inputExpr
+    : INPUT '()' # InputExprInstr_Label
+    | INPUT '(' WS? string WS? ')' # InputExprInstrArgs_Label
     ;
+
 
 simpleConstInstr
     : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
@@ -65,7 +72,7 @@ primarydata
 
 expr                                        
     : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
-    | anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    | inputExpr                             # InputExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
@@ -108,14 +115,17 @@ id
     ;
 
 if
-    : 'if'                                   # If_Label
+    : 'if' WS? '(' expr ')' WS?              # If_Label
     ;
-else
-    : 'else'                                 # Else_Label
-    ;
+
 then
-    : 'then'                                 # Then_Label
+    : 'then' WS? expr WS?                    # Then_Label
     ;
+
+else
+    : 'else' WS? expr                        # Else_Label
+    ;
+
 
 arrayAccess
     : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label

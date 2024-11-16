@@ -74,7 +74,7 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
 
-    processArithmeticOperation(ctx, operator, bytecode) {
+    processOperation(ctx, operator, bytecode) {
         this.visitChildren(ctx);
         this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
         (this.func ? this.functionCode : this.byteCode).push(bytecode);
@@ -83,46 +83,62 @@ export class Visitor extends biesCVisitor {
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
     visitMul_Label(ctx) {
-        this.processArithmeticOperation(ctx, '*', 'MUL');
+        this.processOperation(ctx, '*', 'MUL');
         return null;
     }
 
     visitDiv_Label(ctx) {
-        this.processArithmeticOperation(ctx, '/', 'DIV');
+        this.processOperation(ctx, '/', 'DIV');
         return null;
     }
 
     visitAdd_Label(ctx) {
-        this.processArithmeticOperation(ctx, '+', 'ADD');
+        this.processOperation(ctx, '+', 'ADD');
         return null;
     }
 
     visitSub_Label(ctx) {
-        this.processArithmeticOperation(ctx, '-', 'SUB');
+        this.processOperation(ctx, '-', 'SUB');
         return null;
     }
 
 
     visitPow_Label(ctx) {
-        this.processArithmeticOperation(ctx, '**', 'POW');
+        this.processOperation(ctx, '**', 'POW');
         return null;
     }
   
+    // ----------------------------------------- Visitas a nodos de operaciones comparacion---------------------------------------------
+
+    visitLt_Label(ctx) {
+        this.processOperation(ctx, '<', 'LT');
+        return null;
+    }
+
+    visitGt_Label(ctx) {
+        this.processOperation(ctx, '>', 'GT');
+        return null;
+    }
+
+    visitLe_Label(ctx) {
+        this.processOperation(ctx, '<=', 'LE');
+        return null;
+    }
+
+    visitGe_Label(ctx) {
+        this.processOperation(ctx, '>=', 'GE');
+        return null;
+    }
+
+
     isFunction = () => this.func;
     //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
 
+
     visitPrimaryData_Label(ctx) {
-        const primaryData = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: primaryData ->'), primaryData);
+        this.logger.log(chalk.magenta('Nodo visitado: primaryData ->'));
 
-        // Verificar si primaryData es una variable definida y generar el bytecode correspondiente
-        const bytecode = (primaryData in this.variables) ? this.variables[primaryData].byteload : `LDV ${primaryData}`;
-        this.isFunction() ? this.functionCode.push(bytecode) : this.byteCode.push(bytecode);
-
-        // Procesar builtIns si está definido
-        if (this.builtInsProcessor[this.builtIns]) {
-            this.builtInsProcessor[this.builtIns]();
-        }
+        this.visitChildren(ctx);
 
         return null;
     }
@@ -131,13 +147,22 @@ export class Visitor extends biesCVisitor {
         const number = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: number ->'), number);
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
+
 
     visitString(ctx) {
         const string = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: string ->'), string);
         this.isFunction() ? this.functionCode.push('LDV ' + string) : this.byteCode.push('LDV ' + string);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
 
@@ -145,6 +170,10 @@ export class Visitor extends biesCVisitor {
         const array = ctx.getText();
         this.logger.log(chalk.green('Nodo visitado: array ->'), array);
         this.isFunction() ? this.functionCode.push('LDV ' + array) : this.byteCode.push('LDV ' + array);
+
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
         return null;
     }
 
@@ -154,52 +183,56 @@ export class Visitor extends biesCVisitor {
 
         if (id in this.variables) { // Verificar si el id está en el mapa de variables
             this.isFunction() ? this.functionCode.push(this.variables[id].byteload) : this.byteCode.push(this.variables[id].byteload);
-        } else {
-            console.error(`Error: Variable ${id} no está definida`);
+        }   else {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter++ };
         }
+
         return null;
     }
+
+    // --------------------------------------------- Visitas a nodos de input---------------------------------------------
+    visitInputExprInstr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: inputExprInstr'));
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('INP') : this.byteCode.push('INP');
+        return null;
+    }
+
+    visitInputExprInstrArgs_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: inputExprInstrArgs'));
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
+        this.isFunction() ? this.functionCode.push('INP') : this.byteCode.push('INP');
+        return null;
+    }
+
 
     // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
 
     // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
 
     visitSimpleLetInstr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: simpleLetInstr'));
-        const id = ctx.id().getText();
-
-        // Verificar si la variable ya está en el mapa de variables
-        if (!(id in this.variables)) {
-            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
-        }
-
-        // Visitar los hijos del nodo para procesar la expresión
-        this.visitChildren(ctx);
-
-        // Generar el bytecode para asignar el valor a la variable
-        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.byteCode.push(`BST 0 ${this.variableCounter++}`);
-        return null;
+        return this.handleSimpleInstr(ctx, 'simpleLetInstr');
     }
 
     visitSimpleConstInstr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: simpleConstInstr'));
+        return this.handleSimpleInstr(ctx, 'simpleConstInstr');
+    }
+
+    handleSimpleInstr(ctx, label) {
+        this.logger.debug(chalk.magenta(`Nodo visitado: ${label}`));
         const id = ctx.id().getText();
 
-        // Verificar si la variable ya está en el mapa de variables
         if (!(id in this.variables)) {
             this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
         }
 
-        // Visitar los hijos del nodo para procesar la expresión
         this.visitChildren(ctx);
 
-        // Generar el bytecode para asignar el valor a la variable
-        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
-
-        return null;
+        const targetArray = this.isFunction() ? this.functionCode : this.byteCode;
+        targetArray.push(`BST 0 ${this.variables[id]?.arg2 ?? this.variableCounter++}`);
     }
 
-//<<<<<<< Eddy
     // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
 
     visitLetInExpr_Label(ctx) {
@@ -326,8 +359,25 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
-    // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
-    visitLambdaNoParams_Label(ctx) {
+    visitLenInExpr_Label(ctx) {
+        this.logger.debug(chalk.red('Nodo visitado: lenInExpr'));
+        this.visitChildren(ctx);
+        return null;
+    }
+    
+    visitLetExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: letExpr'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitInExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: inExpr'));
+        this.visitChildren(ctx);
+    }
+
+     // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
+     visitLambdaNoParams_Label(ctx) {
         return this.visitLambda_Label(ctx, 0);
     }
 
@@ -344,12 +394,6 @@ export class Visitor extends biesCVisitor {
     visitLambdaConstWithParams_Label(ctx) {
         const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
         return this.visitLambda_Label(ctx, paramCount);
-    }
-
-    visitLetInExpr_Label(ctx) {
-        console.log(chalk.red('Nodo visitado: letInExpr'));
-        this.visitChildren(ctx);
-        return null;
     }
 
     visitFunctionCallExpr_Label(ctx) {
@@ -387,8 +431,8 @@ export class Visitor extends biesCVisitor {
         main.push('\n;Aquí inicia el "main"\n');
         main.push('$FUN $0 ARGS:0 PARENT:$0');
         main.push(...this.byteCode);
-        main.push('$END $0');
         main.push('HLT');
+        main.push('$END $0');
         main.push('INI $0');
         main.push('\n;Aquí termina el "main"');
         this.byteCode = main;
@@ -413,6 +457,45 @@ export class Visitor extends biesCVisitor {
 
     visitExp_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: exp'));
+
+        this.visitChildren(ctx);
+
+        return null;
+    }
+
+    // --------------------------------------------- Visitas a nodos de instrucciones de control ---------------------------------------------
+    
+
+    visitIfElseExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
+        this.func = true;
+        this.visitChildren(ctx);
+        return null;
+    }
+
+
+
+    visitIf_Label(ctx){
+        this.logger.debug(chalk.magenta('Nodo visitado: if'));
+
+        this.visitChildren(ctx);
+        this.functionCode.push('BF 3');
+
+        return null;
+    }
+
+    visitThen_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: then'));
+
+        this.visitChildren(ctx);
+        //this.functionCode.push(ctx.expr().getText());
+        this.functionCode.push('RET');
+
+        return null;
+    }
+
+    visitElse_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: else'));
 
         this.visitChildren(ctx);
 
