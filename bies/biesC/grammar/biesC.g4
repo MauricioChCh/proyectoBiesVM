@@ -10,14 +10,17 @@ statement
     | simpleLetInstr
     | simpleConstInstr
     | anonymousLetFunction
+    | simpleConstInstr
+    | anonymousConstFunction
     | functionCall
     | letInExpr
     | ifElseExpr
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
+    : 'print' '(' (primarydata | expr | statement) ')'  # PrintInstr_Label
     ;
+
 
 simpleLetInstr
     : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
@@ -61,7 +64,8 @@ primarydata
     ;
 
 expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
+    | anonymousLetFunction                  # AnonymousFunctionExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
