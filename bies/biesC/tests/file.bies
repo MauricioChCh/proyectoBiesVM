@@ -29,14 +29,14 @@ print(x3)
 /*
 let max = (x, y) => if (x > y) then x else y //Lambda Binaria
 */
-let max = x => y => if (x > y) then x else y //Lambda Anidada
-//let {
-//	const x = 10
-//	const y = 20
-//} in {
-//	print("*** Testing max("+ x + " ," + y + ") ***")
-//	print(max(x)(y))
-//}
+let max = x => y => if (x > y) then x else y
+let {
+	const x = 10
+	const y = 20
+} in {
+	print("*** Testing max("+ x + " ," + y + ") ***")
+	print(max(x)(y))
+}
 
 //---------------------------------------------------------------------------------------------------------------
 /*
@@ -131,4 +131,98 @@ let {const a = [1, 2, 3, 4, 5]
 	print(sumList(a, from, to, 0) )
 	print(sumListShort(a, to))
 }
+*/
+
+
+// Propuestas por chatGPT basadas en el código anterior:
+
+/*
+
+// Invertir una hilera (reverse, iterativo)
+
+let reverseString = (str) => {
+    let reversed = "";
+    for (let i = str.length - 1; i >= 0; i--) {
+        reversed += str[i];
+    }
+    return reversed;
+};
+
+print("*** Testing reverseString('hello') ***");
+print(reverseString("hello")); // "olleh"
+
+// Índice de una subhilera en una hilera (iterativo)
+
+let indexOfSubstring = (str, substr) => {
+    for (let i = 0; i <= str.length - substr.length; i++) {
+        if (str.substring(i, i + substr.length) === substr) {
+            return i;
+        }
+    }
+    return -1; // Si no se encuentra
+};
+
+print("*** Testing indexOfSubstring('hello world', 'world') ***");
+print(indexOfSubstring("hello world", "world")); // 6
+
+// Chequeo de si una lista es palíndrome (iterativo)
+
+let isPalindromeIterative = (arr) => {
+    for (let i = 0, j = arr.length - 1; i < j; i++, j--) {
+        if (arr[i] !== arr[j]) {
+            return false;
+        }
+    }
+    return true;
+};
+
+print("*** Testing isPalindromeIterative([1, 2, 3, 2, 1]) ***");
+print(isPalindromeIterative([1, 2, 3, 2, 1])); // true
+
+// Chequeo de si una lista es palíndrome (recursivo)
+
+fun isPalindromeRecursive = (arr, start = 0, end = arr.length - 1) => {
+    if (start >= end) return true;
+    if (arr[start] !== arr[end]) return false;
+    return isPalindromeRecursive(arr, start + 1, end - 1);
+};
+
+print("*** Testing isPalindromeRecursive([1, 2, 3, 2, 1]) ***");
+print(isPalindromeRecursive([1, 2, 3, 2, 1])); // true
+
+// Factorial iterativo
+
+let factorialIterative = (n) => {
+    let result = 1;
+    for (let i = 1; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+};
+
+print("*** Testing factorialIterative(5) ***");
+print(factorialIterative(5)); // 120
+
+// Factorial recursivo
+
+fun factorialRecursive = (n) => { if (n <= 1) then 1 else n * factorialRecursive(n - 1); }
+
+print("*** Testing factorialRecursive(5) ***");
+print(factorialRecursive(5)); // 120
+
+
+// Fibonacci iterativo
+
+let fibonacciIterative = (n) => {
+    if (n <= 1) return n;
+    let a = 0, b = 1;
+    for (let i = 2; i <= n; i++) {
+        [a, b] = [b, a + b];
+    }
+    return b;
+};
+
+print("*** Testing fibonacciIterative(7) ***");
+print(fibonacciIterative(7)); // 13
+
 */

@@ -314,9 +314,11 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
+
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
-        
+
         this.visitChildren(ctx);
 
         return null;
@@ -332,11 +334,77 @@ export class Visitor extends biesCVisitor {
 
     visitInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: inExpr'));
-        
+
         this.visitChildren(ctx);
 
         return null
     }
+
+    // --------------------------------------------- Visitas a nodos de 'NestedLambda_Label' ---------------------------------------------
+
+    visitNestedLambda_Label(ctx) {
+        this.func = true;
+        const paramCount = ctx.id().length - 1;
+        const lambdaName = ctx.id(0).getText();
+
+        let functionDeclarations = '';
+
+        // Método auxiliar para generar declaraciones de funciones
+        const generateFunctionBlock = (argsCount, isLastFunction = false) => {
+            const functionName = `$FUN $${this.functionCounter}`;
+            const parentFunction = `$${this.functionCounter === 1 ? 0 : this.functionCounter - 1}`;
+
+            functionDeclarations += `${functionName} ARGS:${argsCount} PARENT:${parentFunction}`;
+            this.functionCode.push(`${functionName} ARGS:${argsCount} PARENT:${parentFunction}`);
+
+            // Generar instrucciones BLD para cada argumento
+            for (let i = 0; i < argsCount; i++) {
+                const bldInstruction = `BLD 0 ${i}`;
+                functionDeclarations += bldInstruction;
+                this.functionCode.push(bldInstruction);
+            }
+
+            if (!isLastFunction) {
+                this.functionCode.push(`LDF $${this.functionCounter + 1}`);
+                this.functionCode.push(`APP ${paramCount}`);
+            }
+
+            // Si es la última función, incluir las instrucciones generadas por visitar hijos
+            if (isLastFunction) {
+                this.visitChildren(ctx);
+            }
+
+            this.functionCode.push(`RET`);
+
+            const endInstruction = `$END $${this.functionCounter}`;
+            functionDeclarations += endInstruction;
+            this.functionCode.push(endInstruction);
+
+            this.functionMap[lambdaName] = {
+                originalName: lambdaName,
+                newId: `$${1}`,
+                args: 1,
+                parent: `$${0}`,
+                invoking: `$${1}`
+            };
+
+            this.functionCounter++;
+        };
+
+        // Generar funciones intermedias
+        for (let i = 0; i < paramCount - 1; i++) {
+            generateFunctionBlock(1);
+        }
+
+        // Generar la última función
+        if (paramCount > 0) {
+            generateFunctionBlock(paramCount, true);
+        }
+        this.func = false;
+
+        return null;
+    }
+
 
     // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
     visitLambdaNoParams_Label(ctx) {
@@ -378,6 +446,17 @@ export class Visitor extends biesCVisitor {
 
     visitFunctionCallNoParams_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: functionCallNoParams'));
+
+        this.visitChildren(ctx);
+
+        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
+        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
+
+        return null;
+    }
+
+    visitFunctionCallNested_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: functionCallNested'));
 
         this.visitChildren(ctx);
 
@@ -445,7 +524,6 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.magenta('Nodo visitado: then'));
 
         this.visitChildren(ctx);
-        //this.functionCode.push(ctx.expr().getText());
         this.functionCode.push('RET');
 
         return null;

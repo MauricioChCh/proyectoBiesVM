@@ -85,10 +85,11 @@ expr
 
 functionCall
     : id '()'                                                               # FunctionCallNoParams_Label
-    | id '(' expr (',' expr)* ')' ( '(' expr (',' expr)* ')' )*             # FunctionCallWithParams_Label
+    | id '(' expr (',' expr)* ')'                                           # FunctionCallWithParams_Label
+    | id '(' expr ')' ( '(' expr ')' )*                                     # FunctionCallNested_Label    
     | predSymbols '(' expr (',' expr)* ')'                                  # PredifinedFunctionCall_Label
     ;
-
+//functionCallWithParams
 number
     : NUMBER
     ;
