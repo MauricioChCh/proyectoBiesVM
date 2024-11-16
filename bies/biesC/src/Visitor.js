@@ -355,7 +355,7 @@ export class Visitor extends biesCVisitor {
             const parentFunction = `$${this.functionCounter === 1 ? 0 : this.functionCounter - 1}`;
 
             functionDeclarations += `${functionName} ARGS:${argsCount} PARENT:${parentFunction}`;
-            this.functionCode.push(`${functionName} ARGS:${argsCount} PARENT:${parentFunction}`);
+            this.functionCode.push(`${functionName} ARGS:${argsCount} PARENT:${parentFunction}\n`);
 
             // Generar instrucciones BLD para cada argumento
             for (let i = 0; i < argsCount; i++) {
@@ -376,7 +376,7 @@ export class Visitor extends biesCVisitor {
 
             this.functionCode.push(`RET`);
 
-            const endInstruction = `$END $${this.functionCounter}`;
+            const endInstruction = `\n$END $${this.functionCounter}\n`;
             functionDeclarations += endInstruction;
             this.functionCode.push(endInstruction);
 
