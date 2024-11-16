@@ -39,7 +39,7 @@ let
     ;
 
 in
-    : 'in' (statement | '{' (expr | statement (NL | WS)*)* '}') # InExpr_Label
+    : 'in' (statement | '{' (statement | expr (NL | WS)*)* '}') # InExpr_Label
     ;
 
 ifElseExpr

@@ -180,15 +180,14 @@ export class Visitor extends biesCVisitor {
         this.logger.log(chalk.green('Nodo visitado: id ->'), id);
 
         if (id in this.variables) {
-            const command = `${'BLD'} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
+            const command = `${this.variables[id].byteload} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
             this.isFunction() ? this.functionCode.push(command) : this.byteCode.push(command);
-        }
-        else {
+        } else {
             this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
         }
-
         return null;
     }
+
 
     // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
 
@@ -208,7 +207,7 @@ export class Visitor extends biesCVisitor {
 
         // Verificar si la variable ya está en el mapa de variables
         if (!(id in this.variables)) {
-            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter };
+            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
         }
 
         // Visitar los hijos del nodo para procesar la expresión
@@ -317,7 +316,7 @@ export class Visitor extends biesCVisitor {
     // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
 
     visitLetInExpr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: letInExpr'));
+        this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
 
         this.visitChildren(ctx);
 
@@ -325,7 +324,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitLetExpr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: letExpr'));
+        this.logger.debug(chalk.red('Nodo visitado: letExpr'));
 
         this.visitChildren(ctx);
 
@@ -333,7 +332,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitInExpr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: inExpr'));
+        this.logger.debug(chalk.red('Nodo visitado: inExpr'));
 
         this.visitChildren(ctx);
 
