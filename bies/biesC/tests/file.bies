@@ -27,16 +27,20 @@ print(x3)
 
 //---------------------------------------------------------------------------------------------------------------
 /*
-let max = (x, y) => if (x > y) then x else y //Lambda Binaria
+a[ 3 ]
+
+
+LDV [1, 2, 3, "Hello World!", 5, 6, 7]
+LDV 0
+LTK
+
 */
-let max = x => y => if (x > y) then x else y
-let {
-	const x = 10
-	const y = 20
-} in {
-	print("*** Testing max("+ x + " ," + y + ") ***")
-	print(max(x)(y))
+let {const a = [1, 2, 3, "Hello World!", 5, 6, 7]
+	} in {
+	print("*** Testing List Access ("+ a + ") ***")
+	print(a[ a[0] + 2 ])
 }
+
 
 //---------------------------------------------------------------------------------------------------------------
 /*

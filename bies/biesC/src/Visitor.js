@@ -537,6 +537,16 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    visitArrayAccess_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
+
+        this.visitId_Label(ctx.id());
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
+
+        return null;
+    }
+
     // PredifinedSymbols ------------------------------------------------------------------------------------------------------------
 
     // Método genérico para visitar los nodos de los símbolos predefinidos
