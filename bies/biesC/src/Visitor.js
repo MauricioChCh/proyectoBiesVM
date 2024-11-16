@@ -230,7 +230,22 @@ export class Visitor extends biesCVisitor {
     }
 
 
-    // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
+    // --------------------------------------------- Visitas a nodos de instrucciones LEN ---------------------------------------------
+    visitLenExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: lenExpr'));
+        this.visitChildren(ctx);
+        console.log('Llego a 0')
+        this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
+        return null;
+    }
+    
+    // visitLenInstr_Label(ctx) {
+    //     this.logger.debug(chalk.magenta('Nodo visitado: lenInstr'));
+    //     this.visitChildren(ctx);
+    //     console.log('Llego a 1')
+    //     this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
+    //     return null;
+    // }
 
     // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
 
