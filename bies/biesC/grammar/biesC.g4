@@ -8,6 +8,7 @@ program
 statement
     : printInstr
     | simpleLetInstr
+    | simpleConstInstr
     | anonymousLetFunction
     | functionCall
     | letInExpr
@@ -76,6 +77,7 @@ expr
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
     | expr GE expr                          # Ge_Label
+    | arrayAccess                           # ArrayAccessExpr_Label
     | '(' expr ')'                          # Exp_Label
     ;
 
@@ -109,6 +111,10 @@ else
     ;
 then
     : 'then'                                 # Then_Label
+    ;
+
+arrayAccess
+    : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label
     ;
 
 predSymbols

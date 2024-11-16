@@ -198,6 +198,12 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesCParser#ArrayAccessExpr_Label.
+	visitArrayAccessExpr_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesCParser#Gt_Label.
 	visitGt_Label(ctx) {
 	  return this.visitChildren(ctx);
@@ -266,6 +272,12 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by biesCParser#Then_Label.
 	visitThen_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by biesCParser#ArrayAccess_Label.
+	visitArrayAccess_Label(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
