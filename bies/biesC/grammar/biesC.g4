@@ -50,7 +50,7 @@ ifElseExpr
 
 inputExpr
     : INPUT '()' # InputExprInstr_Label
-    | INPUT '(' WS? string WS? ')' # InputExprInstrArgs_Label
+    | INPUT '(' WS? expr WS? ')' # InputExprInstrArgs_Label
     ;
 
 lenExpr
@@ -87,6 +87,7 @@ expr
     | expr AND expr                         # And_Label
     | expr OR expr                          # Or_Label
     | expr EQ expr                          # Eq_Label
+    | expr NEG expr                         # Neg_Label
     | expr LT expr                          # Lt_Label
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
@@ -178,7 +179,7 @@ POW: '**';
 AND: '&&';
 OR: '||';
 EQ: '==';
-NEQ: '!=';
+NEG: '!=';
 LT: '<';
 GT: '>';
 LE: '<=';
