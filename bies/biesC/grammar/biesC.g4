@@ -25,6 +25,7 @@ simpleLetInstr
 anonymousLetFunction
     : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
     | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
 letInExpr
@@ -79,9 +80,9 @@ expr
     ;
 
 functionCall
-    : id '()'                               # FunctionCallNoParams_Label
-    | id '(' expr (',' expr)* ')'           # FunctionCallWithParams_Label
-    | predSymbols '(' expr (',' expr)* ')'  # PredifinedFunctionCall_Label
+    : id '()'                                                               # FunctionCallNoParams_Label
+    | id '(' expr (',' expr)* ')' ( '(' expr (',' expr)* ')' )*             # FunctionCallWithParams_Label
+    | predSymbols '(' expr (',' expr)* ')'                                  # PredifinedFunctionCall_Label
     ;
 
 number
