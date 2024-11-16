@@ -10,7 +10,7 @@ import { Logger } from '../Logger.js';
  */
 class CommandExecutor {
     constructor() {
-        this.logger =  Logger;
+        this.logger = Logger;
     }
 
     /**
@@ -54,12 +54,12 @@ class CommandExecutor {
      * @returns {string} Comando biesVM completo
      */
     buildBiesVMCommand() {
-        const baseCommand = `node src/biesVM.js ${path.join('basm', 'Compilador.basm')}`;
+        const baseCommand = `node src/biesVM.js "${path.join('basm', 'Compilador.basm')}"`;
         const flags = [
             this.logger.getVerbose() ? '-v' : '',
             this.logger.getDebug() ? '-d' : '',
             //this.logger.getOutfile() ? '-o' : '',
-           // this.logger.getErrfile() ? '-e' : ''
+            // this.logger.getErrfile() ? '-e' : ''
         ];
         return `${baseCommand} ${flags.filter(Boolean).join(' ')}`;
     }
@@ -71,9 +71,11 @@ class CommandExecutor {
      * @returns {string} Comandos concatenados
      */
     buildCommandList(biesVMPath, systemCommands) {
-        const antlrCommand = `java -jar ${path.join('lib', 'antlr-4.13.1-complete.jar')} ` +
-            `-Dlanguage=JavaScript ${path.join(biesVMPath, 'grammar', 'biesVM.g4')} ` +
-            `-no-listener -visitor -o ${path.join(biesVMPath, 'output')}`;
+        const antlrCommand = `java -jar "${path.join('lib', 'antlr-4.13.1-complete.jar')}" ` +
+            `-Dlanguage=JavaScript "${path.join(biesVMPath, 'grammar', 'biesVM.g4')}" ` +
+            `-no-listener -visitor -o "${path.join(biesVMPath, 'output')}"`;
+
+
 
         return [
             `cd "${biesVMPath}"`,
@@ -92,10 +94,10 @@ class CommandExecutor {
      */
     executeProcess(commands, projectRoot) {
         return new Promise((resolve, reject) => {
-            const child = spawn(commands, { 
-                shell: true, 
-                cwd: projectRoot, 
-                stdio: 'inherit' 
+            const child = spawn(commands, {
+                shell: true,
+                cwd: projectRoot,
+                stdio: 'inherit'
             });
 
             child.on('error', (error) => {
@@ -119,14 +121,14 @@ class CommandExecutor {
     async executeCommands() {
         try {
             console.log(chalk.blueBright('Llamando a biesVM ...'));
-            
+
             const projectRoot = this.getProjectRoot();
             this.logger.log(`Project root: ${projectRoot}`);
-            
+
             const biesVMPath = this.validateBiesVMDirectory(projectRoot);
             const systemCommands = this.getSystemCommands(process.platform === 'win32');
             const commands = this.buildCommandList(biesVMPath, systemCommands);
-            
+
             await this.executeProcess(commands, projectRoot);
         } catch (error) {
             this.logger.err(chalk.red(error.message));

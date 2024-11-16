@@ -38,7 +38,7 @@ export class Visitor extends biesCVisitor {
      * @returns {C} - El compilador.
      */
     visitProgram(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: program'));
+        this.logger.debug(chalk.magenta('\nNodo visitado: program'));
         this.visitChildren(ctx);
         this.generateMain();
         this.sendCodeToCompiler();
@@ -204,9 +204,6 @@ export class Visitor extends biesCVisitor {
 
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: letInInstr'));
-
-
-        this.logger.debug('Scope actual:', this.currentScope);
 
         this.visitChildren(ctx);
 
@@ -388,7 +385,11 @@ export class Visitor extends biesCVisitor {
         const main = [];
         main.push(...this.functionCode);
         main.push('\n;Aquí inicia el "main"\n');
+        main.push('$FUN $0 ARGS:0 PARENT:$0');
         main.push(...this.byteCode);
+        main.push('$END $0');
+        main.push('HLT');
+        main.push('INI $0');
         main.push('\n;Aquí termina el "main"');
         this.byteCode = main;
     }

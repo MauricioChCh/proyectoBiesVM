@@ -8,11 +8,13 @@ program
 statement
     : printInstr
     | simpleLetInstr
+    | simpleConstInstr
     | anonymousLetFunction
     | simpleConstInstr
     | anonymousConstFunction
     | functionCall
     | letInExpr
+    | ifElseExpr
     ;
 
 printInstr
@@ -27,10 +29,15 @@ simpleLetInstr
 anonymousLetFunction
     : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
     | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
 letInExpr
-    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' ('{' (statement (NL | WS)*)* '}')?  # LetInExpr_Label
+    : 'let' '{' (declaration (NL | WS)*)* '}' 'in' (statement | '{' (statement (NL | WS)*)* '}')
+    ;
+
+ifElseExpr
+    : if WS? '(' expr ')' WS? then WS? expr WS? else WS? expr  # IfElseExpr_Label
     ;
 
 declaration
@@ -74,13 +81,14 @@ expr
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
     | expr GE expr                          # Ge_Label
+    | arrayAccess                           # ArrayAccessExpr_Label
     | '(' expr ')'                          # Exp_Label
     ;
 
 functionCall
-    : id '()'                               # FunctionCallNoParams_Label
-    | id '(' expr (',' expr)* ')'           # FunctionCallWithParams_Label
-    | predSymbols '(' expr (',' expr)* ')'  # PredifinedFunctionCall_Label
+    : id '()'                                                               # FunctionCallNoParams_Label
+    | id '(' expr (',' expr)* ')' ( '(' expr (',' expr)* ')' )*             # FunctionCallWithParams_Label
+    | predSymbols '(' expr (',' expr)* ')'                                  # PredifinedFunctionCall_Label
     ;
 
 number
@@ -97,6 +105,20 @@ array
 
 id
     : ID                                    
+    ;
+
+if
+    : 'if'                                   # If_Label
+    ;
+else
+    : 'else'                                 # Else_Label
+    ;
+then
+    : 'then'                                 # Then_Label
+    ;
+
+arrayAccess
+    : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label
     ;
 
 predSymbols
