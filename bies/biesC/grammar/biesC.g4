@@ -14,6 +14,7 @@ statement
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
@@ -32,25 +33,26 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : let in # LetInExpr_Label
-    ;
-
-inputExpr
-    : INPUT '()'                    # InputExprInstr_Label
-    | INPUT '(' WS? expr WS? ')'    # InputExprInstrArgs_Label
+    : let in # LenInExpr_Label
     ;
 
 let
-    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}' # LetExpr_Label
+    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}'               # LetExpr_Label
     ;
 
 in
-    : 'in' (statement | '{' (statement | expr (NL | WS)*)* '}') # InExpr_Label
+    :  'in' (statement | '{' (statement (NL | WS)*)* '}')   # InExpr_Label
     ;
 
 ifElseExpr
-    : if then else  # IfElseExpr_Label
+    :  if then else # IfElseExpr_Label
     ;
+
+inputExpr
+    : INPUT '()' # InputExprInstr_Label
+    | INPUT '(' WS? string WS? ')' # InputExprInstrArgs_Label
+    ;
+
 
 simpleConstInstr
     : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
@@ -70,6 +72,7 @@ primarydata
 
 expr                                        
     : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    | inputExpr                             # InputExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
@@ -123,6 +126,7 @@ then
 else
     : 'else' WS? expr                        # Else_Label
     ;
+
 
 arrayAccess
     : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label
