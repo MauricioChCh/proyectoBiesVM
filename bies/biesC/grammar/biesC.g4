@@ -31,7 +31,15 @@ anonymousLetFunction
     ;
 
 letInExpr
-    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}' 'in' (statement | '{' (expr | statement (NL | WS)*)* '}')
+    : let in # LetInExpr_Label
+    ;
+
+let
+    : 'let' '{' (anonymousConstFunction | simpleConstInstr (NL | WS)*)* '}' # LetExpr_Label
+    ;
+
+in
+    : 'in' (statement | '{' (expr | statement (NL | WS)*)* '}') # InExpr_Label
     ;
 
 ifElseExpr
