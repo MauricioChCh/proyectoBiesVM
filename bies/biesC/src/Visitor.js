@@ -317,7 +317,7 @@ export class Visitor extends biesCVisitor {
     // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
 
     visitLetInExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: letInExpr'));
 
         this.visitChildren(ctx);
 
@@ -325,7 +325,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitLetExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: letExpr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: letExpr'));
 
         this.visitChildren(ctx);
 
@@ -333,7 +333,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitInExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: inExpr'));
+        this.logger.debug(chalk.magenta('Nodo visitado: inExpr'));
 
         this.visitChildren(ctx);
 
