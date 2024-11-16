@@ -47,12 +47,16 @@ in
 
 ifElseExpr
     : if then else  # IfElseExpr_Label
+    ;
 
 inputExpr
     : INPUT '()' # InputExprInstr_Label
     | INPUT '(' WS? string WS? ')' # InputExprInstrArgs_Label
     ;
 
+lenExpr
+    : LEN '(' WS? primarydata WS? ')' # LenExprInstr_Label
+    ;
 
 simpleConstInstr
     : 'const' WS? id WS? '=' WS? expr       #SimpleConstInstr_Label
@@ -73,6 +77,7 @@ primarydata
 expr                                        
     : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
     | inputExpr                             # InputExpr_Label
+    | lenExpr                               # lenExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
