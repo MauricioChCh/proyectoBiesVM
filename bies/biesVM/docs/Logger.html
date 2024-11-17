@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Logger<span class="signature">(isVerbose<span class="signature-attributes">opt</span>, isDebug<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Logger<span class="signature">(isVerbose<span class="signature-attributes">opt</span>, isDebug<span class="signature-attributes">opt</span>, isOutfile<span class="signature-attributes">opt</span>, isErrfile<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.Permite activar diferentes niveles de detalle en los logs a través de las propiedades `isVerbose` y `isDebug`.</div>
+            <div class="class-description">Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.Permite activar diferentes niveles de detalle en los logs a través de las propiedades `isVerbose`, `isDebug`, `isOutfile` e `isErrfile`.</div>
         
     
 </header>
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="Logger"><span class="type-signature"></span>new Logger<span class="signature">(isVerbose<span class="signature-attributes">opt</span>, isDebug<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Logger"><span class="type-signature"></span>new Logger<span class="signature">(isVerbose<span class="signature-attributes">opt</span>, isDebug<span class="signature-attributes">opt</span>, isOutfile<span class="signature-attributes">opt</span>, isErrfile<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -53,7 +53,7 @@
 
 
 <div class="description">
-    Crea una nueva instancia de la clase `Logger`.
+    Crea una nueva instancia de la clase `Logger`.Esta función solo se ejecuta una vez para crear la instancia.
 </div>
 
 
@@ -168,6 +168,84 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>isOutfile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Indica si se deben registrar mensajes en un archivo de salida.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isErrfile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Indica si se deben registrar mensajes de error en un archivo.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -205,7 +283,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line5">line 5</a>
+        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -261,6 +339,254 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="configure"><span class="type-signature"></span>configure<span class="signature">(isVerbose<span class="signature-attributes">opt</span>, isDebug<span class="signature-attributes">opt</span>, isOutfile<span class="signature-attributes">opt</span>, isErrfile<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Método para actualizar la configuración del Logger.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isVerbose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Actualiza el valor de `isVerbose`.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isDebug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Actualiza el valor de `isDebug`.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isOutfile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Actualiza el valor de `isOutfile`.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isErrfile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Actualiza el valor de `isErrfile`.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -381,7 +707,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line33">line 33</a>
+        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -530,7 +856,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line22">line 22</a>
+        <a href="Logger.js.html">Logger.js</a>, <a href="Logger.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -582,7 +908,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Fri Nov 15 2024 13:41:22 GMT-0600 (hora estándar central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Sat Nov 16 2024 23:05:22 GMT-0600 (hora estándar central)
 </footer>
 
 <script> prettyPrint(); </script>

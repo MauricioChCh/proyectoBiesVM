@@ -69,7 +69,7 @@ class FunctionCommands extends Command {
                 if (this.vm.stack.length > 0) {
                     newBinding[i] = this.vm.stack.pop();
                 } else {
-                    console.warn(`Advertencia: No hay suficientes argumentos en la pila para la función ${closure.functionName}`);
+                    console.warn(`Advertencia: No hay suficientes argumentos en la pila para la $FUN ${closure.functionName}`);
                     break;
                 }
             }
@@ -78,7 +78,7 @@ class FunctionCommands extends Command {
             this.vm.programCounter = 0;
             this.verifyFunctionBody(this.vm.code);
             const functionBody = this.vm.code.join('\n');
-            this.vm.logger.log(chalk.magenta(`Ejecutando función ${closure.functionName} args: ${closure.paramCount} parent: ${closure.parentContext} con cuerpo:\n${functionBody}`));
+            this.vm.logger.log(chalk.magenta(`Ejecutando -> $FUN ${closure.functionName} ARGS:${closure.paramCount} PARENT:${closure.parentContext}\n${functionBody}`));
             this.vm.executeAntlrParsing(functionBody);
         } else {
             throw new Error('Closure or closure body is undefined');

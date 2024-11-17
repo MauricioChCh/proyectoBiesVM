@@ -71,7 +71,7 @@ class StackCommands extends Command {
         const [layerIndex, variableIndex] = instruction.args;
         const value = this.vm.stack.pop();
         this.vm.getCurrentLayer(layerIndex)[variableIndex] = value;
-        this.vm.logger.debug(`Stored value: ${value}`);
+        this.vm.logger.debug(`Stored value:          ${value}`);
     }
 }
 
