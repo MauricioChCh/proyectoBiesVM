@@ -32,6 +32,7 @@ anonymousLetFunction
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
+
 letInExpr
     : let in # LenInExpr_Label
     ;
@@ -74,7 +75,7 @@ primarydata
     ;
 
 expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
     | inputExpr                             # InputExpr_Label
     | lenExpr                               # lenExpr_Label
     | primarydata                           # PrimaryData_Label

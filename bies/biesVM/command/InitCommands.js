@@ -33,7 +33,7 @@ class InitCommands extends Command {
      */
     INI() {
         const mainFunctionName = '$0';
-        const mainFunction = this.vm.functions[mainFunctionName];
+        const mainFunctionBody = this.vm.functions[mainFunctionName];
 
         if (!mainFunction) {
             this.vm.logger.log(`Error: Main function ${mainFunctionName} not defined`);

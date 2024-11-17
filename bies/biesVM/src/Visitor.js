@@ -25,6 +25,8 @@ export class Visitor extends biesVMVisitor {
          */
         this.vm = new VM();
 
+        
+
         /**
          * Código acumulado durante el recorrido del árbol de sintaxis.
          * @type {Array<{ type: string, args: string[] }>}
@@ -42,6 +44,15 @@ export class Visitor extends biesVMVisitor {
         this.logger.log(chalk.cyanBright('Visitando el programa'));
         super.visitProgram(ctx); // Visita cada elemento del programa y acumula las instrucciones
         this.sendCode(); // Envía el código para que sea ejecutado en `run()`
+        if(this.vm.functions && '$1' in this.vm.functions){
+            this.vm.execute = false;
+            if(this.vm.counter !== 0){
+                this.vm.execute = true;
+            } 
+        }
+        // console.log(this.vm.counter);
+        this.vm.counter++;
+        
         return this.vm;
     }
 

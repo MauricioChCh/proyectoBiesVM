@@ -7,6 +7,7 @@ import { Logger } from './Logger.js';
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
+
         this.logger = Logger;
 
         this.compiler = new C();
@@ -114,6 +115,7 @@ export class Visitor extends biesCVisitor {
 
 
 
+
     visitLt_Label(ctx) {
         this.processOperation(ctx, '<', 'LT');
         return null;
@@ -123,6 +125,7 @@ export class Visitor extends biesCVisitor {
         this.processOperation(ctx, '>', 'GT');
         return null;
     }
+
 
     visitLe_Label(ctx) {
         this.processOperation(ctx, '<=', 'LE');
@@ -158,7 +161,6 @@ export class Visitor extends biesCVisitor {
 
     visitPrimaryData_Label(ctx) {
         this.logger.log(chalk.magenta('Nodo visitado: primaryData ->'));
-
         this.visitChildren(ctx);
 
         return null;
@@ -188,6 +190,7 @@ export class Visitor extends biesCVisitor {
         }
         return null;
     }
+
 
     visitString(ctx) {
         const string = ctx.getText();
@@ -226,6 +229,7 @@ export class Visitor extends biesCVisitor {
     }
 
 //---------------------------------------- Visitas a nodos de input---------------------------------------------
+
     visitInputExprInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: inputExprInstr'));
         this.visitChildren(ctx);
@@ -289,7 +293,9 @@ export class Visitor extends biesCVisitor {
     //     return null;
     // }
 
+
     // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
+
 
     visitSimpleLetInstr_Label(ctx) {
         return this.handleSimpleInstr(ctx, 'simpleLetInstr');
@@ -332,7 +338,28 @@ export class Visitor extends biesCVisitor {
         return null
     }
 
-     // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
+
+
+    visitSimpleConstInstr_Label(ctx) {
+        console.log(chalk.red('Nodo visitado: simpleConstInstr'));
+        const id = ctx.id().getText();
+
+        // Verificar si la variable ya está en el mapa de variables
+        if (!(id in this.variables)) {
+            this.variables[id] = { byteload: 'BLD 0 ' + this.variableCounter };
+        }
+
+        // Visitar los hijos del nodo para procesar la expresión
+        this.visitChildren(ctx);
+
+        // Generar el bytecode para asignar el valor a la variable
+        this.isFunction() ? this.functionCode.push(`BST 0 ${this.variableCounter++}`) : this.code.push(`BST 0 ${this.variableCounter++}`);
+
+        return null;
+    }
+
+    // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
+
 
      visitAnonymousLetFunction(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousLetFunction'));
@@ -342,6 +369,12 @@ export class Visitor extends biesCVisitor {
 
     visitAnonymousConstFunction(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousConstFunction'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitAnonymousConstFunction(ctx) {
+        console.log(chalk.red('Nodo visitado: anonymousConstFunction'));
         this.visitChildren(ctx);
         return null;
     }
@@ -437,12 +470,10 @@ export class Visitor extends biesCVisitor {
 
 
     // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
-
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
         this.func = true;
         this.visitChildren(ctx);
-
         return null;
     }
 
@@ -450,15 +481,12 @@ export class Visitor extends biesCVisitor {
         this.logger.debug(chalk.red('Nodo visitado: letExpr'));
         this.func = true;
         this.visitChildren(ctx);
-
         return null
     }
 
     visitInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: inExpr'));
-
         this.visitChildren(ctx);
-
         return null
     }
 
@@ -550,6 +578,17 @@ export class Visitor extends biesCVisitor {
         return this.visitLambda_Label(ctx, 0);
     }
 
+    visitInExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: inExpr'));
+        this.visitChildren(ctx);
+    }
+
+     // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
+     visitLambdaNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
+  
+  
     visitLambdaWithParams_Label(ctx) {
         const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
         return this.visitLambda_Label(ctx, paramCount);
@@ -585,15 +624,15 @@ export class Visitor extends biesCVisitor {
     visitFunctionCallWithParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
     }
-
+    
     visitFunctionCallNoParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNoParams');
     }
-
+    
     visitFunctionCallNested_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNested');
     }
-
+    
     generateMain() {
         const main = [];
         main.push(...this.functionCode);
@@ -610,6 +649,7 @@ export class Visitor extends biesCVisitor {
     visitPrintInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
         this.visitChildren(ctx);
+
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
     }
@@ -625,6 +665,7 @@ export class Visitor extends biesCVisitor {
         this.visitChildren(ctx);
         return null;
     }
+
 
 
     visitIfElseExpr_Label(ctx) {
@@ -780,7 +821,6 @@ export class Visitor extends biesCVisitor {
         }
         return null;
     }
-
 }
 
 export default Visitor;
