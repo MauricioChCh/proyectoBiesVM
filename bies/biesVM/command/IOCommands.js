@@ -51,6 +51,7 @@ class IOCommands extends Command {
         const userInput = await this.getUserInput(rl); // Obtiene el input del usuario
 
         this.vm.stack.push(userInput); // Almacena el input en el stack
+        console.log(chalk.cyan(userInput)); // Imprime el input en consola
         rl.close(); // Cierra la interfaz readline
         // }
     }
