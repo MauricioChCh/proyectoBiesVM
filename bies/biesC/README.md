@@ -48,6 +48,16 @@ Este script compila el código fuente y ejecuta un archivo `.basm`.
     ./build.sh
     ```
 
+5. Ejecutar tests (opcional):
+
+    ```bash
+    npm run test
+    ```
+6. Realizar documentacióm (opcional):
+
+    ```bash
+    npm run docs
+    ```
 ### Comprobacion de instalación
 Puedes verificar que la instalacion se concreto probando:
 ```bash
