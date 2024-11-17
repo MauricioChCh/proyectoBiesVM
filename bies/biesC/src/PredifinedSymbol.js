@@ -30,25 +30,23 @@ class BuiltInsProcessor {
     }
 
     int() {
-        
+        this.visitor.byteCode.push('CST number');
     }
 
     str() {
-
+        this.visitor.byteCode.push('CST string');
     }
 
     list() {
-
+        this.visitor.byteCode.push('CST list');
     }
 
     len() {
         this.visitor.byteCode.push('LEN');
-        this.visitor.byteCode.push('PRN');
     }
 
     pow() {
         this.visitor.byteCode.push('POW');
-        this.visitor.byteCode.push('PRN');
     }
 }
 
