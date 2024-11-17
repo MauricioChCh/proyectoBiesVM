@@ -40,7 +40,6 @@ class VM {
         this.programCounter = 0;
         this.logger = new Logger();
   
-
         this.initCommands = new InitCommands(this);
         this.stackCommands = new StackCommands(this);
         this.arithmeticCommands = new ArithmeticCommands(this);

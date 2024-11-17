@@ -14,6 +14,7 @@ statement
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
@@ -26,12 +27,17 @@ simpleLetInstr
 
 anonymousLetFunction
     : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
-    | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    | ('let' | 'fun') WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
 letInExpr
     : let in # LetInExpr_Label
+    ;
+
+inputExpr
+    : INPUT '()'                    # InputExprInstr_Label
+    | INPUT '(' WS? expr WS? ')'    # InputExprInstrArgs_Label
     ;
 
 let
@@ -75,8 +81,8 @@ expr
     | expr (LT | GT | LE | GE) expr         # RelationalExpr
     | expr AND expr                         # AndExpr
     | expr OR expr                          # OrExpr
+    | predSymbols
     ;
-
 
 functionCall
     : id '()'                                                               # FunctionCallNoParams_Label
@@ -135,7 +141,7 @@ predSymbols
 BOOL: 'bool';
 TRUE: 'true';
 FALSE: 'false';
-NULL: 'null';
+NULL: 'none';
 INPUT: 'input';
 INT: 'int';
 STR: 'str';

@@ -1,11 +1,81 @@
+$FUN $1 ARGS:4 PARENT:$0
+BLD 0 0
+BLD 0 1
+BLD 0 2
+BLD 0 3
+BLD 0 1
+BLD 0 2
+BLD 0 1
+BLD 0 2
+EQ
+BF 3
+BLD 0 3
+RET
+BLD 0 0
+BLD 0 1
+LDV 1
+ADD
+BLD 0 2
+BLD 0 0
+BLD 0 1
+LTK
+BLD 0 3
+ADD
+LDF $1
+APP 4
+RET
+$END $1
+
+
+$FUN $2 ARGS:2 PARENT:$0
+BLD 0 0
+BLD 0 1
+BLD 0 0
+LDV 0
+BLD 0 1
+LDV 0
+LDF $1
+APP 4
+RET
+$END $2
+
+
+LDV [1,2,3,4,5]
+BST 0 0
+LDV 0
+BST 0 1
+LDV 3
+BST 0 2
+LDV "*** Testing sumList("
+BLD 0 0
+ADD
+LDV " ,"
+ADD
+BLD 0 1
+ADD
+LDV ", "
+ADD
+BLD 0 2
+ADD
+LDV ") ***"
+ADD
+PRN
+BLD 0 0
+BLD 0 1
+BLD 0 2
+LDV 0
+LDF $1
+APP 4
+PRN
+BLD 0 0
+BLD 0 2
+LDF $2
+APP 2
+PRN
 
 ;Aquí inicia el "main"
 
 $FUN $0 ARGS:0 PARENT:$0
-LDV [1,2,3]
-BST 0 0
-BLD 0 0
-PRN
 HLT
 $END $0
 INI $0

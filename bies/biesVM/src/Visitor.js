@@ -24,9 +24,6 @@ export class Visitor extends biesVMVisitor {
          * @type {VM}
          */
         this.vm = new VM();
-
-        
-
         /**
          * Código acumulado durante el recorrido del árbol de sintaxis.
          * @type {Array<{ type: string, args: string[] }>}
@@ -65,8 +62,6 @@ export class Visitor extends biesVMVisitor {
         if (!this.vm.functions) {
             this.vm.functions = {};
         }
-
-        //this.vm.functions[functionName] = functionBody;
         
         this.vm.functions[functionName] = {
             body: functionBody,
@@ -76,7 +71,7 @@ export class Visitor extends biesVMVisitor {
         
         this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
 
-        return super.visitFunctionDef(ctx);
+        return null;
     }
 
     /**

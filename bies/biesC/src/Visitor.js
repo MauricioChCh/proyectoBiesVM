@@ -73,12 +73,11 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
 
-    // processOperation(ctx, operator, bytecode) {
-    //     this.visitChildren(ctx);
-    //     this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
-    //     (this.func ? this.functionCode : this.byteCode).push(bytecode);
-    // }
-
+    processOperation(ctx, operator, bytecode) {
+        this.visitChildren(ctx);
+        this.logger.log(chalk.magenta('Nodo visitado: ArithOp ->'), operator);
+        (this.func ? this.functionCode : this.byteCode).push(bytecode);
+    }
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
     visitParenthesisExpr(ctx) {
@@ -224,7 +223,7 @@ visitRelationalExpr(ctx) {
 
     visitNumber_Label(ctx) {
         const number = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: number ->'), number);
+        this.logger.log(chalk.magenta('Nodo visitado: number ->'), number);
 
         this.isFunction() ? this.functionCode.push('LDV ' + number) : this.byteCode.push('LDV ' + number);
 
@@ -236,7 +235,7 @@ visitRelationalExpr(ctx) {
 
     visitString(ctx) {
         const string = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: string ->'), string);
+        this.logger.log(chalk.magenta('Nodo visitado: string ->'), string);
         this.isFunction() ? this.functionCode.push('LDV ' + string) : this.byteCode.push('LDV ' + string);
 
         if (this.builtInsProcessor[this.builtIns]) {
@@ -247,7 +246,7 @@ visitRelationalExpr(ctx) {
 
     visitArray(ctx) {
         const array = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: array ->'), array);
+        this.logger.log(chalk.magenta('Nodo visitado: array ->'), array);
         this.isFunction() ? this.functionCode.push('LDV ' + array) : this.byteCode.push('LDV ' + array);
 
         if (this.builtInsProcessor[this.builtIns]) {
@@ -258,7 +257,7 @@ visitRelationalExpr(ctx) {
 
     visitId_Label(ctx) {
         const id = ctx.getText();
-        this.logger.log(chalk.green('Nodo visitado: id ->'), id);
+        this.logger.log(chalk.magenta('Nodo visitado: id ->'), id);
 
         if (id in this.variables) {
             const command = `${this.variables[id].byteload} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
@@ -305,17 +304,13 @@ visitRelationalExpr(ctx) {
 
     visitConst_WithParams_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: constWithParams'));
-
         this.visitChildren(ctx);
-
         return null
     }
 
     visitConst_NoParams_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: const_NoParams'));
-
         this.visitChildren(ctx);
-
         return null
     }
 
@@ -375,6 +370,11 @@ visitRelationalExpr(ctx) {
 
         this.functionCode.push(...Array.from({ length: paramCount }, (_, i) => `BLD 0 ${i}`)); //Agrega un 'BLD' para cada parámetro
 
+        // Actualizar el mapa de variables con los parámetros de la función
+        for (let i = 0; i < paramCount; i++) {
+            this.variables[ctx.id(i + 1).getText()] = { byteload: 'BLD', arg1: 0, arg2: i };
+        }
+
         // Actualizar el contexto padre actual
         this.compiler.currentParent = functionId;
 
@@ -398,7 +398,7 @@ visitRelationalExpr(ctx) {
 
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
-
+        this.func = true;
         this.visitChildren(ctx);
 
         return null;
@@ -406,7 +406,7 @@ visitRelationalExpr(ctx) {
 
     visitLetExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letExpr'));
-
+        this.func = true;
         this.visitChildren(ctx);
 
         return null
@@ -470,21 +470,16 @@ visitRelationalExpr(ctx) {
 
             this.functionCounter++;
         };
-
-        // Generar funciones intermedias
-        for (let i = 0; i < paramCount - 1; i++) {
+        for (let i = 0; i < paramCount - 1; i++) { // Generar funciones intermedias
             generateFunctionBlock(1);
         }
-
-        // Generar la última función
-        if (paramCount > 0) {
+        if (paramCount > 0) {   // Generar la última función
             generateFunctionBlock(paramCount, true);
         }
         this.func = false;
 
         return null;
     }
-
 
     // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
     visitLambdaNoParams_Label(ctx) {
@@ -507,43 +502,32 @@ visitRelationalExpr(ctx) {
     }
 
     visitFunctionCallExpr_Label(ctx) {
-        const funcName = ctx.getText();
-        this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), funcName);
+        this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
         this.visitChildren(ctx);
+        return null;
+    }
+
+    visitFunctionCall_Label(ctx, type) {
+        this.logger.debug(chalk.magenta(`Nodo visitado: ${type} ->`), ctx.getText());
+        this.visitChildren(ctx);
+        const functionId = ctx.id().getText();
+        const functionDetails = this.functionMap[functionId];
+        this.isFunction() ? this.functionCode.push(`LDF ${functionDetails.newId}`) : this.byteCode.push(`LDF ${functionDetails.newId}`);
+        this.isFunction() ? this.functionCode.push(`APP ${functionDetails.args}`) : this.byteCode.push(`APP ${functionDetails.args}`);
+
         return null;
     }
 
     visitFunctionCallWithParams_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: functionCallWithParams'));
-
-        this.visitChildren(ctx);
-
-        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
-        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
-
-        return null;
+        return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
     }
 
     visitFunctionCallNoParams_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: functionCallNoParams'));
-
-        this.visitChildren(ctx);
-
-        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
-        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
-
-        return null;
+        return this.visitFunctionCall_Label(ctx, 'functionCallNoParams');
     }
 
     visitFunctionCallNested_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: functionCallNested'));
-
-        this.visitChildren(ctx);
-
-        this.byteCode.push('LDF ' + this.functionMap[ctx.id().getText()].newId);
-        this.byteCode.push('APP ' + this.functionMap[ctx.id().getText()].args);
-
-        return null;
+        return this.visitFunctionCall_Label(ctx, 'functionCallNested');
     }
 
     generateMain() {
@@ -561,7 +545,6 @@ visitRelationalExpr(ctx) {
 
     visitPrintInstr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
-
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
         return null;
@@ -569,17 +552,13 @@ visitRelationalExpr(ctx) {
 
     visitPredifinedFunctionCall_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: predifinedFunctionCall'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitExp_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: exp'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
@@ -587,49 +566,39 @@ visitRelationalExpr(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
         this.func = true;
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitIf_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: if'));
-
         this.visitChildren(ctx);
         this.functionCode.push('BF 3');
-
         return null;
     }
 
     visitThen_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: then'));
-
         this.visitChildren(ctx);
         this.functionCode.push('RET');
-
         return null;
     }
 
     visitElse_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: else'));
-
         this.visitChildren(ctx);
-
         return null;
     }
 
     visitArrayAccess_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
-
         this.visitId_Label(ctx.id());
         this.visitChildren(ctx);
         this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
-
         return null;
     }
 
     // PredifinedSymbols ------------------------------------------------------------------------------------------------------------
 
-    // Método genérico para visitar los nodos de los símbolos predefinidos
     visitBuiltIns(ctx, label) {
         this.logger.debug(chalk.magenta(`Nodo visitado: ${label}`));
 
@@ -639,21 +608,32 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
-    // Luego, los métodos específicos pueden delegar en la función genérica:
     visitBool_Label(ctx) {
         return this.visitBuiltIns(ctx, 'bool');
     }
 
-    visitTrue_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'true');
+    visitTrue_Label() {
+        this.builtIns = 'true';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
-    visitFalse_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'false');
+    visitFalse_Label() {
+        this.builtIns = 'false';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
-    visitNull_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'null');
+    visitNull_Label() {
+        this.builtIns = 'none';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
     visitInput_Label(ctx) {
@@ -674,6 +654,22 @@ visitRelationalExpr(ctx) {
 
     visitLen_Label(ctx) {
         return this.visitBuiltIns(ctx, 'len');
+    }
+
+    visitInputExprInstr_Label() {
+        this.builtIns = 'input';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
+    }
+
+    visitInputExprInstrArgs_Label() {
+        this.builtIns = 'input';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 }
 

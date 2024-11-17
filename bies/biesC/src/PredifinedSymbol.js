@@ -6,27 +6,31 @@ class BuiltInsProcessor {
     bool() {
         this.visitor.byteCode.push('EQ');
         this.visitor.byteCode.push('NOT');
-        this.visitor.byteCode.push('PRN');
+        this.visitor.byteCode.push('RET');
     }
 
     true() {
-
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('EQ');
     }
 
     false() {
-
+        this.visitor.byteCode.push('LDV 0');
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('EQ');
     }
 
-    null() {
-
+    none() {
+        this.visitor.byteCode.push('LDV "none"');
     }
 
     input() {
-
+        this.visitor.byteCode.push('INP');
     }
 
     int() {
-
+        
     }
 
     str() {
