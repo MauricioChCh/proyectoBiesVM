@@ -31,10 +31,12 @@ class IOCommands extends Command {
      * Los elementos del arreglo se imprimen con un espacio en blanco entre ellos.
      */
     PRN() {
-        const value = this.vm.stack.pop();
-        if (value !== undefined) {
-            const output = Array.isArray(value) ? this.formatArray(value) : value;
-            console.log(chalk.cyan(output));
+        if(this.vm.execute){
+            const value = this.vm.stack.pop();
+            if (value !== undefined) {
+                const output = Array.isArray(value) ? this.formatArray(value) : value;
+                console.log(chalk.cyan(output));
+            }
         }
     }
 
