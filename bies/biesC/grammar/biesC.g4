@@ -73,7 +73,7 @@ expr
     | anonymousLetFunction                  # AnonymousFunctionExpr
     | primarydata                           # PrimaryData
     | functionCall                          # FunctionCallExpr
-    | arrayAccess                           # ArrayAccessExpr
+    | arrayAccess                          # ArrayAccessExpr
     | <precedence=right> expr POW expr      # PowExpr
     | expr (MULT | DIV) expr                # MultDivExpr
     | expr (ADD | SUB) expr                 # AddSubExpr
@@ -81,7 +81,7 @@ expr
     | expr (LT | GT | LE | GE) expr         # RelationalExpr
     | expr AND expr                         # AndExpr
     | expr OR expr                          # OrExpr
-    | predSymbols
+    | predSymbols                          # PredSymbolsExpr
     ;
 
 functionCall
