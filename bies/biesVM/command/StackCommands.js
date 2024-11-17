@@ -44,16 +44,17 @@ class StackCommands extends Command {
         this.vm.stack.push(
             Array.isArray(parsedValue)
                 ? parsedValue
-                : value.startsWith('"') && value.endsWith('"') && value.length > 2
-                    ? String(value.slice(1, -1))
-                    : value === '""'
-                        ? undefined
-                        : !isNaN(Number(value))
-                            ? Number(value)
-                            : undefined
+                : value === 'none'
+                    ? null
+                    : value.startsWith('"') && value.endsWith('"') && value.length > 2
+                        ? String(value.slice(1, -1))
+                        : value === '""'
+                            ? undefined
+                            : !isNaN(Number(value))
+                                ? Number(value)
+                                : undefined
         );
     }
-
     /**
      * Carga un valor desde una capa de bindings en la pila.
      * @param {Object} instruction - La instrucción que contiene el índice de la capa y el índice de la variable.

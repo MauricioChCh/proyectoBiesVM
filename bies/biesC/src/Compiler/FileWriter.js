@@ -3,13 +3,26 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import { Logger } from '../Logger.js';
+
 /**
  * Clase que se encarga de escribir el bytecode en un archivo.
+ * Permite escribir el bytecode en una ruta especificada por el usuario o en una ruta por defecto.
+ *
+ * @class FileWriter
+ * @version 1.0.0
+ * 
+ * @author 
+ * - Joshua Yarit Amador Lara
+ * - Mauricio Chaves Chaves [Coordinador]
+ * - Fabiola Rojas Alvarado
+ * - Eddy Villarreal Muñoz
  */
 class FileWriter {
     /**
      * Escribe el bytecode en los archivos necesarios.
-     * @param {Array} bytecode - El bytecode a escribir.
+     * Si el usuario especifica un archivo de salida, se escribe allí; de lo contrario, se usa un archivo por defecto.
+     * 
+     * @param {Array<string>} bytecode - El bytecode a escribir, representado como un array de strings.
      * @returns {Promise<void>}
      */
     async writeByteCodeToFile(bytecode) {
@@ -35,8 +48,10 @@ class FileWriter {
 
     /**
      * Escribe contenido en un archivo específico.
-     * @param {string} filePath - La ruta del archivo.
-     * @param {string} content - El contenido a escribir.
+     * 
+     * @private
+     * @param {string} filePath - La ruta del archivo donde se guardará el contenido.
+     * @param {string} content - El contenido a escribir en el archivo.
      * @returns {Promise<void>}
      */
     async _writeToFile(filePath, content) {
@@ -46,7 +61,9 @@ class FileWriter {
 
     /**
      * Devuelve la ruta del archivo por defecto para guardar el bytecode.
-     * @returns {string} - La ruta del archivo por defecto.
+     * 
+     * @private
+     * @returns {string} Ruta del archivo por defecto.
      */
     _getDefaultFilePath() {
         const __filename = fileURLToPath(import.meta.url);

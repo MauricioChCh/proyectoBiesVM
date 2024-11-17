@@ -38,7 +38,7 @@ initializeInstr
     ;
 
 loadInstr
-    : 'LDV' ES* (NUMBER | STRING | array)? ES* // Permite cargar números, cadenas y listas
+    : 'LDV' ES* (NUMBER | STRING | array | boolData)? ES* // Permite cargar números, cadenas y listas
     | 'BLD' ES? NUMBER ES? NUMBER ES? // Instrucción de carga de bloque con dos números
     | 'BST' ES? NUMBER ES? NUMBER ES? // Instrucción de almacenamiento de bloque con dos números
     | 'LDF' ES? LABEL_IDENTIFIER ES? // Instrucción de carga de función con un identificador de etiqueta
@@ -102,6 +102,12 @@ listInstr
     | 'LNT'
     | 'LRK'
     | 'TOL'
+    ;
+
+boolData
+    : 'true' // Valor booleano verdadero
+    | 'false' // Valor booleano falso
+    | 'none' // Valor nulo
     ;
 
 signInstr

@@ -19,18 +19,31 @@ class TypeCommands extends Command {
      * @param {Object} instruction - La instrucción que contiene el valor a convertir.
      */
     CST(instruction) {
-        const value = instruction.args[0];
-        let parsedValue;
-        if (!isNaN(value) && !isNaN(parseFloat(value))) {
-            parsedValue = parseFloat(value);
-        } else {
-            try {
-                parsedValue = JSON.parse(value);
-            } catch (e) {
-                parsedValue = value;
-            }
+        const value = this.vm.stack.pop();
+        const targetType = instruction.args[0];
+
+        let castedValue;
+
+        switch (targetType) {
+            case 'number':
+                castedValue = parseFloat(value);
+                if (isNaN(castedValue)) {
+                    throw new Error(`No se puede convertir "${value}" a number.`);
+                }
+                break;
+
+            case 'string':
+                castedValue = String(value);
+                break;
+
+            case 'list':
+                castedValue = Array.isArray(value) ? value : (value != null && typeof value[Symbol.iterator] === 'function') ? [...value] : [value];
+                break;
+
+            default:
+                throw new Error(`Tipo de casting no soportado: ${targetType}`);
         }
-        this.vm.stack.push(parsedValue);
+        this.vm.stack.push(castedValue);
     }
 
     /**

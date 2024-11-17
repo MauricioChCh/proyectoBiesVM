@@ -125,6 +125,9 @@ const mensaje = "Hola " + "Mundo"
 - `int`: Caste de string a int
 - `str`: Castea listas a string
 - `len`: Retorna longitud
+- `bool`: Retorna true o flase
+- `list`: Castea enteros o string a lista
+
 
 ## Operadores
 - Aritméticos: `**`, `*`, `/`, `+`, `-`
