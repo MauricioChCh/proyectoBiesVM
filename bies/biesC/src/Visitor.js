@@ -443,14 +443,14 @@ export class Visitor extends biesCVisitor {
 
     visitFunctionCall_Label(ctx, type) {
         this.logger.debug(chalk.magenta(`Nodo visitado: ${type} ->`), ctx.getText());
-    
+
         this.visitChildren(ctx);
     
         const functionId = ctx.id().getText();
         const functionDetails = this.functionMap[functionId];
     
-        this.byteCode.push(`LDF ${functionDetails.newId}`);
-        this.byteCode.push(`APP ${functionDetails.args}`);
+        this.isFunction() ? this.functionCode.push(`LDF ${functionDetails.newId}`) : this.byteCode.push(`LDF ${functionDetails.newId}`);
+        this.isFunction() ? this.functionCode.push(`APP ${functionDetails.args}`) : this.byteCode.push(`APP ${functionDetails.args}`);
     
         return null;
     }
