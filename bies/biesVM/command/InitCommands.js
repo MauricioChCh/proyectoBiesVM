@@ -19,8 +19,8 @@ class InitCommands extends Command {
      * @param {Object} instruction - La instrucción que contiene el nombre de la función principal.
      * @throws {Error} Si la función principal no está definida.
      */
-    INI(instruction) {
-        const mainFunctionName = instruction.args[0];
+    INI() {
+        const mainFunctionName = '$0';
         const mainFunctionBody = this.vm.functions[mainFunctionName];
 
         if (!mainFunctionBody) {
