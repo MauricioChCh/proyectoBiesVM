@@ -83,7 +83,7 @@ biesc -h                                      # Muestra la ayuda
 ## Estructura del Proyecto
 ```
 biesC/
-├──📁 battery/           # Casos de prueba
+├──📁 battery/           # Casos de prueba (Versiones)
 ├──📁 grammar/           # Gramática ANTLR4
 ├──📁 lib/              # Bibliotecas necesarias
 ├──📁 output/           # Archivos generados por ANTLR$
