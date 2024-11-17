@@ -22,7 +22,7 @@ class BuiltInsProcessor {
     }
 
     none() {
-        this.visitor.byteCode.push('LDV "none"');
+        this.visitor.byteCode.push('LDV none');
     }
 
     input() {
