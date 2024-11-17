@@ -39,6 +39,8 @@ class VM {
         this.functions = {};
         this.programCounter = 0;
         this.logger = new Logger();
+        this.counter = 0;
+        this.execute = false;
   
 
         this.initCommands = new InitCommands(this);
