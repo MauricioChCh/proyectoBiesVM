@@ -6,6 +6,7 @@ import fs from 'fs';
 import { Logger } from '../Logger.js';
 
 /**
+ * @file CommandExecutor.js
  * Clase que se encarga de ejecutar los comandos del sistema.
  * Proporciona métodos para construir y ejecutar comandos necesarios para
  * la ejecución de la máquina virtual biesVM.

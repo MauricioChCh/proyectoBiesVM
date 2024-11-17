@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import { Logger } from '../Logger.js';
 
 /**
+ * @file FileWriter.js
  * Clase que se encarga de escribir el bytecode en un archivo.
  * Permite escribir el bytecode en una ruta especificada por el usuario o en una ruta por defecto.
  *

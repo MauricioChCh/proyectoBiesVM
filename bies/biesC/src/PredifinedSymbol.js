@@ -1,3 +1,7 @@
+/**
+ * @file PredifinedSymbol.js
+ */
+
 class BuiltInsProcessor {
     constructor(visitor) {
         this.visitor = visitor;

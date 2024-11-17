@@ -17,6 +17,10 @@ class Logger {
      * @param {boolean} [isDebug=false] - Indica si se deben mostrar mensajes de depuración.
      * @param {boolean} [isOutfile=false] - Indica si se deben registrar mensajes en un archivo de salida.
      * @param {boolean} [isErrfile=false] - Indica si se deben registrar mensajes de error en un archivo.
+     * @param {string} [outfile=null] - La ruta del archivo de salida.
+     * @param {string} [errfile=null] - La ruta del archivo de errores.
+     * @param {fs.WriteStream} [outStream=null] - El flujo de escritura para el archivo de salida.
+     * @param {fs.WriteStream} [errStream=null] - El flujo de escritura para el archivo de errores.
      */
     constructor() {
         if (!Logger.instance) {
@@ -96,7 +100,10 @@ class Logger {
         }
     }
 
-
+    /**
+     * Registra mensajes de error en la consola y en un archivo si `isErrfile` está activado.
+     * @param  {...any} args Los mensajes o datos de error que se desean registrar.
+     */
     err(...args) {
         const message = args.join(' ');
         console.error(chalk.red(...args));
@@ -104,27 +111,51 @@ class Logger {
             this.errStream.write(`${message}\n`);
         }
     }
-
+ 
+    /** 
+     * Obtiene el valor de `isVerbose`.
+     * @returns {boolean} `true` si `isVerbose` está activado, `false` en caso contrario.
+    */
     getVerbose() {
         return this.isVerbose;
     }
 
+    /** 
+     * Obtiene el valor de `isDebug`.
+     * @returns {boolean} `true` si `isDebug` está activado, `false` en caso contrario.
+    */
     getDebug() {
         return this.isDebug;
     }
 
+    /** 
+     * Obtiene el valor de `isOutfile`.
+     * @returns {boolean} `true` si `isOutfile` está activado, `false` en caso contrario.
+    */
     getisOutfile() {
         return this.isOutfile;
     }
 
+    /** 
+     * Obtiene el valor de `isErrfile`.
+     * @returns {boolean} `true` si `isErrfile` está activado, `false` en caso contrario.
+    */
     getisErrfile() {
         return this.isErrfile;
     }
 
+    /**
+     * Obtiene la ruta del archivo de salida.
+     * @returns {string} La ruta del archivo de salida.
+     */
     getOutfile(){
         return this.outfile;
     }
 
+    /**
+     * Obtiene la ruta del archivo de errores.
+     * @returns {string} La ruta del archivo de errores.
+     */
     getErrfile(){
         return this.errfile;
     }
