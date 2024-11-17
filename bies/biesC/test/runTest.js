@@ -9,14 +9,21 @@ import chalk from 'chalk';
  * Script para ejecutar pruebas en archivos .bies dentro del directorio de pruebas.
  * Este script ejecuta cada archivo .bies en el orden que se encuentra en el directorio `battery` y
  * muestra el resultado en la consola. Usa `exec` para correr el script `biesC.js` con cada archivo .bies.
- *
+ * 
+ * @file runTest.js
  * @version 1.0.0
  * 
- * @author
- * - Joshua Yarit Amador Lara
- * - Mauricio Chaves Chaves [Coordinador]
- * - Fabiola Rojas Alvarado
- * - Eddy Villarreal Muñoz
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves [Coordinador]
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * 
+ * @requires path
+ * @requires fileURLToPath
+ * @requires fs
+ * @requires exec
+ * @requires chalk
  */
 
 // Obtener la ruta del archivo actual
