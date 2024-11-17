@@ -50,6 +50,7 @@ export class Visitor extends biesVMVisitor {
                 this.vm.execute = true;
             } 
         }
+        // console.log(this.vm.counter);
         this.vm.counter++;
         
         return this.vm;
