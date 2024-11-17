@@ -14,6 +14,7 @@ statement
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
@@ -32,6 +33,11 @@ anonymousLetFunction
 
 letInExpr
     : let in # LetInExpr_Label
+    ;
+
+inputExpr
+    : INPUT '()'                    # InputExprInstr_Label
+    | INPUT '(' WS? expr WS? ')'    # InputExprInstrArgs_Label
     ;
 
 let

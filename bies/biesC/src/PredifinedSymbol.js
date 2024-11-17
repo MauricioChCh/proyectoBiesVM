@@ -26,7 +26,7 @@ class BuiltInsProcessor {
     }
 
     input() {
-
+        this.visitor.byteCode.push('INP');
     }
 
     int() {
