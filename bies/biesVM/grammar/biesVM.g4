@@ -30,6 +30,11 @@ instruction
     | stackInstr // Instrucción para manejar la instrucción SWP
     | castInstr // Instrucción para manejar la instrucción CST
     | lengthInstr // Instrucción para manejar la instrucción LEN
+    | initializeInstr // Instrucción para manejar la instrucción INI
+    ;
+
+initializeInstr
+    : 'INI' ES? LABEL_IDENTIFIER ES? // Instrucción de inicialización con un identificador de etiqueta
     ;
 
 loadInstr
