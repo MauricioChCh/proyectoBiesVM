@@ -246,7 +246,6 @@ export class Visitor extends biesCVisitor {
     visitLenExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: lenExpr'));
         this.visitChildren(ctx);
-        console.log('Llego a 0')
         this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
         return null;
     }
@@ -254,7 +253,6 @@ export class Visitor extends biesCVisitor {
     // visitLenInstr_Label(ctx) {
     //     this.logger.debug(chalk.magenta('Nodo visitado: lenInstr'));
     //     this.visitChildren(ctx);
-    //     console.log('Llego a 1')
     //     this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
     //     return null;
     // }
@@ -280,7 +278,6 @@ export class Visitor extends biesCVisitor {
     visitLenExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: lenExpr'));
         this.visitChildren(ctx);
-        console.log('Llego a 0')
         this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
         return null;
     }
@@ -288,7 +285,6 @@ export class Visitor extends biesCVisitor {
     // visitLenInstr_Label(ctx) {
     //     this.logger.debug(chalk.magenta('Nodo visitado: lenInstr'));
     //     this.visitChildren(ctx);
-    //     console.log('Llego a 1')
     //     this.isFunction() ? this.functionCode.push('LEN') : this.byteCode.push('LEN');
     //     return null;
     // }
