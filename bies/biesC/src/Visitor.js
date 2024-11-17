@@ -118,7 +118,7 @@ export class Visitor extends biesCVisitor {
     }
 
     visitLe_Label(ctx) {
-        this.processOperation(ctx, '<=', 'LE');
+        this.processOperation(ctx, '<=', 'LTE');
         return null;
     }
 
@@ -438,22 +438,22 @@ export class Visitor extends biesCVisitor {
         const functionDetails = this.functionMap[functionId];
         this.isFunction() ? this.functionCode.push(`LDF ${functionDetails.newId}`) : this.byteCode.push(`LDF ${functionDetails.newId}`);
         this.isFunction() ? this.functionCode.push(`APP ${functionDetails.args}`) : this.byteCode.push(`APP ${functionDetails.args}`);
-    
+
         return null;
     }
 
     visitFunctionCallWithParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
     }
-    
+
     visitFunctionCallNoParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNoParams');
     }
-    
+
     visitFunctionCallNested_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNested');
     }
-    
+
     generateMain() {
         const main = [];
         main.push(...this.functionCode);
@@ -536,16 +536,28 @@ export class Visitor extends biesCVisitor {
         return this.visitBuiltIns(ctx, 'bool');
     }
 
-    visitTrue_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'true');
+    visitTrue_Label() {
+        this.builtIns = 'true';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
-    visitFalse_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'false');
+    visitFalse_Label() {
+        this.builtIns = 'false';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
-    visitNull_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'null');
+    visitNull_Label() {
+        this.builtIns = 'none';
+        if (this.builtInsProcessor[this.builtIns]) {
+            this.builtInsProcessor[this.builtIns]();
+        }
+        return null;
     }
 
     visitInput_Label(ctx) {
@@ -566,10 +578,6 @@ export class Visitor extends biesCVisitor {
 
     visitLen_Label(ctx) {
         return this.visitBuiltIns(ctx, 'len');
-    }
-
-    visitTrue_Label(ctx) {
-        return this.visitBuiltIns(ctx, 'true');
     }
 
     visitInputExprInstr_Label() {

@@ -27,7 +27,7 @@ simpleLetInstr
 
 anonymousLetFunction
     : 'let' WS? id WS? '=' WS? '()' '=>' (statement | expr)                       # LambdaNoParams_Label
-    | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
+    | ('let' | 'fun') WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
 
@@ -146,7 +146,7 @@ predSymbols
 BOOL: 'bool';
 TRUE: 'true';
 FALSE: 'false';
-NULL: 'null';
+NULL: 'none';
 INPUT: 'input';
 INT: 'int';
 STR: 'str';

@@ -6,7 +6,7 @@ class BuiltInsProcessor {
     bool() {
         this.visitor.byteCode.push('EQ');
         this.visitor.byteCode.push('NOT');
-        this.visitor.byteCode.push('PRN');
+        this.visitor.byteCode.push('RET');
     }
 
     true() {
@@ -21,8 +21,8 @@ class BuiltInsProcessor {
         this.visitor.byteCode.push('EQ');
     }
 
-    null() {
-
+    none() {
+        this.visitor.byteCode.push('LDV "none"');
     }
 
     input() {
@@ -30,7 +30,7 @@ class BuiltInsProcessor {
     }
 
     int() {
-
+        
     }
 
     str() {
