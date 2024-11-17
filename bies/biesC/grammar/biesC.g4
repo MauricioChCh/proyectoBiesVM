@@ -74,12 +74,12 @@ expr
     | expr AND expr                         # And_Label
     | expr OR expr                          # Or_Label
     | expr EQ expr                          # Eq_Label
-    | expr NEQ expr                         # Neq_Label
     | expr LT expr                          # Lt_Label
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
     | expr GE expr                          # Ge_Label
     | arrayAccess                           # ArrayAccessExpr_Label
+    | predSymbols                           # PredSymbolsExpr_Label
     | '(' expr ')'                          # Exp_Label
     ;
 

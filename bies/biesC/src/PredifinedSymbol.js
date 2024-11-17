@@ -10,11 +10,15 @@ class BuiltInsProcessor {
     }
 
     true() {
-
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('EQ');
     }
 
     false() {
-
+        this.visitor.byteCode.push('LDV 0');
+        this.visitor.byteCode.push('LDV 1');
+        this.visitor.byteCode.push('EQ');
     }
 
     null() {
