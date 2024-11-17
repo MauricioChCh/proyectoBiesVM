@@ -137,6 +137,7 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+
     visitNeg_Label(ctx) {
         this.processOperation(ctx, '!=', 'NEG');
         return
@@ -410,7 +411,6 @@ export class Visitor extends biesCVisitor {
     visitLetExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letExpr'));
         this.func = true;
-
         this.visitChildren(ctx);
 
         return null
@@ -486,55 +486,56 @@ export class Visitor extends biesCVisitor {
     }
 
 
-   // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
-   visitLambdaNoParams_Label(ctx) {
-    return this.visitLambda_Label(ctx, 0);
-}
 
-visitLambdaWithParams_Label(ctx) {
-    const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
-    return this.visitLambda_Label(ctx, paramCount);
-}
+    // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
+    visitLambdaNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
 
-// Metodos especificos para LamdbaConstNoParams y LambdaConstWithParams
-visitLambdaConstNoParams_Label(ctx) {
-    return this.visitLambda_Label(ctx, 0);
-}
+    visitLambdaWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
+    }
 
-visitLambdaConstWithParams_Label(ctx) {
-    const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
-    return this.visitLambda_Label(ctx, paramCount);
-}
+    // Metodos especificos para LamdbaConstNoParams y LambdaConstWithParams
+    visitLambdaConstNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
 
-visitFunctionCallExpr_Label(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
-    this.visitChildren(ctx);
-    return null;
-}
+    visitLambdaConstWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
+    }
 
-visitFunctionCall_Label(ctx, type) {
-    this.logger.debug(chalk.magenta(`Nodo visitado: ${type} ->`), ctx.getText());
-    this.visitChildren(ctx);
-    const functionId = ctx.id().getText();
-    const functionDetails = this.functionMap[functionId];
-    this.isFunction() ? this.functionCode.push(`LDF ${functionDetails.newId}`) : this.byteCode.push(`LDF ${functionDetails.newId}`);
-    this.isFunction() ? this.functionCode.push(`APP ${functionDetails.args}`) : this.byteCode.push(`APP ${functionDetails.args}`);
+    visitFunctionCallExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
+        this.visitChildren(ctx);
+        return null;
+    }
 
-    return null;
-}
+    visitFunctionCall_Label(ctx, type) {
+        this.logger.debug(chalk.magenta(`Nodo visitado: ${type} ->`), ctx.getText());
+        this.visitChildren(ctx);
+        const functionId = ctx.id().getText();
+        const functionDetails = this.functionMap[functionId];
+        this.isFunction() ? this.functionCode.push(`LDF ${functionDetails.newId}`) : this.byteCode.push(`LDF ${functionDetails.newId}`);
+        this.isFunction() ? this.functionCode.push(`APP ${functionDetails.args}`) : this.byteCode.push(`APP ${functionDetails.args}`);
+
+        return null;
+    }
 
     visitFunctionCallWithParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
     }
-    
+
     visitFunctionCallNoParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNoParams');
     }
-    
+
     visitFunctionCallNested_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNested');
     }
-    
+
     generateMain() {
         const main = [];
         main.push(...this.functionCode);
@@ -710,6 +711,7 @@ visitFunctionCall_Label(ctx, type) {
         }
         return null;
     }
+
 }
 
 export default Visitor;

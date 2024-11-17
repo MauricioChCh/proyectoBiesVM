@@ -210,6 +210,12 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
+	// Visit a parse tree produced by biesCParser#PredSymbolsExpr_Label.
+	visitPredSymbolsExpr_Label(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by biesCParser#Ge_Label.
 	visitGe_Label(ctx) {
 	  return this.visitChildren(ctx);
