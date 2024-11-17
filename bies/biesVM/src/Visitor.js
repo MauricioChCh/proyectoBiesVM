@@ -44,13 +44,14 @@ export class Visitor extends biesVMVisitor {
         this.logger.log(chalk.cyanBright('Visitando el programa'));
         super.visitProgram(ctx); // Visita cada elemento del programa y acumula las instrucciones
         this.sendCode(); // Envía el código para que sea ejecutado en `run()`
-        if(this.vm.counter !== 0 && this.vm.functions && '$1' in this.vm.functions){
-            this.vm.execute = true;
-        } else {
-            this.vm.execute = true;
+        if(this.vm.functions && '$1' in this.vm.functions){
+            this.vm.execute = false;
+            if(this.vm.counter !== 0){
+                this.vm.execute = true;
+            } 
         }
-
         this.vm.counter++;
+        
         return this.vm;
     }
 
