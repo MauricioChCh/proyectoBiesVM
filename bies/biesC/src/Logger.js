@@ -5,6 +5,20 @@ import fs from 'fs';
 /**
  * Clase `Logger` que proporciona funcionalidades para registrar mensajes en la consola.
  * Permite activar diferentes niveles de detalle en los logs a través de las propiedades `isVerbose`, `isDebug`, `isOutfile` e `isErrfile`.
+ * 
+ * @class Logger
+ * @file Logger.js
+ * @singleton
+ * @version 1.0.0
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves [Coordinador]
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @requires chalk
+ * @requires fs
+ * 
  */
 class Logger {
     

@@ -5,7 +5,31 @@ import BuiltInsProcessor from './PredifinedSymbol.js';
 import C from './Compiler/C.js';
 import { Logger } from './Logger.js';
 
+
 // ----------------------------------------- Clase Visitor -----------------------------------------
+
+/**
+ * Clase que representa un visitor para el lenguaje Bies.
+ * Se encarga de visitar los nodos del árbol de análisis sintáctico y generar código.
+ * 
+ * @class Visitor
+ * @extends biesCVisitor
+ * @file Visitor.js
+ * @version 1.0.0
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves [Coordinador]
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @requires chalk
+ * @requires biesCVisitor
+ * @requires BuiltInsProcessor
+ * @requires C
+ * @requires Logger
+ */
+
+
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
