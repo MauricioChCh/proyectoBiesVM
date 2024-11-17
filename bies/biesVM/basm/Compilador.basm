@@ -1,49 +1,75 @@
-$FUN $1 ARGS:1 PARENT:$0
-
+$FUN $1 ARGS:4 PARENT:$0
 BLD 0 0
-LDF $2
-APP 2
+BLD 0 1
+BLD 0 2
+BLD 0 3
+BLD 0 0
+BLD 0 1
+EQ
+BF 3
 RET
-
+BLD 0 0
+LDV 1
+ADD
+BLD 0 1
+BLD 0 3
+BLD 0 0
+LTK
+BLD 0 2
+ADD
+RET
 $END $1
 
-$FUN $2 ARGS:2 PARENT:$1
 
+$FUN $2 ARGS:2 PARENT:$0
 BLD 0 0
 BLD 0 1
-BLD 0 0
-BLD 0 1
-GT
-BF 3
-BLD 0 0
+BLD 0 3
+LDV 0
+LDV 0
 RET
-BLD 0 1
-RET
-
 $END $2
+
 
 
 ;Aquí inicia el "main"
 
 $FUN $0 ARGS:0 PARENT:$0
-LDV 10
+LDF $1
+APP 4
+LDF $1
+APP 4
+LDV [1,2,3,4,5]
+BST 0 3
+LDV 0
 BST 0 0
-LDV 20
+LDV 3
 BST 0 1
-LDV "*** Testing max("
-BLD 0 0
+LDV "*** Testing sumList("
+BLD 0 3
 ADD
 LDV " ,"
+ADD
+BLD 0 0
+ADD
+LDV ", "
 ADD
 BLD 0 1
 ADD
 LDV ") ***"
 ADD
 PRN
+BLD 0 3
 BLD 0 0
 BLD 0 1
+LDV 0
 LDF $1
-APP 1
+APP 4
+PRN
+BLD 0 3
+BLD 0 1
+LDF $2
+APP 2
 PRN
 HLT
 $END $0

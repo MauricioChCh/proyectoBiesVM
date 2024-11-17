@@ -10,47 +10,47 @@ cd C:\Users\Eddy\Desktop\Proyecto Paradigmas de la Programación\bies\biesC && r
 // //Print con expresiones
 //print(654 + 1 + 11 * 2 / 9 - 2 + 5) //Se debe de corregir la precedencia de operadores
 //Asignaciones varias a variables
-// print("Asignaciones a variables")
-// let x1 = 12
-// let x2 = 654 - 2
-// let x3 = "Esto es un String"
-// let x4 = ["Array"]
-// let x5 = [[21], ["Array Anidado"], [3, 4, 5, 6, 7, 8, 9, 10]]
-// let p = 3 + 2
-// // //Print de variables
-// print(x1)
-// print(x2)
-// print(x5)
-// print(x4)
-// print(x3)
-// print(p)
+print("Asignaciones a variables")
+let x1 = 12
+let x2 = 654 - 2
+let x3 = "Esto es un String"
+let x4 = ["Array"]
+let x5 = [[21], ["Array Anidado"], [3, 4, 5, 6, 7, 8, 9, 10]]
+let p = 3 + 2
+// //Print de variables
+print(x1)
+print(x2)
+print(x5)
+print(x4)
+print(x3)
+print(p)
 
 
-// //estas las hace bien
-// print("Operaciones aritméticas")
-// print(654 + 1 + 11 * 2 / 9 - 2 + 5) 
-// let x = 2 ** 3 * 4 + 5        // 37
-// let y = 3 + 4 * 2 ** 3        // 35
-// let z = (3 + 4) * 2 ** 3      // 56
-// let a =  2 ** 3 ** 2      // 56
-//  print (x)
-// print (y)
-// print (z)
-// print (a)
+//estas las hace bien
+print("Operaciones aritméticas")
+print(654 + 1 + 11 * 2 / 9 - 2 + 5) 
+let x = 2 ** 3 * 4 + 5        // 37
+let y = 3 + 4 * 2 ** 3        // 35
+let z = (3 + 4) * 2 ** 3      // 56
+let a =  2 ** 3 ** 2      // 56
+ print (x)
+print (y)
+print (z)
+print (a)
 
-// //estas no
-// print("Operaciones aritméticas de casos")
-// let caso1 = 666-664//2 (falla)
-// let caso2 = (4+1-2)//3 (falla)
-// let caso3 = (5**5/(4+1))//625 (falla)
-// let caso4 = (4*4/(3+1))//4 (falla)
+//estas no
+print("Operaciones aritméticas de casos")
+let caso1 = 666-664//2 (falla)
+let caso2 = (4+1-2)//3 (falla)
+let caso3 = (5**5/(4+1))//625 (falla)
+let caso4 = (4*4/(3+1))//4 (falla)
 
 
-// print(caso1)
-// print(caso2)
-// print(caso3)
-// print(caso4)
-// print(caso5)
+print(caso1)
+print(caso2)
+print(caso3)
+print(caso4)
+print(caso5)
 
 //let prueba = 2+2
 //let p1 = 5 //ni siquiera lo imprime
@@ -155,14 +155,14 @@ LTK
 // Máximo entre dos números lambda anidada (<span style="color:red">** NUEVO **</span>)
 
 // Version Extra compleja 7 Maximo entre dos números, lambda anidada
-let max = x => y => if (x > y) then x else y
-let {
-	const x = 10
-	const y = 20
-} in {
-	print("*** Testing max("+ x + " ," + y + ") ***")
-	print(max(x)(y))
-}
+// let max = x => y => if (x > y) then x else y
+// let {
+// 	const x = 10
+// 	const y = 20
+// } in {
+// 	print("*** Testing max("+ x + " ," + y + ") ***")
+// 	print(max(x)(y))
+// }
 
 // Acceso a un elemento de una lista (<span style="color:red">** NUEVO **</span>)
 
