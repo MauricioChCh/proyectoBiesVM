@@ -1,180 +1,96 @@
-# Proyecto BiesVM
+# BiesVM - Máquina Virtual para el Lenguaje BIES
 
-## Autores
+## Descripción
+BiesVM es una máquina virtual diseñada para ejecutar código compilado `.basm` generado por el compilador BiesC. Esta máquina virtual interpreta y ejecuta instrucciones específicas del lenguaje BIES, proporcionando un entorno de ejecución robusto y eficiente.
 
-Este proyecto ha sido posible gracias al esfuerzo y colaboración de varios individuos. Aquí te presentamos a los autores:
-
-- **Joshua Yarit Amador Lara**
-  
-- **Mauricio Chaves Chaves**
-
-- **Fabiola Rojas Alvarado**
-
-- **Eddy Villarreal Muñoz**
-
-
-**BiesVM** es un proyecto construido sobre la base de un lenguaje personalizado interpretado con ANTLR. La máquina virtual creada permite ejecutar instrucciones en archivos `.basm`, dando vida a un sistema único que simula comportamientos diversos en el mundo de Bies. Aquí te mostramos cómo instalar y ejecutar el proyecto en distintos sistemas operativos.
-
-
-
-## Requisitos
-
-- **Node.js** (>= 14)
-- **ANTLR** (versión utilizada: 4.13.1)
-- Dependencias:
-  - `antlr4`
+## Requisitos Previos
+- Node.js (versión 14 o superior)
+- Dependencias NPM:
+  - `antlr4` (versión 4.13.1)
   - `chalk`
   - `commander`
 
-## Uso en Windows
+## Instalación
 
-1. Abre una terminal de comandos (CMD).
-2. Navega hasta el directorio del proyecto.
-3. Ejecuta el archivo `build.bat`:
+### Windows
 
-    ```bash
-    build.bat
-    ```
-
-Este script compila el código fuente y ejecuta un archivo `.basm`.
-
-## Uso en Linux/Mac
-
-1. Abre una terminal.
-2. Navega hasta el directorio del proyecto.
-3. Haz el script ejecutable (solo la primera vez):
-
-    ```bash
-    chmod +x build.sh
-    ```
-
-4. Ejecuta el script:
-
-    ```bash
-    ./build.sh
-    ```
-
-Este script también compila el código fuente y ejecuta un archivo `.basm`.
-
-# Uso General
-Una vez completado el proceso de build, ya sea mediante los scripts build.bat (Windows) o build.sh (Linux/Mac), o utilizando el comando para generar el enlace simbólico, tendrás acceso al comando biesVM. Este comando facilita el uso de la aplicación, permitiéndote ejecutar archivos BASM de forma más sencilla.
-
-# Instalación Global
-Para hacer que `biesVM` esté disponible globalmente en tu sistema, ejecuta:
-
-    ```bash
-        npm link
-    ```
-
-Esto creará un enlace simbólico, permitiéndote usar biesVM desde cualquier ubicación en tu terminal.
-
-# Uso de `biesVM`
-El comando biesVM es la interfaz principal para ejecutar archivos BASM. Su sintaxis básica es:
-
-    ```bash
-    biesVM <archivo> [opciones]
-    ```
-# Argumentos
-
-- <archivo>: Ruta al archivo BASM que deseas ejecutar. Este argumento es obligatorio.
-
-Opciones
-
-- -h, --help: Muestra el manual de ayuda.
-- -V, --version: Muestra la versión actual de biesVM.
-- -v, --verbose: Activa el modo verbose para obtener información detallada durante la ejecución.
-- -d, --detail: Activa el modo detallado, proporcionando aún más información sobre la ejecución.
-
-# Ejemplos de Uso
-
-- Ejecutar un archivo BASM:
-bashCopybiesVM ruta/al/archivo.basm
-
-E- jecutar en modo verbose:
-bashCopybiesVM  ruta/al/archivo.basm -v
-
-Ejecutar en modo detallado:
-bashCopybiesVM  ruta/al/archivo.basm -d
-
-Ver la ayuda:
-bashCopybiesVM -h
-
-Ver la version:
-bashCopybiesVM -V
-
-
-## Descripción de los Scripts
-
-### build.bat (Windows)
-
-Este script realiza las siguientes tareas:
-- Ejecuta el comando de Node.js para interpretar el archivo `.basm`.
-- Utiliza las dependencias instaladas en el proyecto.
-
-### build.sh (Linux/Mac)
-
-Realiza las mismas tareas que el script de Windows, pero está adaptado para sistemas Unix-like.
-
-## Ejecución Manual
-
-Si prefieres ejecutar los comandos manualmente, sigue estos pasos:
-
-1. Genera el Lexer y Parser de ANTLR:
-
-    ```bash
-    antlr4 -Dlanguage=JavaScript -o ./output grammar/biesLanguage.g4
-    ```
-
-2. Ejecuta la máquina virtual de Bies con un archivo `.basm`:
-
-    ```bash
-    node src/biesVM.js ./battery/archivo.basm
-    ```
-
-## Compilar y Ejecutar
-
-- **Compilar el proyecto**: Genera los archivos necesarios de ANTLR y prepara el entorno para la ejecución:
-
-    ```bash
-    antlr4 -Dlanguage=JavaScript -o ./output grammar/biesLanguage.g4
-    ```
-
-- **Ejecutar un archivo `.basm`**:
-
-    ```bash
-    node src/biesVM.js ./battery/archivo.basm
-    ```
-
-## Tests
-
-Puedes ejecutar las pruebas con:
-
+1. Ejecuta el script de construcción:
 ```bash
-npm test
+build.bat
 ```
-## Linker
 
-Puedes hacer un link a biesVM con:
+### Linux/MacOS
 
+1. Dale permisos de ejecución al script:
+```bash
+chmod +x build.sh
+```
+
+3. Ejecuta el script:
+```bash
+./build.sh
+```
+
+### Instalación Global
+Para hacer disponible `biesVM` globalmente:
+Igualmente esto lo hara automaticamente los builds.
 ```bash
 npm link
 ```
 
-## run:linux
+## Uso de BiesVM
 
-Con este se ejecuta el build.sh para el sistema operativo linux
-
+### Sintaxis Básica
 ```bash
-npm run run:linux
+biesvm <archivo.basm> [opciones]
 ```
 
-## run:windows
+### Opciones Disponibles
+| Opción | Descripción |
+|--------|-------------|
+| `-v, --verbose` | Activa el modo verbose para ver el proceso de ejecución detallado |
+| `-d, --detail` | Muestra información detallada sobre el proceso de parseo |
+| `-h, --help` | Muestra la ayuda con todas las opciones disponibles |
+| `-V, --version` | Muestra la versión actual de BiesVM (1.1.0) |
 
-Con este se ejecuta el build.bat para el sistema operativo windows
-
-```cmd
-npm run:windows
+### Ejemplos de Uso
+```bash
+biesvm programa.basm              # Ejecuta un archivo BASM
+biesvm programa.basm --verbose    # Ejecuta con salida detallada
+biesvm programa.basm --detail     # Muestra detalles del proceso
+biesvm -h                         # Muestra la ayuda
 ```
+
+## Estructura del Proyecto
+```
+biesVM/
+├── 📁 basm/             # Archivos de prueba BASM
+├── 📁 command/          # Clases command para el manejo de la VM
+├── 📁 grammar/          # Definición de gramática ANTLR4
+├── 📁 lib/              # Bibliotecas y dependencias
+├── 📁 output/           # Archivos generados por ANTLR4
+└── 📁 src/              # Código fuente de la máquina virtual
+```
+
+## Scripts Disponibles
+
+### Scripts NPM
+```bash
+npm test               # Ejecuta las pruebas
+npm run run:linux      # Ejecuta build.sh en Linux (incluye pruebas)
+npm run run:windows    # Ejecuta build.bat en Windows (incluye pruebas)
+```
+
+### Compilación Manual
+Si prefieres compilar manualmente:
+```bash
+# Generar Lexer y Parser
+antlr4 -Dlanguage=JavaScript -o ./output grammar/biesLanguage.g4
+
+# Ejecutar un archivo BASM
+node src/biesVM.js ./battery/archivo.basm
+```
+
 
 
 ### Uso de Inteligencia Artificial
@@ -185,3 +101,12 @@ En el desarrollo de este proyecto, hemos utilizado varias herramientas de inteli
 - Claude: Para recomendaciones de diseño, simplificaciones de código y ayuda en la comprensión de ANTLR4.
 
 Es importante señalar que, si bien estas herramientas han sido de gran ayuda, todo el código y las decisiones finales han sido revisados y aprobados por nuestro equipo de desarrollo. Las IA se han utilizado como herramientas de apoyo, no como sustitutos del pensamiento crítico y la experiencia de nuestros desarrolladores.
+
+## Autores
+
+Este proyecto ha sido posible gracias al esfuerzo y colaboración de varios individuos. Aquí te presentamos a los autores:
+- Joshua Yarit Amador Lara
+- Mauricio Chaves Chaves `[Coordinador]`
+- Fabiola Rojas Alvarado
+- Eddy Villarreal Muñoz
+

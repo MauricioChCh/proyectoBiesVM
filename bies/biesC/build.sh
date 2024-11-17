@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Colors for output
 echo "Verifying dependencies..."
 npm install --no-audit --no-fund || { echo "Dependency installation failed"; exit 1; }
 

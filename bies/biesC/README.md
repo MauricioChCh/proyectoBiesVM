@@ -1,62 +1,155 @@
-# bies README
+# BiesC - Compilador para el Lenguaje BIES
 
-This is the README for your extension "bies". After writing up a brief description, we recommend including the following sections.
+## Descripción
+BiesC es un compilador para el lenguaje de programación BIES con archivos `.bies`, un lenguaje funcional que genera código para la máquina virtual BIESVM en archivos `.basm`. BIES permite expresiones funcionales, operaciones aritméticas, lógicas, manejo de cadenas y listas, con una sintaxis similar a JavaScript pero con características propias.
 
-## Features
+## Características Principales
+- Lenguaje funcional con tipado dinámico
+- Soporte para expresiones aritméticas, lógicas, strings y listas
+- Sistema de scoping léxico
+- Declaraciones `let`, `fun`, y `let-in`
+- Operadores similares a JavaScript
+- Símbolos predefinidos inspirados en Python
+- Comentarios estilo C
+- Codificación UTF-8
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Instalación
+### Requisitos
+- **Node.js** (>= 14)
+- **ANTLR** (versión utilizada: 4.13.1)
+- Dependencias:
+  - `antlr4`
+  - `chalk`
+  - `commander`
 
-For example if there is an image subfolder under your extension project workspace:
+### Uso en Windows
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Abre una terminal de comandos (CMD).
+2. Navega hasta el directorio del proyecto.
+3. Ejecuta el archivo `build.bat`:
+    ```bash
+    build.bat
+    ```
+Este script compila el código fuente y ejecuta un archivo `.basm`.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Uso en Linux/Mac
+
+1. Abre una terminal.
+2. Navega hasta el directorio del proyecto.
+3. Haz el script ejecutable (solo la primera vez):
+
+    ```bash
+    chmod +x build.sh
+    ```
+
+4. Ejecuta el script:
+
+    ```bash
+    ./build.sh
+    ```
+
+### Comprobacion de instalación
+Puedes verificar que la instalacion se concreto probando:
+```bash
+biesC --version
+```
+Deberías ver la versión actual de BiesC (1.1.0)
 
 
-## Extension Settings
+### Comandos de Compilación
+```bash
+biesc <archivo.bies> [opciones]
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+| Opción | Descripción |
+|--------|-------------|
+| `-v, --verbose` | Activa el modo verbose para ver el proceso de compilación detallado |
+| `-d, --detail` | Muestra información detallada sobre el proceso de parseo |
+| `-o, --outfile <archivo>` | Redirige la salida estándar (print/sysout) a un archivo `.basm`|
+| `-e, --errFile <archivo>` | Redirige la salida de errores (syserr) a un archivo `.txt` |
+| `-h, --help` | Muestra la ayuda con todas las opciones disponibles |
+| `-V, --version` | Muestra la versión actual de BiesC (1.1.0) |
 
-For example:
+Ejemplos:
+```bash
+biesc programa.bies                            # Compila un archivo BIES
+biesc programa.bies --verbose                  # Compila con salida detallada
+biesc programa.bies -o salida.basm             # Redirige la salida a un archivo
+biesc programa.bies -e errores.txt            # Redirige los errores a un archivo
+biesc programa.bies -o salida.basm -e err.txt  # Redirige ambas salidas
+biesc -h                                      # Muestra la ayuda
+```
 
-This extension contributes the following settings:
+## Estructura del Proyecto
+```
+biesC/
+├──📁 battery/           # Casos de prueba
+├──📁 grammar/           # Gramática ANTLR4
+├──📁 lib/              # Bibliotecas necesarias
+├──📁 output/           # Archivos generados por ANTLR$
+├──📁 src/              # Código fuente
+│   ├──📁 Compiler/     # Núcleo del compilador
+└──📁 test/         # Pruebas unitarias
+```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## Uso del Compilador
 
-## Known Issues
+### Sintaxis Básica
+```javascript
+// Declaraciones
+const x = 10
+const y = 20
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
 
-## Release Notes
+// Expresiones let-in
+let max = (x, y) => if (x > y) then x else y
+let {
+	const x = 10
+	const y = 20
+} in {
+	print("*** Testing max("+ x + " ," + y + ") ***")
+	print(max(x, y))
+}
 
-Users appreciate release notes as you update your extension.
+// Listas
+let lista = [1, 2, [3, 4]]
 
-### 1.0.0
+// Operaciones con strings
+const mensaje = "Hola " + "Mundo"
+```
 
-Initial release of ...
 
-### 1.0.1
+## Símbolos Predefinidos
+- `print`: Imprime en consola
+- `input`: Lee entrada del usuario
+- `len`: Retorna longitud
 
-Fixed issue #.
+## Operadores
+- Aritméticos: `**`, `*`, `/`, `+`, `-`
+- Lógicos: `!`, `&&`, `||`
+- Relacionales: `==`, `!=`, `>`, `>=`, `<`, `<=`
 
-### 1.1.0
+## Ejemplos
 
-Added features X, Y, and Z.
+### Manejo de Listas
+```javascript
+const lista = [1, 2, 3]
+print(len(lista))     // Imprime: 3
+```
 
----
+### Scope y Let-in
+```javascript
+let {
+    const x = 10
+    const y = 20
+} in {
+    print(x + y)      // Imprime: 30
+}
+```
 
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+## Autores
+Creado por: 
+- Joshua Yarit Amador Lara
+- Mauricio Chaves Chaves `[Coordinador]`
+- Fabiola Rojas Alvarado
+- Eddy Villarreal Muñoz
