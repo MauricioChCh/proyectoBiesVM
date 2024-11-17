@@ -86,7 +86,7 @@ POW
 AND
 OR
 EQ
-NEQ
+NEG
 LT
 GT
 LE
@@ -134,7 +134,7 @@ POW
 AND
 OR
 EQ
-NEQ
+NEG
 LT
 GT
 LE

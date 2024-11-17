@@ -31,10 +31,12 @@ class IOCommands extends Command {
      * Los elementos del arreglo se imprimen con un espacio en blanco entre ellos.
      */
     PRN() {
-        const value = this.vm.stack.pop();
-        if (value !== undefined) {
-            const output = Array.isArray(value) ? this.formatArray(value) : value;
-            console.log(chalk.cyan(output));
+        if(this.vm.execute){
+            const value = this.vm.stack.pop();
+            if (value !== undefined) {
+                const output = Array.isArray(value) ? this.formatArray(value) : value;
+                console.log(chalk.cyan(output));
+            }
         }
     }
 
@@ -43,32 +45,32 @@ class IOCommands extends Command {
      * @returns {Promise<void>} Una promesa que se resuelve cuando la entrada del usuario se ha leído y colocado en la pila.
      */
     async INP() {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-
-        const userInput = await new Promise((resolve) => rl.question('', resolve));
-        rl.close();
-
-        this.vm.stack.push(userInput);
+        // if(this.vm.execute){
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+            const userInput = await this.getUserInput(rl); // Obtiene el input del usuario
+            
+            this.vm.stack.push(userInput); // Almacena el input en el stack
+            rl.close(); // Cierra la interfaz readline
+        // }
     }
-
+    
     /**
      * Obtiene una entrada del usuario desde la consola.
      * @returns {Promise<string>} Una promesa que se resuelve con la entrada del usuario.
      */
-    async getUserInput() {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
-
-        const userInput = await new Promise((resolve) => rl.question('', resolve));
-        rl.close();
-
-        return userInput;
+    getUserInput(rl) {
+        return new Promise((resolve) => rl.question('', (answer) => resolve(answer.trim())));
     }
+
+    /**
+     * Limpia la interfaz readline al terminar.
+     */
+    // closeInterface() {
+    //     this.rl.close();
+    // }
 }
 
 export default IOCommands;

@@ -14,11 +14,13 @@ statement
     | functionCall
     | letInExpr
     | ifElseExpr
+    | inputExpr
     ;
 
 printInstr
-    : 'print' '(' (primarydata | expr) ')'  # PrintInstr_Label
+    : 'print' '(' (primarydata | expr | statement) ')'  # PrintInstr_Label
     ;
+
 
 simpleLetInstr
     : 'let' WS? id WS? '=' WS? expr         # SimpleLetInstr_Label
@@ -29,6 +31,7 @@ anonymousLetFunction
     | 'let' WS? id WS? '=' WS? '(' (id (',' id)*)? ')' '=>' (statement | expr)    # LambdaWithParams_Label
     | 'let' WS? id WS? '=' WS? id (WS? '=>' WS? id)* WS? '=>' (statement | expr)  # NestedLambda_Label
     ;
+
 
 letInExpr
     : let in # LetInExpr_Label
@@ -44,6 +47,15 @@ in
 
 ifElseExpr
     : if then else  # IfElseExpr_Label
+    ;
+
+inputExpr
+    : INPUT '()' # InputExprInstr_Label
+    | INPUT '(' WS? expr WS? ')' # InputExprInstrArgs_Label
+    ;
+
+lenExpr
+    : LEN '(' WS? primarydata WS? ')' # LenExprInstr_Label
     ;
 
 simpleConstInstr
@@ -63,7 +75,9 @@ primarydata
     ;
 
 expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
+    : anonymousConstFunction                # AnonymousConstFunctionExpr_Label
+    | inputExpr                             # InputExpr_Label
+    | lenExpr                               # lenExpr_Label
     | primarydata                           # PrimaryData_Label
     | functionCall                          # FunctionCallExpr_Label
     | expr MULT expr                        # Mul_Label
@@ -74,7 +88,7 @@ expr
     | expr AND expr                         # And_Label
     | expr OR expr                          # Or_Label
     | expr EQ expr                          # Eq_Label
-    | expr NEQ expr                         # Neq_Label
+    | expr NEG expr                         # Neg_Label
     | expr LT expr                          # Lt_Label
     | expr GT expr                          # Gt_Label
     | expr LE expr                          # Le_Label
@@ -117,6 +131,7 @@ then
 else
     : 'else' WS? expr                        # Else_Label
     ;
+
 
 arrayAccess
     : id '[' (expr | arrayAccess) ']'        # ArrayAccess_Label
@@ -164,7 +179,7 @@ POW: '**';
 AND: '&&';
 OR: '||';
 EQ: '==';
-NEQ: '!=';
+NEG: '!=';
 LT: '<';
 GT: '>';
 LE: '<=';

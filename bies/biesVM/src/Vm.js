@@ -39,6 +39,8 @@ class VM {
         this.functions = {};
         this.programCounter = 0;
         this.logger = new Logger();
+        this.counter = 0;
+        this.execute = true;
   
 
         this.initCommands = new InitCommands(this);
@@ -128,7 +130,7 @@ class VM {
      * Ejecuta el análisis sintáctico de ANTLR en el cuerpo de una función.
      * @param {string} functionBody - El cuerpo de la función a analizar.
      */
-    executeAntlrParsing(functionBody) {
+    async executeAntlrParsing(functionBody) {
         const chars = new antlr4.InputStream(functionBody);
         const lexer = new biesVMLexer(chars);
         const tokens = new antlr4.CommonTokenStream(lexer);

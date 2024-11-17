@@ -124,14 +124,14 @@ export default class biesCLexer extends antlr4.Lexer {
                           null, "BOOL", "TRUE", "FALSE", "NULL", "INPUT", 
                           "INT", "STR", "LIST", "LEN", "STRING", "NUMBER", 
                           "PRINT", "ID", "MULT", "DIV", "ADD", "SUB", "POW", 
-                          "AND", "OR", "EQ", "NEQ", "LT", "GT", "LE", "GE", 
+                          "AND", "OR", "EQ", "NEG", "LT", "GT", "LE", "GE", 
                           "NL", "WS", "COMMENT", "MULTILINE_COMMENT" ];
 	static ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", 
                       "T__7", "T__8", "T__9", "T__10", "T__11", "T__12", 
                       "T__13", "T__14", "T__15", "BOOL", "TRUE", "FALSE", 
                       "NULL", "INPUT", "INT", "STR", "LIST", "LEN", "STRING", 
                       "NUMBER", "PRINT", "ID", "MULT", "DIV", "ADD", "SUB", 
-                      "POW", "AND", "OR", "EQ", "NEQ", "LT", "GT", "LE", 
+                      "POW", "AND", "OR", "EQ", "NEG", "LT", "GT", "LE", 
                       "GE", "NL", "WS", "COMMENT", "MULTILINE_COMMENT" ];
 
     constructor(input) {
@@ -178,7 +178,7 @@ biesCLexer.POW = 34;
 biesCLexer.AND = 35;
 biesCLexer.OR = 36;
 biesCLexer.EQ = 37;
-biesCLexer.NEQ = 38;
+biesCLexer.NEG = 38;
 biesCLexer.LT = 39;
 biesCLexer.GT = 40;
 biesCLexer.LE = 41;

@@ -26,7 +26,7 @@ export class Visitor extends biesVMVisitor {
         this.vm = new VM();
 
         
-
+        
         /**
          * Código acumulado durante el recorrido del árbol de sintaxis.
          * @type {Array<{ type: string, args: string[] }>}
@@ -44,6 +44,15 @@ export class Visitor extends biesVMVisitor {
         this.logger.log(chalk.cyanBright('Visitando el programa'));
         super.visitProgram(ctx); // Visita cada elemento del programa y acumula las instrucciones
         this.sendCode(); // Envía el código para que sea ejecutado en `run()`
+        if(this.vm.functions && '$1' in this.vm.functions){
+            this.vm.execute = false;
+            if(this.vm.counter !== 0){
+                this.vm.execute = true;
+            } 
+        }
+        // console.log(this.vm.counter);
+        this.vm.counter++;
+        
         return this.vm;
     }
 
@@ -59,9 +68,10 @@ export class Visitor extends biesVMVisitor {
         const args = ctx.NUMBER(0).getText(); // Extrae el número de argumentos
         const parent = ctx.LABEL_IDENTIFIER(1).getText(); // Extrae el contexto padre
 
+
         // La información extraída de la función, incluyendo args y parent es la siguiente
         //this.logger.log(chalk.blue(`Definida función ${functionName} con argumentos: ${args} en el contexto ${parent}`));
-
+        
         if (!this.vm.functions) {
             this.vm.functions = {};
         }
@@ -75,7 +85,7 @@ export class Visitor extends biesVMVisitor {
         };
         
         this.logger.log(chalk.blue(`Definida función ${functionName} con cuerpo: ${functionBody}`));
-
+        
         return super.visitFunctionDef(ctx);
     }
 
