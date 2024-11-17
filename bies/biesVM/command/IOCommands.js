@@ -31,12 +31,10 @@ class IOCommands extends Command {
      * Los elementos del arreglo se imprimen con un espacio en blanco entre ellos.
      */
     PRN() {
-        if(this.vm.execute){
-            const value = this.vm.stack.pop();
-            if (value !== undefined) {
-                const output = Array.isArray(value) ? this.formatArray(value) : value;
-                console.log(chalk.cyan(output));
-            }
+        const value = this.vm.stack.pop();
+        if (value !== undefined) {
+            const output = Array.isArray(value) ? this.formatArray(value) : value;
+            console.log(chalk.cyan(output));
         }
     }
 
@@ -45,7 +43,6 @@ class IOCommands extends Command {
      * @returns {Promise<void>} Una promesa que se resuelve cuando la entrada del usuario se ha leído y colocado en la pila.
      */
     async INP() {
-        // if(this.vm.execute){
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
@@ -54,9 +51,8 @@ class IOCommands extends Command {
 
         this.vm.stack.push(userInput); // Almacena el input en el stack
         rl.close(); // Cierra la interfaz readline
-        // }
     }
-
+    
     /**
      * Obtiene una entrada del usuario desde la consola.
      * @returns {Promise<string>} Una promesa que se resuelve con la entrada del usuario.
@@ -64,6 +60,13 @@ class IOCommands extends Command {
     getUserInput(rl) {
         return new Promise((resolve) => rl.question('', (answer) => resolve(answer.trim())));
     }
+
+    /**
+     * Limpia la interfaz readline al terminar.
+     */
+    // closeInterface() {
+    //     this.rl.close();
+    // }
 }
 
 export default IOCommands;
