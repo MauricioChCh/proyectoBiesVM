@@ -26,16 +26,15 @@ cd C:\Users\Eddy\Desktop\Proyecto Paradigmas de la Programación\bies\biesC && r
 // print(p)
 
 // //estas las hace bien
-// print("Operaciones aritméticas")
-// print(654 + 1 + 11 * 2 / 9 - 2 + 5) 
-// let x = 2 ** 3 * 4 + 5        // 37
-// let y = 3 + 4 * 2 ** 3        // 35
-// let z = (3 + 4) * 2 ** 3      // 56
-// let a =  2 ** 3 ** 2      // 56
-//  print (x)
-// print (y)
-// print (z)
-// print (a)
+print("Operaciones aritméticas")
+print(654 + 1 + 11 * 2 / 9 - 2 + 5) 
+let x = 2 ** 3 * 4 + 5        // 37
+let y = 3 + 4 * 2 ** 3        // 35
+let z = (3 + 4) * 2 ** 3      // 56
+ print (x)
+print (y)
+print (z)
+
 
 // //estas no
 // print("Operaciones aritméticas de casos")
@@ -72,11 +71,11 @@ cd C:\Users\Eddy\Desktop\Proyecto Paradigmas de la Programación\bies\biesC && r
 
 //print(none)
 
-print(int("34"))
-print(str(666))
-print(bool(1))
-print(list("hello"))
-print(list(1111))
+// print(int("34"))
+// print(str(666))
+// print(bool(1))
+// print(list("hello"))
+// print(list(1111))
 
 
 //---------------------------------------------------------------------------------------------------------------

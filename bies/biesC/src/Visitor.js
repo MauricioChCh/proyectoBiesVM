@@ -1,9 +1,11 @@
+// ----------------------------------------- Importaciones -----------------------------------------
 import chalk from 'chalk';
 import biesCVisitor from '../output/biesCVisitor.js';
 import BuiltInsProcessor from './PredifinedSymbol.js';
 import C from './Compiler/C.js';
 import { Logger } from './Logger.js';
 
+// ----------------------------------------- Clase Visitor -----------------------------------------
 export class Visitor extends biesCVisitor {
     constructor() {
         super();
@@ -30,6 +32,8 @@ export class Visitor extends biesCVisitor {
         this.builtInsProcessor = new BuiltInsProcessor(this);
         this.builtIns = null;
     }
+
+    // ----------------------------------------- Métodos Principales -----------------------------------------
 
     /**
      * Visita el nodo del programa.
@@ -63,155 +67,166 @@ export class Visitor extends biesCVisitor {
         this.compiler.run(this.byteCode);
     }
 
-    //--------------------------------------------- Funciones de visitas a los nodos ---------------------------------------------
+    /**
+     * Genera el código principal para la función 'main'.
+     */
+    generateMain() {
+        const main = [];
+        main.push(...this.functionCode);
+        main.push('\n;Aquí inicia el "main"\n');
+        main.push('$FUN $0 ARGS:0 PARENT:$0');
+        main.push(...this.byteCode);
+        main.push('HLT');
+        main.push('$END $0');
+        main.push('INI $0');
+        main.push('\n;Aquí termina el "main"');
+        this.byteCode = main;
+    }
+
+    // ----------------------------------------- Operaciones Aritméticas -----------------------------------------
 
     /**
      * Procesa un nodo de operación aritmética.
      * @param {Object} ctx - El contexto del nodo.
      * @param {string} operator - El operador aritmético.
+     * @param {string} bytecode - El código de bytes correspondiente.
      */
-
-    // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
-
     processOperation(ctx, operator, bytecode) {
+        this.logger.debug(chalk.magenta(`Procesando operación ${operator} -> ${bytecode}`));
+
+        // Primero visitamos los hijos para asegurar el orden correcto de operaciones
         this.visitChildren(ctx);
-        this.logger.log(chalk.magenta('Nodo visitado: ArithOp ->'), operator);
+
+        // Agregamos la instrucción al código correspondiente según si estamos en una función o no
         (this.func ? this.functionCode : this.byteCode).push(bytecode);
     }
-    // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
-    visitParenthesisExpr(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: ParenthesisExpr'));
-    return this.visit(ctx.expr());
-}
-
-visitAnonymousFunctionExpr(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: AnonymousFunctionExpr'));
-    return this.visit(ctx.anonymousLetFunction());
-}
-
-visitPowExpr(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: PowExpr'));
-    this.visitChildren(ctx);
-    (this.func ? this.functionCode : this.byteCode).push('POW');
-    return null;
-}
-
-visitMultDivExpr(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: MultDivExpr'));
-    const operator = ctx.getChild(1).getText();
-    
-    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
-    this.visitChildren(ctx);
-    
-    switch(operator) {
-        case '*':
-            (this.func ? this.functionCode : this.byteCode).push('MUL');
-            break;
-        case '/':
-            (this.func ? this.functionCode : this.byteCode).push('DIV');
-            break;
-        default:
-            throw new Error(`Operador desconocido: ${operator}`);
-    }
-    return null;
-}
-
-visitAddSubExpr(ctx) {
-    this.logger.debug(chalk.magenta('Nodo visitado: AddSubExpr'));
-    const operator = ctx.getChild(1).getText();
-    
-    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
-    this.visitChildren(ctx);
-    
-    switch(operator) {
-        case '+':
-            (this.func ? this.functionCode : this.byteCode).push('ADD');
-            break;
-        case '-':
-            (this.func ? this.functionCode : this.byteCode).push('SUB');
-            break;
-        default:
-            throw new Error(`Operador desconocido: ${operator}`);
-    }
-    return null;
-}
-
-// Método auxiliar para procesar operaciones (versión simplificada adaptada a tu estructura)
-processOperation(ctx, operator, bytecode) {
-    this.logger.debug(chalk.magenta(`Procesando operación ${operator} -> ${bytecode}`));
-    
-    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
-    this.visitChildren(ctx);
-    
-    // Agregamos la instrucción al código correspondiente según si estamos en una función o no
-    (this.func ? this.functionCode : this.byteCode).push(bytecode);
-}
-    generateTempVar() {
-        return `t${this.tempVarCounter++}`;
-    }
-    
-    addInstruction(instruction) {
-        this.instructions.push(instruction);
+    visitPowExpr(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: PowExpr'));
+        this.visitChildren(ctx);
+        (this.func ? this.functionCode : this.byteCode).push('POW');
+        return null;
     }
 
+    visitMultDivExpr(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: MultDivExpr'));
+        const operator = ctx.getChild(1).getText();
 
-    // ----------------------------------------- Visitas a nodos de operaciones comparacion ---------------------------------------------
+        // Primero visitamos los hijos para asegurar el orden correcto de operaciones
+        this.visitChildren(ctx);
 
-// ----------------------------------------- Visitas a nodos de operaciones comparacion ---------------------------------------------
-
-visitEqualityExpr(ctx) {
-    // Obtén los operandos de la operación
-    const left = this.visit(ctx.expr(0));
-    const right = this.visit(ctx.expr(1));
-    const operator = ctx.getChild(1).getText(); // Obtiene el operador de comparación
-
-    // Mapea el operador a las instrucciones de la máquina virtual
-    let opcode;
-    switch (operator) {
-        case '==':
-            opcode = 'EQ';
-            break;
-        case '!=':
-            opcode = 'NEQ';
-            break;
+        switch (operator) {
+            case '*':
+                (this.func ? this.functionCode : this.byteCode).push('MUL');
+                break;
+            case '/':
+                (this.func ? this.functionCode : this.byteCode).push('DIV');
+                break;
+            default:
+                throw new Error(`Operador desconocido: ${operator}`);
+        }
+        return null;
     }
 
-    // Realiza la operación con los operandos
-    this.processOperation(ctx, operator, opcode);
-    return null;
-}
+    visitAddSubExpr(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: AddSubExpr'));
+        const operator = ctx.getChild(1).getText();
 
-visitRelationalExpr(ctx) {
-    const left = this.visit(ctx.expr(0));
-    const right = this.visit(ctx.expr(1));
-    const operator = ctx.getChild(1).getText();
+        // Primero visitamos los hijos para asegurar el orden correcto de operaciones
+        this.visitChildren(ctx);
 
-    let opcode;
-    switch (operator) {
-        case '<':
-            opcode = 'LT';
-            break;
-        case '>':
-            opcode = 'GT';
-            break;
-        case '<=':
-            opcode = 'LE';
-            break;
-        case '>=':
-            opcode = 'GE';
-            break;
+        switch (operator) {
+            case '+':
+                (this.func ? this.functionCode : this.byteCode).push('ADD');
+                break;
+            case '-':
+                (this.func ? this.functionCode : this.byteCode).push('SUB');
+                break;
+            default:
+                throw new Error(`Operador desconocido: ${operator}`);
+        }
+        return null;
     }
 
-    this.processOperation(ctx, operator, opcode);
-    return null;
-}
+    // ----------------------------------------- Operaciones Comparativas -----------------------------------------
 
+    visitEqualityExpr(ctx) {
+        // Obtén los operandos de la operación
+        const left = this.visit(ctx.expr(0));
+        const right = this.visit(ctx.expr(1));
+        const operator = ctx.getChild(1).getText(); // Obtiene el operador de comparación
 
-    // --------------------------------------------- Visitas a nodos de operaciones lógicas ---------------------------------------------
+        // Mapea el operador a las instrucciones de la máquina virtual
+        let opcode;
+        switch (operator) {
+            case '==':
+                opcode = 'EQ';
+                break;
+            case '!=':
+                opcode = 'NEQ';
+                break;
+        }
 
-    isFunction = () => this.func;
-    //--------------------------------------------- Visitas a nodos de datos primarios ---------------------------------------------
+        // Realiza la operación con los operandos
+        this.processOperation(ctx, operator, opcode);
+        return null;
+    }
+
+    visitRelationalExpr(ctx) {
+        const left = this.visit(ctx.expr(0));
+        const right = this.visit(ctx.expr(1));
+        const operator = ctx.getChild(1).getText();
+
+        let opcode;
+        switch (operator) {
+            case '<':
+                opcode = 'LT';
+                break;
+            case '>':
+                opcode = 'GT';
+                break;
+            case '<=':
+                opcode = 'LE';
+                break;
+            case '>=':
+                opcode = 'GE';
+                break;
+        }
+
+        this.processOperation(ctx, operator, opcode);
+        return null;
+    }
+
+    // ----------------------------------------- Operaciones Lógicas -----------------------------------------
+
+    visitIfElseExpr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
+        this.func = true;
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    visitIf_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: if'));
+        this.visitChildren(ctx);
+        this.functionCode.push('BF 3');
+        return null;
+    }
+
+    visitThen_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: then'));
+        this.visitChildren(ctx);
+        this.functionCode.push('RET');
+        return null;
+    }
+
+    visitElse_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: else'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    // ----------------------------------------- Datos Primarios y Accesos -----------------------------------------
 
     visitPrimaryData_Label(ctx) {
         this.logger.log(chalk.magenta('Nodo visitado: primaryData ->'));
@@ -268,10 +283,15 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
+    visitArrayAccess_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
+        this.visitId_Label(ctx.id());
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
+        return null;
+    }
 
-    // --------------------------------------------- Visitas a nodos de instrucciones let ---------------------------------------------
-
-    // ----------------------------------------------- Visitas a nodos de 'simple let' ------------------------------------------------
+    // ----------------------------------------- Instrucciones Let y Const -----------------------------------------
 
     visitSimpleLetInstr_Label(ctx) {
         return this.handleSimpleInstr(ctx, 'simpleLetInstr');
@@ -300,21 +320,21 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
-    // ----------------------------------------------- Visitas a nodos de 'let-in' ------------------------------------------------
+    // ----------------------------------------- Funciones Lambda -----------------------------------------
 
-    visitConst_WithParams_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: constWithParams'));
-        this.visitChildren(ctx);
-        return null
+    visitLambdaConstWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
     }
 
-    visitConst_NoParams_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: const_NoParams'));
-        this.visitChildren(ctx);
-        return null
+    visitLambdaConstNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
     }
 
-    // --------------------------------------------- Visitas a nodos de 'anonymousLetFunction' ---------------------------------------------
+    visitAnonymousFunctionExpr(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: AnonymousFunctionExpr'));
+        return this.visit(ctx.anonymousLetFunction());
+    }
 
     visitAnonymousLetFunction(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousLetFunction'));
@@ -326,6 +346,15 @@ visitRelationalExpr(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: anonymousConstFunction'));
         this.visitChildren(ctx);
         return null;
+    }
+
+    visitLambdaNoParams_Label(ctx) {
+        return this.visitLambda_Label(ctx, 0);
+    }
+
+    visitLambdaWithParams_Label(ctx) {
+        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
+        return this.visitLambda_Label(ctx, paramCount);
     }
 
     visitLambda_Label(ctx, paramCount = 0) {
@@ -394,34 +423,6 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
-    // --------------------------------------------- Visitas a nodos de 'let-in' ---------------------------------------------
-
-    visitLetInExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
-        this.func = true;
-        this.visitChildren(ctx);
-
-        return null;
-    }
-
-    visitLetExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: letExpr'));
-        this.func = true;
-        this.visitChildren(ctx);
-
-        return null
-    }
-
-    visitInExpr_Label(ctx) {
-        this.logger.debug(chalk.red('Nodo visitado: inExpr'));
-
-        this.visitChildren(ctx);
-
-        return null
-    }
-
-    // --------------------------------------------- Visitas a nodos de 'NestedLambda_Label' ---------------------------------------------
-
     visitNestedLambda_Label(ctx) {
         this.func = true;
         const paramCount = ctx.id().length - 1;
@@ -481,25 +482,19 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
-    // Métodos específicos para `LambdaNoParams` y `LambdaWithParams`
-    visitLambdaNoParams_Label(ctx) {
-        return this.visitLambda_Label(ctx, 0);
+    visitConst_WithParams_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: constWithParams'));
+        this.visitChildren(ctx);
+        return null
     }
 
-    visitLambdaWithParams_Label(ctx) {
-        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
-        return this.visitLambda_Label(ctx, paramCount);
+    visitConst_NoParams_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: const_NoParams'));
+        this.visitChildren(ctx);
+        return null
     }
 
-    // Metodos especificos para LamdbaConstNoParams y LambdaConstWithParams
-    visitLambdaConstNoParams_Label(ctx) {
-        return this.visitLambda_Label(ctx, 0);
-    }
-
-    visitLambdaConstWithParams_Label(ctx) {
-        const paramCount = ctx.id().length - 1; // Calcula la cantidad de parámetros
-        return this.visitLambda_Label(ctx, paramCount);
-    }
+    // ----------------------------------------- Llamadas a Funciones -----------------------------------------
 
     visitFunctionCallExpr_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: FunctionCall -> '), ctx.getText());
@@ -518,86 +513,25 @@ visitRelationalExpr(ctx) {
         return null;
     }
 
-    visitFunctionCallWithParams_Label(ctx) {
-        return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
-    }
-
     visitFunctionCallNoParams_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNoParams');
+    }
+
+    visitFunctionCallWithParams_Label(ctx) {
+        return this.visitFunctionCall_Label(ctx, 'functionCallWithParams');
     }
 
     visitFunctionCallNested_Label(ctx) {
         return this.visitFunctionCall_Label(ctx, 'functionCallNested');
     }
 
-    generateMain() {
-        const main = [];
-        main.push(...this.functionCode);
-        main.push('\n;Aquí inicia el "main"\n');
-        main.push('$FUN $0 ARGS:0 PARENT:$0');
-        main.push(...this.byteCode);
-        main.push('HLT');
-        main.push('$END $0');
-        main.push('INI $0');
-        main.push('\n;Aquí termina el "main"');
-        this.byteCode = main;
-    }
-
-    visitPrintInstr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
-        this.visitChildren(ctx);
-        this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
-        return null;
-    }
+    // ----------------------------------------- Funciones Predefinidas -----------------------------------------
 
     visitPredifinedFunctionCall_Label(ctx) {
         this.logger.debug(chalk.magenta('Nodo visitado: predifinedFunctionCall'));
         this.visitChildren(ctx);
         return null;
     }
-
-    visitExp_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: exp'));
-        this.visitChildren(ctx);
-        return null;
-    }
-
-    visitIfElseExpr_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: ifElseExpr'));
-        this.func = true;
-        this.visitChildren(ctx);
-        return null;
-    }
-
-    visitIf_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: if'));
-        this.visitChildren(ctx);
-        this.functionCode.push('BF 3');
-        return null;
-    }
-
-    visitThen_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: then'));
-        this.visitChildren(ctx);
-        this.functionCode.push('RET');
-        return null;
-    }
-
-    visitElse_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: else'));
-        this.visitChildren(ctx);
-        return null;
-    }
-
-    visitArrayAccess_Label(ctx) {
-        this.logger.debug(chalk.magenta('Nodo visitado: arrayAccess'));
-        this.visitId_Label(ctx.id());
-        this.visitChildren(ctx);
-        this.isFunction() ? this.functionCode.push('LTK') : this.byteCode.push('LTK');
-        return null;
-    }
-
-    // PredifinedSymbols ------------------------------------------------------------------------------------------------------------
 
     visitBuiltIns(ctx, label) {
         this.logger.debug(chalk.magenta(`Nodo visitado: ${label}`));
@@ -656,6 +590,18 @@ visitRelationalExpr(ctx) {
         return this.visitBuiltIns(ctx, 'len');
     }
 
+
+    // ----------------------------------------- Instrucciones de Impresión -----------------------------------------
+
+    visitPrintInstr_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: printInstr'));
+        this.visitChildren(ctx);
+        this.isFunction() ? this.functionCode.push('PRN') : this.byteCode.push('PRN');
+        return null;
+    }
+
+    // ----------------------------------------- Operaciones de Entrada -----------------------------------------
+
     visitInputExprInstr_Label() {
         this.builtIns = 'input';
         if (this.builtInsProcessor[this.builtIns]) {
@@ -671,6 +617,71 @@ visitRelationalExpr(ctx) {
         }
         return null;
     }
+
+    // ----------------------------------------- Estructuras Let-In -----------------------------------------
+
+    visitLetInExpr_Label(ctx) {
+        this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
+        this.func = true;
+        this.visitChildren(ctx);
+
+        return null;
+    }
+
+    visitLetExpr_Label(ctx) {
+        this.logger.debug(chalk.red('Nodo visitado: letExpr'));
+        this.func = true;
+        this.visitChildren(ctx);
+
+        return null
+    }
+
+    visitInExpr_Label(ctx) {
+        this.logger.debug(chalk.red('Nodo visitado: inExpr'));
+
+        this.visitChildren(ctx);
+
+        return null
+    }
+
+    // ----------------------------------------- Operaciones Generales y Expresiones -----------------------------------------
+
+    visitParenthesisExpr(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: ParenthesisExpr'));
+        return this.visit(ctx.expr());
+    }
+
+    visitExp_Label(ctx) {
+        this.logger.debug(chalk.magenta('Nodo visitado: exp'));
+        this.visitChildren(ctx);
+        return null;
+    }
+
+    // ----------------------------------------- Métodos Auxiliares -----------------------------------------
+
+    /**
+     * Genera una variable temporal.
+     * @returns {string} - Nombre de la variable temporal.
+     */
+    generateTempVar() {
+        return `t${this.tempVarCounter++}`;
+    }
+
+    /**
+     * Agrega una instrucción al conjunto de instrucciones.
+     * @param {string} instruction - La instrucción a agregar.
+     */
+    addInstruction(instruction) {
+        this.instructions.push(instruction);
+    }
+
+    /**
+     * Verifica si el contexto actual está dentro de una función.
+     * @returns {boolean} - `true` si está en una función, de lo contrario `false`.
+     */
+    isFunction = () => this.func;
+
 }
+
 
 export default Visitor;
