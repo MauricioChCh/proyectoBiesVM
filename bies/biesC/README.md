@@ -122,6 +122,8 @@ const mensaje = "Hola " + "Mundo"
 ## Símbolos Predefinidos
 - `print`: Imprime en consola
 - `input`: Lee entrada del usuario
+- `int`: Caste de string a int
+- `str`: Castea listas a string
 - `len`: Retorna longitud
 
 ## Operadores
