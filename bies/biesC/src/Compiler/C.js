@@ -6,12 +6,16 @@ import CommandExecutor from './CommandExecutor.js';
  * Se encarga de procesar código, generar bytecode y ejecutar comandos del sistema.
  * 
  * @class C
+ * @file C.js
  * @version 1.0.0
  * 
  * @author Joshua Yarit Amador Lara
  * @author Mauricio Chaves Chaves [Coordinador]
  * @author Fabiola Rojas Alvarado
  * @author Eddy Villarreal Muñoz
+ * 
+ * @requires FileWriter
+ * @requires CommandExecutor
  */
 class C {
   

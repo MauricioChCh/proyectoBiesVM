@@ -5,6 +5,20 @@
  * y chalk para el formateo de la salida en consola.
  *
  * @module biesC
+ * @file biesC.js
+ * @version 1.1.0
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves [Coordinador]
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
+ * @requires commander
+ * @requires chalk
+ * @requires fs
+ * @requires path
+ * @requires Logger
+ * @requires integrateLexerParser
  */
 
 import fs from 'fs';

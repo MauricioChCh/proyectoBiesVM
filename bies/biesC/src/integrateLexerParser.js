@@ -10,9 +10,25 @@ import { Logger } from './Logger.js';
 /**
  * Analiza un archivo .bies utilizando un lexer y un parser generados por ANTLR.
  *
+ * @file integrateLexerParser.js
+ * @version 1.0.0
+ * 
+ * @author Joshua Yarit Amador Lara
+ * @author Mauricio Chaves Chaves [Coordinador]
+ * @author Fabiola Rojas Alvarado
+ * @author Eddy Villarreal Muñoz
+ * 
  * @param {string} filePath - La ruta del archivo .bies a analizar.
  * @param {Logger} logger - Un objeto Logger para registrar mensajes y errores.
  * @returns {boolean} Devuelve true si el análisis fue exitoso, false en caso contrario.
+ * 
+ * @requires fs
+ * @requires chalk
+ * @requires antlr4
+ * @requires biesCLexer
+ * @requires biesCParser
+ * @requires Visitor
+ * @requires Logger
  */
 export function analizarArchivoBies(filePath) {
     const logger =  Logger;
