@@ -25,7 +25,6 @@ print(x4)
 print(x3)
 print(p)
 
-
 //estas las hace bien
 print("Operaciones aritméticas")
 print(654 + 1 + 11 * 2 / 9 - 2 + 5) 

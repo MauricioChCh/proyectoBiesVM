@@ -15,9 +15,6 @@ Este proyecto ha sido posible gracias al esfuerzo y colaboración de varios indi
 
 **BiesVM** es un proyecto construido sobre la base de un lenguaje personalizado interpretado con ANTLR. La máquina virtual creada permite ejecutar instrucciones en archivos `.basm`, dando vida a un sistema único que simula comportamientos diversos en el mundo de Bies. Aquí te mostramos cómo instalar y ejecutar el proyecto en distintos sistemas operativos.
 
-## Uso de IA 
-El proyecto 
-
 
 
 ## Requisitos
@@ -64,6 +61,7 @@ Una vez completado el proceso de build, ya sea mediante los scripts build.bat (W
 
 # Instalación Global
 Para hacer que `biesVM` esté disponible globalmente en tu sistema, ejecuta:
+
     ```bash
         npm link
     ```
@@ -72,6 +70,7 @@ Esto creará un enlace simbólico, permitiéndote usar biesVM desde cualquier ub
 
 # Uso de `biesVM`
 El comando biesVM es la interfaz principal para ejecutar archivos BASM. Su sintaxis básica es:
+
     ```bash
     biesVM <archivo> [opciones]
     ```

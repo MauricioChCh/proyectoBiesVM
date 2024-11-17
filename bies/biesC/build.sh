@@ -15,4 +15,3 @@ npm run test &       # Run in background
 wait  # Wait for all background tasks to complete
 
 sudo npm run link   # Run in background
-
