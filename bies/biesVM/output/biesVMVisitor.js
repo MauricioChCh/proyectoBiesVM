@@ -1,4 +1,4 @@
-// Generated from ./grammar/biesVM.g4 by ANTLR 4.13.1
+// Generated from /home/mauricio/Documents/Obsidian/2024/Ciclo2/Paradigmas/Evaluaciones/Proyectos/Proyecto 2/proyectoBiesVM/bies/biesVM/grammar/biesVM.g4 by ANTLR 4.13.1
 // jshint ignore: start
 import antlr4 from 'antlr4';
 

@@ -114,110 +114,74 @@ export default class biesCVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Sub_Label.
-	visitSub_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#PrimaryData.
+	visitPrimaryData(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Mul_Label.
-	visitMul_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#MultDivExpr.
+	visitMultDivExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Exp_Label.
-	visitExp_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#AndExpr.
+	visitAndExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Or_Label.
-	visitOr_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#ParenthesisExpr.
+	visitParenthesisExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#And_Label.
-	visitAnd_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#FunctionCallExpr.
+	visitFunctionCallExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Neq_Label.
-	visitNeq_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#EqualityExpr.
+	visitEqualityExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Div_Label.
-	visitDiv_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#AnonymousFunctionExpr.
+	visitAnonymousFunctionExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Le_Label.
-	visitLe_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#ArrayAccessExpr.
+	visitArrayAccessExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Add_Label.
-	visitAdd_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#PowExpr.
+	visitPowExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Eq_Label.
-	visitEq_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#RelationalExpr.
+	visitRelationalExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#AnonymousFunctionExpr_Label.
-	visitAnonymousFunctionExpr_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#AddSubExpr.
+	visitAddSubExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by biesCParser#Pow_Label.
-	visitPow_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#Ge_Label.
-	visitGe_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#FunctionCallExpr_Label.
-	visitFunctionCallExpr_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#Lt_Label.
-	visitLt_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#ArrayAccessExpr_Label.
-	visitArrayAccessExpr_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#Gt_Label.
-	visitGt_Label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by biesCParser#PrimaryData_Label.
-	visitPrimaryData_Label(ctx) {
+	// Visit a parse tree produced by biesCParser#OrExpr.
+	visitOrExpr(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

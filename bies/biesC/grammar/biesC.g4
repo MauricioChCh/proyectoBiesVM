@@ -62,26 +62,21 @@ primarydata
     | id                                    # Id_Label
     ;
 
-expr                                        
-    : anonymousLetFunction                  # AnonymousFunctionExpr_Label
-    | primarydata                           # PrimaryData_Label
-    | functionCall                          # FunctionCallExpr_Label
-    | expr MULT expr                        # Mul_Label
-    | expr DIV expr                         # Div_Label
-    | expr ADD expr                         # Add_Label
-    | expr SUB expr                         # Sub_Label
-    | expr POW expr                         # Pow_Label
-    | expr AND expr                         # And_Label
-    | expr OR expr                          # Or_Label
-    | expr EQ expr                          # Eq_Label
-    | expr NEQ expr                         # Neq_Label
-    | expr LT expr                          # Lt_Label
-    | expr GT expr                          # Gt_Label
-    | expr LE expr                          # Le_Label
-    | expr GE expr                          # Ge_Label
-    | arrayAccess                           # ArrayAccessExpr_Label
-    | '(' expr ')'                          # Exp_Label
+expr
+    : '(' expr ')'                          # ParenthesisExpr
+    | anonymousLetFunction                  # AnonymousFunctionExpr
+    | primarydata                           # PrimaryData
+    | functionCall                          # FunctionCallExpr
+    | arrayAccess                           # ArrayAccessExpr
+    | <precedence=right> expr POW expr      # PowExpr
+    | expr (MULT | DIV) expr                # MultDivExpr
+    | expr (ADD | SUB) expr                 # AddSubExpr
+    | expr (EQ | NEQ) expr                  # EqualityExpr
+    | expr (LT | GT | LE | GE) expr         # RelationalExpr
+    | expr AND expr                         # AndExpr
+    | expr OR expr                          # OrExpr
     ;
+
 
 functionCall
     : id '()'                                                               # FunctionCallNoParams_Label
@@ -149,7 +144,7 @@ LEN: 'len';
 
 // Datos Primarios
 STRING: '"' (~["\r\n])* '"';
-NUMBER: [+-]? [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)?;
+NUMBER: [0-9]+ ('.' [0-9]+)?;
 PRINT: 'print';
 ID: [a-zA-Z_][a-zA-Z_0-9]*;
 

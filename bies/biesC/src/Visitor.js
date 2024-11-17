@@ -73,60 +73,141 @@ export class Visitor extends biesCVisitor {
 
     // --------------------------------------------- Visita a Nodo de Operaciones Aritméticas ---------------------------------------------
 
-    processOperation(ctx, operator, bytecode) {
-        this.visitChildren(ctx);
-        this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
-        (this.func ? this.functionCode : this.byteCode).push(bytecode);
-    }
+    // processOperation(ctx, operator, bytecode) {
+    //     this.visitChildren(ctx);
+    //     this.logger.log(chalk.green('Nodo visitado: ArithOp ->'), operator);
+    //     (this.func ? this.functionCode : this.byteCode).push(bytecode);
+    // }
 
     // --------------------------------------------- Visitas a nodos de operaciones matemáticas ---------------------------------------------
 
-    visitMul_Label(ctx) {
-        this.processOperation(ctx, '*', 'MUL');
-        return null;
+    visitParenthesisExpr(ctx) {
+    this.logger.debug(chalk.magenta('Nodo visitado: ParenthesisExpr'));
+    return this.visit(ctx.expr());
+}
+
+visitAnonymousFunctionExpr(ctx) {
+    this.logger.debug(chalk.magenta('Nodo visitado: AnonymousFunctionExpr'));
+    return this.visit(ctx.anonymousLetFunction());
+}
+
+visitPowExpr(ctx) {
+    this.logger.debug(chalk.magenta('Nodo visitado: PowExpr'));
+    this.visitChildren(ctx);
+    (this.func ? this.functionCode : this.byteCode).push('POW');
+    return null;
+}
+
+visitMultDivExpr(ctx) {
+    this.logger.debug(chalk.magenta('Nodo visitado: MultDivExpr'));
+    const operator = ctx.getChild(1).getText();
+    
+    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
+    this.visitChildren(ctx);
+    
+    switch(operator) {
+        case '*':
+            (this.func ? this.functionCode : this.byteCode).push('MUL');
+            break;
+        case '/':
+            (this.func ? this.functionCode : this.byteCode).push('DIV');
+            break;
+        default:
+            throw new Error(`Operador desconocido: ${operator}`);
+    }
+    return null;
+}
+
+visitAddSubExpr(ctx) {
+    this.logger.debug(chalk.magenta('Nodo visitado: AddSubExpr'));
+    const operator = ctx.getChild(1).getText();
+    
+    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
+    this.visitChildren(ctx);
+    
+    switch(operator) {
+        case '+':
+            (this.func ? this.functionCode : this.byteCode).push('ADD');
+            break;
+        case '-':
+            (this.func ? this.functionCode : this.byteCode).push('SUB');
+            break;
+        default:
+            throw new Error(`Operador desconocido: ${operator}`);
+    }
+    return null;
+}
+
+// Método auxiliar para procesar operaciones (versión simplificada adaptada a tu estructura)
+processOperation(ctx, operator, bytecode) {
+    this.logger.debug(chalk.magenta(`Procesando operación ${operator} -> ${bytecode}`));
+    
+    // Primero visitamos los hijos para asegurar el orden correcto de operaciones
+    this.visitChildren(ctx);
+    
+    // Agregamos la instrucción al código correspondiente según si estamos en una función o no
+    (this.func ? this.functionCode : this.byteCode).push(bytecode);
+}
+    generateTempVar() {
+        return `t${this.tempVarCounter++}`;
+    }
+    
+    addInstruction(instruction) {
+        this.instructions.push(instruction);
     }
 
-    visitDiv_Label(ctx) {
-        this.processOperation(ctx, '/', 'DIV');
-        return null;
-    }
-
-    visitAdd_Label(ctx) {
-        this.processOperation(ctx, '+', 'ADD');
-        return null;
-    }
-
-    visitSub_Label(ctx) {
-        this.processOperation(ctx, '-', 'SUB');
-        return null;
-    }
-
-    visitPow_Label(ctx) {
-        this.processOperation(ctx, '**', 'POW');
-        return null;
-    }
 
     // ----------------------------------------- Visitas a nodos de operaciones comparacion ---------------------------------------------
 
-    visitLt_Label(ctx) {
-        this.processOperation(ctx, '<', 'LT');
-        return null;
+// ----------------------------------------- Visitas a nodos de operaciones comparacion ---------------------------------------------
+
+visitEqualityExpr(ctx) {
+    // Obtén los operandos de la operación
+    const left = this.visit(ctx.expr(0));
+    const right = this.visit(ctx.expr(1));
+    const operator = ctx.getChild(1).getText(); // Obtiene el operador de comparación
+
+    // Mapea el operador a las instrucciones de la máquina virtual
+    let opcode;
+    switch (operator) {
+        case '==':
+            opcode = 'EQ';
+            break;
+        case '!=':
+            opcode = 'NEQ';
+            break;
     }
 
-    visitGt_Label(ctx) {
-        this.processOperation(ctx, '>', 'GT');
-        return null;
+    // Realiza la operación con los operandos
+    this.processOperation(ctx, operator, opcode);
+    return null;
+}
+
+visitRelationalExpr(ctx) {
+    const left = this.visit(ctx.expr(0));
+    const right = this.visit(ctx.expr(1));
+    const operator = ctx.getChild(1).getText();
+
+    let opcode;
+    switch (operator) {
+        case '<':
+            opcode = 'LT';
+            break;
+        case '>':
+            opcode = 'GT';
+            break;
+        case '<=':
+            opcode = 'LE';
+            break;
+        case '>=':
+            opcode = 'GE';
+            break;
     }
 
-    visitLe_Label(ctx) {
-        this.processOperation(ctx, '<=', 'LE');
-        return null;
-    }
+    this.processOperation(ctx, operator, opcode);
+    return null;
+}
 
-    visitGe_Label(ctx) {
-        this.processOperation(ctx, '>=', 'GE');
-        return null;
-    }
 
     // --------------------------------------------- Visitas a nodos de operaciones lógicas ---------------------------------------------
 

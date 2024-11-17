@@ -3,27 +3,74 @@ cd C:\Users\Eddy\Desktop\Proyecto Paradigmas de la Programación\bies\biesC && r
 */
 // Generated from ./grammar/biesC.g4 by ANTLR 4.9.2
 
-/*
+
 //Print con primaryData
 // print(666)
 
 // //Print con expresiones
-print(654 + 1 + 11 * 2 / 9 - 2 + 5) //Se debe de corregir la precedencia de operadores
-
+//print(654 + 1 + 11 * 2 / 9 - 2 + 5) //Se debe de corregir la precedencia de operadores
 //Asignaciones varias a variables
-let x1 = 12
-let x2 = 654 - 2
-let x3 = "Esto es un String"
-let x4 = ["Array"]
-let x5 = [[21], ["Array Anidado"], [3, 4, 5, 6, 7, 8, 9, 10]]
+// print("Asignaciones a variables")
+// let x1 = 12
+// let x2 = 654 - 2
+// let x3 = "Esto es un String"
+// let x4 = ["Array"]
+// let x5 = [[21], ["Array Anidado"], [3, 4, 5, 6, 7, 8, 9, 10]]
+// let p = 3 + 2
+// // //Print de variables
+// print(x1)
+// print(x2)
+// print(x5)
+// print(x4)
+// print(x3)
+// print(p)
 
-// //Print de variables
-print(x1)
-print(x2)
-print(x5)
-print(x4)
-print(x3)
-*/
+
+// //estas las hace bien
+// print("Operaciones aritméticas")
+// print(654 + 1 + 11 * 2 / 9 - 2 + 5) 
+// let x = 2 ** 3 * 4 + 5        // 37
+// let y = 3 + 4 * 2 ** 3        // 35
+// let z = (3 + 4) * 2 ** 3      // 56
+// let a =  2 ** 3 ** 2      // 56
+//  print (x)
+// print (y)
+// print (z)
+// print (a)
+
+// //estas no
+// print("Operaciones aritméticas de casos")
+// let caso1 = 666-664//2 (falla)
+// let caso2 = (4+1-2)//3 (falla)
+// let caso3 = (5**5/(4+1))//625 (falla)
+// let caso4 = (4*4/(3+1))//4 (falla)
+
+
+// print(caso1)
+// print(caso2)
+// print(caso3)
+// print(caso4)
+// print(caso5)
+
+//let prueba = 2+2
+//let p1 = 5 //ni siquiera lo imprime
+//let p2 = (654 + 1 + 11 * 2 / 9 - 2 + 5)
+// let p3 = 3-2
+// let p4 = 3*2
+// let p5 = 3/2
+// let p6 = 3**2
+// let p7 = (3+3)
+
+// print(prueba)
+//print(p1)
+//print(p2)
+// print(p3)
+// print(p4)
+// print(p5)
+// print(p6)
+// print(p7)
+
+
 
 //---------------------------------------------------------------------------------------------------------------
 /*
@@ -35,75 +82,75 @@ LDV 0
 LTK
 
 */
-let sumList = (a, from, to, s) => if (from == to) then s else sumList(a, from + 1, to, a[from] + s)
-let sumListShort = (a, n) => sumList(a, 0, n, 0)
-let {const a = [1, 2, 3, 4, 5]
-	 const from = 0
-	 const to = 3 
-	} in {
-	print("*** Testing sumList("+ a + " ," + from + ", " + to + ") ***")
-	print(sumList(a, from, to, 0) )
-	print(sumListShort(a, to))
-}
+// let sumList = (a, from, to, s) => if (from == to) then s else sumList(a, from + 1, to, a[from] + s)
+// let sumListShort = (a, n) => sumList(a, 0, n, 0)
+// let {const a = [1, 2, 3, 4, 5]
+// 	 const from = 0
+// 	 const to = 3 
+// 	} in {
+// 	print("*** Testing sumList("+ a + " ," + from + ", " + to + ") ***")
+// 	print(sumList(a, from, to, 0) )
+// 	print(sumListShort(a, to))
+// }
 
 //---------------------------------------------------------------------------------------------------------------
-/*
-// Version compleja 0
-print("Testing helloworld Version 0 ***")
-print("Hello World!") 
 
-// Version compleja 1
-let splash = () => print("Testing helloworld Version 1 ***")
-splash()
-print("Hello World!") 
+// Version compleja 0
+// print("Testing helloworld Version 0 ***")
+// print("Hello World!") 
+
+//Version compleja 1
+// let splash = () => print("Testing helloworld Version 1 ***")
+// splash()
+// print("Hello World!") 
 
 // Version compleja 2
-let splash = (msg) => print(msg)
-let version = 666 - 664
-splash("Testing helloworld Version " + version + "***")
-print("Hello World!") 
+// let splash = (msg) => print(msg)
+// let version = 666 - 664
+// splash("Testing helloworld Version " + version + "***")
+// print("Hello World!") 
 
 // Version compleja 3
-let splash = (msg) => print(msg)
-let greetings = () => "Hello World!"
-let version = (4 + 1 - 2)
-splash("Testing helloworld Version " + version + " ***")
-print(greetings()) 
+// let splash = (msg) => print(msg)
+// let greetings = () => "Hello World!"
+// let version = (4 + 1 - 2)
+// splash("Testing helloworld Version " + version + " ***")
+// print(greetings()) 
 
 // Version compleja 4 let-in
-let {
-	 const splash = (msg) => print(msg)
-	 const greetings = () => "Hello World!"
-	} in {
-	    let version = 4 * 4 / (3 + 1)
-		splash("Testing helloworld Version " + version + " ***")
-		print(greetings()) 
-	}
+// let {
+// 	 const splash = (msg) => print(msg)
+// 	 const greetings = () => "Hello World!"
+// 	} in {
+// 	    let version = 4 * 4 / (3 + 1)
+// 		splash("Testing helloworld Version " + version + " ***")
+// 		print(greetings()) 
+// 	}
 
 // Version compleja 5 let-in
-let {
-		const splash = (msg) => print(msg)
-		const greetings = () => 
-		      let {const greet = input("Enter greeting>") 
-			  } in 
-			  if (len(greet) == 0 ) then "Hello World!" else greet
-	} in {
-	    let version = 5 ** 5 / (4 + 1)
-		splash("Testing helloworld Version " + version + " ***")
-		print(greetings())
-    }		
+// let {
+// 		const splash = (msg) => print(msg)
+// 		const greetings = () => 
+// 		      let {const greet = input("Enter greeting>") 
+// 			  } in 
+// 			  if (len(greet) == 0 ) then "Hello World!" else greet
+// 	} in {
+// 	    let version = 5 ** 5 / (4 + 1)
+// 		splash("Testing helloworld Version " + version + " ***")
+// 		print(greetings())
+//     }		
 
 // Máximo entre dos números (<span style="color:red">** NUEVO **</span>)
 
 // Version Extra compleja 6 Maximo entre dos números, lambda binaria
-let max = (x, y) => if (x > y) then x else y
-let {
-	const x = 10
-	const y = 20
-} in {
-	print("*** Testing max("+ x + " ," + y + ") ***")
-	print(max(x, y))
-}
+// let max = (x, y) => if (x > y) then x else y
+// let {
+// 	const x = 10
+// 	const y = 20
+// } in {
+// 	print("*** Testing max("+ x + " ," + y + ") ***")
+// 	print(max(x, y))
+//}
 
 // Máximo entre dos números lambda anidada (<span style="color:red">** NUEVO **</span>)
 
@@ -120,12 +167,12 @@ let {
 // Acceso a un elemento de una lista (<span style="color:red">** NUEVO **</span>)
 
 // Version Extra compleja 8 Acceso a un elemento de una lista
-let {const a = [1, 2, 3, "Hello World!", 5, 6, 7]
-	} in {
-	print("*** Testing List Access ("+ a + ") ***")
-	print(a[ a[0] + 2 ])
-}
-
+// let {const a = [1, 2, 3, "Hello World!", 5, 6, 7]
+// 	} in {
+// 	print("*** Testing List Access ("+ a + ") ***")
+// 	print(a[ a[0] + 2 ])
+// }
+/*
 // Suma de elementos en una lista (recursivo) (<span style="color:red">** NUEVO **</span>)
 
 // Version Extra compleja 9 Largo de una lista (iterativo) lambda multi_argumento. Lambda derivada
