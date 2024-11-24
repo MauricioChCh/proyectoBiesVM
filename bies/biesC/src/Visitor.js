@@ -646,7 +646,7 @@ export class Visitor extends biesCVisitor {
 
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
-        this.func = true;
+        this.func = false; // Se cambia a true, si se quiere que quede fuera del main
         this.visitChildren(ctx);
 
         return null;
@@ -654,7 +654,7 @@ export class Visitor extends biesCVisitor {
 
     visitLetExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letExpr'));
-        this.func = true;
+        this.func = false; // Se cambia a true, si se quiere que quede fuera del main
         this.visitChildren(ctx);
 
         return null
