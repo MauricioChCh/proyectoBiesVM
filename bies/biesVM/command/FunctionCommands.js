@@ -73,7 +73,13 @@ class FunctionCommands extends Command {
                     break;
                 }
             }
-            this.vm.bindings.unshift(newBinding);
+
+
+
+            this.vm.bindings.unshift(newBinding);  // Esta linea es la que hace que funcione, ocupo que este comentada
+            this.vm.bindings = this.vm.bindings.filter(binding => Object.keys(binding).length > 0);
+
+            // console.log(this.vm.bindings);
             this.vm.code = closure.body;
             this.vm.programCounter = 0;
             this.verifyFunctionBody(this.vm.code);

@@ -100,6 +100,7 @@ class VM {
      */
     async run(code) {
         this.code = code;
+
         while (this.programCounter < this.code.length) {
             const instruction = this.code[this.programCounter];
             this.programCounter++;
