@@ -47,6 +47,9 @@ export class Visitor extends biesCVisitor {
         this.functionMap = {}; // Mapa de funciones
         this.currentScope = 0; // Scope actual
         this.func = false; // Indicador de si estamos dentro de una función
+        this.context = 0; // Contexto actual
+        this.isLetIn = false;
+        this.allowScope = [{scope: 0, context: 0}];
 
         // B -> Bindings
         this.variableCounter = 0; // Contador de variables
@@ -107,6 +110,29 @@ export class Visitor extends biesCVisitor {
         this.byteCode = main;
     }
 
+    // useContext = () => this.isLetIn ? this.context : 0;
+    useContext() {
+        if(this.isLetIn) {
+            if(this.func){
+                return this.context + 1;
+            } else {
+                return this.context;
+            }
+        }else {
+            if(this.func){
+                return (this.context + 1);
+            } else {
+                // this.variableCounter = 0;
+                return 0;
+            }
+        }
+    }
+
+    changeScope = () => (!this.isLetIn && !this.func) ? this.currentScope++ : this.currentScope;
+
+    loadAllowScope = () => {
+        this.allowScope.push({scope: this.currentScope, context: this.context});
+    }
     // ----------------------------------------- Operaciones Aritméticas -----------------------------------------
 
     /**
@@ -294,15 +320,37 @@ export class Visitor extends biesCVisitor {
         return null;
     }
 
+    
+    validVariable(variable) {
+        const lastScope = this.currentScope; 
+        if (!this.func && !this.isLetIn) {
+            this.currentScope = 0;// Reinicia el alcance si ambas condiciones son falsas
+        }
+        
+        // Verifica si algún elemento cumple las condiciones
+        const action = this.allowScope.some(
+            (scope) => scope.scope === this.currentScope && scope.context === variable
+        );
+
+        this.currentScope = lastScope; // Restaura el alcance actual
+
+        return action;
+    }
+    
     visitId_Label(ctx) {
         const id = ctx.getText();
         this.logger.log(chalk.magenta('Nodo visitado: id ->'), id);
-
+        console.log(this.variables)
         if (id in this.variables) {
             const command = `${this.variables[id].byteload} ${this.variables[id].arg1} ${this.variables[id].arg2}`;
-            this.isFunction() ? this.functionCode.push(command) : this.byteCode.push(command);
+
+            if(this.validVariable(this.variables[id].arg1)){
+                this.isFunction() ? this.functionCode.push(command) : this.byteCode.push(command);
+            } else {
+                throw new Error(`La variable ${id} no está definida en el contexto actual ${this.currentScope}`);
+            }
         } else {
-            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
+            this.variables[id] = { byteload: 'BLD', arg1: this.useContext(), arg2: this.variableCounter++ };
         }
         return null;
     }
@@ -325,13 +373,14 @@ export class Visitor extends biesCVisitor {
         return this.handleSimpleInstr(ctx, 'simpleConstInstr');
     }
 
+
+
     handleSimpleInstr(ctx, label) {
         this.logger.debug(chalk.magenta(`Nodo visitado: ${label}`));
         const id = ctx.id().getText();
-
         // Verificar si la variable ya está en el mapa de variables
         if (!(id in this.variables)) {
-            this.variables[id] = { byteload: 'BLD', arg1: 0, arg2: this.variableCounter++ };
+            this.variables[id] = { byteload: 'BLD', arg1: this.useContext(), arg2: this.variableCounter++ };
         }
 
         // Visitar los hijos del nodo para procesar la expresión
@@ -339,8 +388,7 @@ export class Visitor extends biesCVisitor {
 
         // Generar el bytecode para asignar el valor a la variable
         const targetArray = this.isFunction() ? this.functionCode : this.byteCode;
-        targetArray.push(`BST 0 ${this.variables[id]?.arg2 ?? this.variableCounter++}`);
-
+        targetArray.push(`BST ${this.useContext()} ${this.variables[id]?.arg2 ?? this.variableCounter++}`);
         return null;
     }
 
@@ -387,8 +435,7 @@ export class Visitor extends biesCVisitor {
 
         const functionName = ctx.id(0).getText(); // Nombre de la función
         let parentContext = '$0'; // Contexto padre por defecto
-        const functionId = `$${this.functionCounter++}`; // Identificador único de la función
-
+        const functionId = `$${this.functionCounter}`; // Identificador único de la función
         // Detectar si hay una llamada a función dentro del cuerpo de la lambda
         let functionCallName = null;
 
@@ -414,18 +461,21 @@ export class Visitor extends biesCVisitor {
             invoking: functionCallName || null
         };
 
-        // Cambiar el scope actual al nuevo scope de la función
-        this.currentScope = this.functionCounter;
-
         // Agregar información de la función a `code`
+        // this.changeScope();
         this.functionCode.push(`$FUN ${functionId} ARGS:${paramCount} PARENT:${parentContext}`);
         this.func = true;
+        this.changeScope();
 
-        this.functionCode.push(...Array.from({ length: paramCount }, (_, i) => `BLD 0 ${i}`)); //Agrega un 'BLD' para cada parámetro
+
+
 
         // Actualizar el mapa de variables con los parámetros de la función
         for (let i = 0; i < paramCount; i++) {
-            this.variables[ctx.id(i + 1).getText()] = { byteload: 'BLD', arg1: 0, arg2: i };
+            this.variables[ctx.id(i + 1).getText()] = { byteload: 'BLD', arg1: this.useContext(), arg2: i };
+            this.context = this.useContext();
+            this.allowScope.push({scope: this.currentScope, context: this.context});
+            this.context--;
         }
 
         // Actualizar el contexto padre actual
@@ -440,7 +490,8 @@ export class Visitor extends biesCVisitor {
         this.functionCode.push(`$END ${functionId}`);
         this.functionCode.push('\n');
         this.func = false;
-
+        // this.isLetIn = false;
+        this.functionCounter++;
         // Restaurar el contexto padre del compilador después de visitar la función
         this.compiler.currentParent = parentContext;
 
@@ -464,7 +515,7 @@ export class Visitor extends biesCVisitor {
 
             // Generar instrucciones BLD para cada argumento
             for (let i = 0; i < argsCount; i++) {
-                const bldInstruction = `BLD 0 ${i}`;
+                const bldInstruction = `BLD ${this.useContext()} ${i}`;
                 functionDeclarations += bldInstruction;
                 this.functionCode.push(bldInstruction);
             }
@@ -646,25 +697,30 @@ export class Visitor extends biesCVisitor {
 
     visitLetInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letInExpr'));
-        this.func = false; // Se cambia a true, si se quiere que quede fuera del main
+        
+        // Aqui deberia ir el metodo para ver que pertenece a que
+        // this.loadAllowScope();
+        // console.log('\nFunc:    ', this.func);
+        // console.log("isLetIn: ", this.isLetIn);
+        this.changeScope();
+        this.isLetIn = true;
+        this.variableCounter = 0;
         this.visitChildren(ctx);
-
+        this.isLetIn = false;
         return null;
     }
-
+    
     visitLetExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: letExpr'));
-        this.func = false; // Se cambia a true, si se quiere que quede fuera del main
+        this.context++;
+        this.loadAllowScope();
         this.visitChildren(ctx);
-
         return null
     }
 
     visitInExpr_Label(ctx) {
         this.logger.debug(chalk.red('Nodo visitado: inExpr'));
-
         this.visitChildren(ctx);
-
         return null
     }
 

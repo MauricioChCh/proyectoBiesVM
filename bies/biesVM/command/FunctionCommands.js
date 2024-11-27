@@ -67,6 +67,7 @@ class FunctionCommands extends Command {
             let newBinding = {};
             for (let i = argCount - 1; i >= 0; i--) {
                 if (this.vm.stack.length > 0) {
+                    // let nextPosition = Object.keys(this.vm.bindings[0]).length
                     newBinding[i] = this.vm.stack.pop();
                 } else {
                     console.warn(`Advertencia: No hay suficientes argumentos en la pila para la $FUN ${closure.functionName}`);
@@ -74,12 +75,11 @@ class FunctionCommands extends Command {
                 }
             }
 
+            this.vm.bindings = [...this.vm.bindings, newBinding];
+            
+            // console.log('instruction', instruction);
+            // console.log('bindings', this.vm.bindings);
 
-
-            this.vm.bindings.unshift(newBinding);  // Esta linea es la que hace que funcione, ocupo que este comentada
-            this.vm.bindings = this.vm.bindings.filter(binding => Object.keys(binding).length > 0);
-
-            // console.log(this.vm.bindings);
             this.vm.code = closure.body;
             this.vm.programCounter = 0;
             this.verifyFunctionBody(this.vm.code);

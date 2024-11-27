@@ -72,16 +72,16 @@ class StackCommands extends Command {
     BST(instruction) {
         const [layerIndex, variableIndex] = instruction.args;
         const value = this.vm.stack.pop();
+        for(let i = 0; i < parseInt(layerIndex); i++) {
+            if(!(this.vm.bindings.length === parseInt(layerIndex) + 1)) {
+                this.vm.bindings = [...this.vm.bindings, {}];
+            }
+        }
         this.vm.getCurrentLayer(layerIndex)[variableIndex] = value;
+
         this.vm.logger.debug(`Stored value:          ${value}`);
     }
-    // BST(instruction) {
-    // const [layerIndex, variableIndex] = instruction.args;
-    // const value = this.vm.stack.pop();
-    // const currentLayer = this.vm.getCurrentLayer(layerIndex);
-    //
-    // this.vm.logger.debug(`Stored value: ${value} in layer ${layerIndex} at index ${variableIndex}`);
-    // }
+
 }
 
 export default StackCommands;
