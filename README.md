@@ -121,7 +121,6 @@ Notas importantes:
 - El modo verbose (`-v`) y detallado (`-d`) pueden combinarse para obtener información más completa
 - Para más detalles sobre el funcionamiento interno y ejemplos avanzados, consulta los README específicos de cada componente
 
-¿Te gustaría que agregue más ejemplos o que detalle alguna opción en particular?
 ## Documentación Detallada
 
 Para información más específica sobre cada componente, incluyendo:
